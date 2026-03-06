@@ -15,11 +15,27 @@ ENV/
 # Logs and temporary files
 *.log
 *.tmp
+.coverage
+.coverage.*
 
 # Python tooling caches
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.ipynb_checkpoints/
+
+# Build and packaging artifacts
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+
+# Test and coverage reports
+htmlcov/
+
+# Local environment files
+.env
+.env.*
 
 # IDE/editor files
 .idea/
