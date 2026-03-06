@@ -22,9 +22,8 @@
 
         <p>
             <b>Your task is different.</b> Instead of entering a direct guess, you will report your
-            <strong>belief about how often Player A lied</strong> — that is, how often Player A sent a message
-            that was <em>not</em> the true secret number (i.e., did not delegate to the computer).
-            You will move a slider from <b>0%</b> (Player A always told the truth) to <b>100%</b> (Player A always lied).
+            <strong>belief about the probability that Player A delegated to the computer</strong>.
+            You will move a slider from <b>0%</b> (Player A never delegated to the computer) to <b>100%</b> (Player A always delegated to the computer).
         </p>
 
         <div class="card border-warning my-3">
@@ -63,18 +62,20 @@
             </div>
             <div class="modal-body">
                 <p>
-                    Let <em>p</em> be your stated belief (as a fraction between 0 and 1) about how often
-                    Player A lied, and let <em>m</em> be the message you observe. The computer submits:
+                    Let <em>p</em> be your stated belief (as a fraction between 0 and 1) about the probability
+                    that Player A delegated to the computer, and let <em>m</em> be the message you observe.
+                    The computer submits:
                 </p>
                 <div class="card bg-light my-3">
                     <div class="card-body text-center" style="font-size: 1.15rem;">
-                        <b>Optimal guess = (1 − p) × m + p × 4</b>
+                        <b>Optimal guess = p × m + (1 − p) × 4</b>
                     </div>
                 </div>
                 <p class="text-muted" style="font-size: 0.9rem;">
                     This formula follows maximizes your expected earnings. When Player A tells the truth
-                    (probability 1 − p), the message <em>m</em> equals the secret number, so the best guess
-                    is <em>m</em>. When Player A lies (probability <em>p</em>), the message carries no
+                    because when Player A delegates (probability <em>p</em>), the message <em>m</em> equals
+                    the secret number, so the best guess is <em>m</em>. When Player A does not delegate
+                    (probability 1 − p), the message carries no
                     information and the best guess is the unconditional mean of the secret number, which is 4.
                     The optimal guess is a weighted average of these two cases.
                 </p>

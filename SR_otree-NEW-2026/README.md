@@ -105,7 +105,7 @@ Uses arrow-reveal blocks (same pattern as `instructions1.html`). Three sections:
 3. Arrow 2 → "About the Instructions Below": why to read the historical instructions carefully. Reveals the Next button.
 
 ### `BeliefTransition.html`
-No longer a standalone page. Its content has been integrated into `role_info.html`, shown conditionally for Belief participants. Explains:
+Its content is integrated into `role_info.html`, shown conditionally for Belief participants. The legacy `BeliefTransition` file/class remains in the repository but is not included in `page_sequence`. The integrated block explains:
 - The previous experiment had Player B guess directly; today's task is different.
 - They will report a belief about the likelihood that Player A delegated to the computer.
 - The computer submits the **guess that maximises their bonus** given that belief — so they should report their true belief.
@@ -120,6 +120,9 @@ Interactive intro.js-guided tutorial for the belief slider (replaces `ReceiverTu
 5. Belief slider — **blocked** until participant moves it; unblocks Next on first interaction
 6. Optimal guess card — shows the computed guess after the slider is moved
 7. Submit button
+
+### `ReceiverGuess.html` (Belief decision screen)
+In Belief treatment, the Spanish elicitation is framed as a **probability/likelihood** question (not “how often”): participants report the percentage probability that Player A delegated to the computer. The UI then displays the implied optimal guess and submits it on confirmation.
 
 ### `ControlQuestions.html`
 `Q_task` is now treatment-aware:

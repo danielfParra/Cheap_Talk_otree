@@ -113,7 +113,7 @@
             {
                 title: 'Belief slider',
                 element: '#belief_section',
-                intro: 'Move the slider to state your belief about how often Player A delegated to the computer. The computer will calculate and submit the optimal guess for you. Please try it now.'
+                intro: 'Move the slider to state your belief about the probability that Player A delegated to the computer. The computer will calculate and submit the optimal guess for you. Please try it now.'
             },
             {
                 title: 'Your optimal guess',
@@ -152,7 +152,7 @@
     function updateBelief(input) {
         const p = parseInt(input.value);
         document.getElementById('belief_honest_pct_input').value = p;
-        document.getElementById('belief_description').innerText = p + '% likelihood that Player A delegated';
+        document.getElementById('belief_description').innerText = p + '% probability that Player A delegated';
 
         const sender_message = js_vars.sender_message;
         const optimal = ((p / 100) * sender_message + (1 - p / 100) * 4).toFixed(2);

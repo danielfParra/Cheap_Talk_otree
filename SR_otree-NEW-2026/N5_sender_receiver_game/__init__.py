@@ -53,8 +53,8 @@ class Constants(BaseConstants):
     O_task = ['Adivinar el número secreto', 'Escribir un texto', 'Enviar un mensaje']
     A_task_PA = 'Enviar un mensaje'
     A_task_PB = 'Adivinar el número secreto'
-    A_task_PB_Belief = 'Reportar mi creencia sobre cuántas veces el Jugador A delegó al computador'
-    O_task_Belief = ['Reportar mi creencia sobre cuántas veces el Jugador A delegó al computador', 'Escribir un texto', 'Enviar un mensaje']
+    A_task_PB_Belief = 'Reportar mi creencia sobre la probabilidad de que el Jugador A delegó al computador'
+    O_task_Belief = ['Reportar mi creencia sobre la probabilidad de que el Jugador A delegó al computador', 'Escribir un texto', 'Enviar un mensaje']
     H_task = 'Piensa en qué acción se te requiere realizar durante el juego. Tu rol determina tu tarea principal.'
     H_task_Belief = 'Recuerda: en lugar de adivinar directamente, tú reportas una creencia sobre el Jugador A y el computador calcula la suposición óptima por ti.'
 

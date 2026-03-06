@@ -90,7 +90,7 @@
         <!-- Belief treatment: belief % slider -->
         <div id="belief_guess_section" class="hidden-paragraph">
         <p>
-            ¿Qué porcentaje de las veces crees que el Jugador A <strong>delegó al computador</strong> (envió el número secreto verdadero)?
+            ¿Cuál es la probabilidad (en porcentaje) de que el Jugador A <strong>haya delegado al computador</strong> (es decir, que haya enviado el número secreto verdadero)?
         </p>
         <h4>Mueve el deslizador para indicar tu creencia.</h4>
         <br>
@@ -155,7 +155,7 @@
                 const optimal = (p / 100) * sender_message + (1 - p / 100) * 4;
                 const optimalRounded = Math.max(1, Math.min(7, optimal)).toFixed(1);
                 document.getElementById('slider').value = optimalRounded;
-                document.getElementById('belief_description').innerText = `Tu creencia: ${p}% delegó al computador`;
+                document.getElementById('belief_description').innerText = `Tu creencia: ${p}% de probabilidad de delegación`;
                 document.getElementById('optimal_guess_display').innerText = `Adivinanza óptima: ${optimalRounded}`;
                 show_text(submit_button);
             }
