@@ -1,0 +1,70 @@
+{{ block title }}
+    Round {{player.round_number}}: Feedback
+{{ endblock }}
+
+{{ block styles }}
+<!-- Load the custom css styles -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+
+
+{{ endblock }}
+
+{{ block content }}
+
+
+<!-- Hide the timer initially and show it when 10 seconds are left -->
+<script>
+    document.addEventListener("DOMContentLoaded", function (event) {
+        $('.otree-timer').hide();  // Initially hide the timer
+
+        $('.otree-timer__time-left').on('update.countdown', function (event) {
+            // Show the timer when there are only 10 seconds left
+            if (event.offset.totalSeconds === 10) {
+                $('.otree-timer').show().addClass('blinking-timer');  // Add blinking effect
+            }
+        });
+    });
+</script>
+
+
+<div class="card bg-light border-dark mb-3">
+  <div class="card-body">
+      <p class="card-text"> <h5>The results of <b>round {{player.round_number}} </b> are the following</h5></p>
+    <hr>
+        {% if sender_message > 0 %}
+                <p class="blocktext">Player A's message was: <b>{{ sender_message }}</b></p>
+        {% else %}
+                <p class="blocktext">Player A didn't send message on time.</p>
+        {% endif %}
+        {% if receiver_guess > 0 %}
+                <p class="blocktext">Player B's guess was: <b>{{ receiver_guess }}</b></p>
+        {% else %}
+            {% if sender_message > 0 %}
+                    <p class="blocktext">Player B's guess was: <b>{{ sender_message }}</b></p>
+            {% else %}
+                    <p class="blocktext">Player B didn't guess on time.</p>
+            {% endif %}
+        {% endif %}
+        <p class="blocktext"> The secret number was: <span class="payoff">{{ secret_number }}</span> </p>
+    </div>
+</div>
+
+<!---
+      <br>
+        <h5><i class="fas fa-coins"></i> Your Additional Earnings</h5>
+        <p class="blocktext">
+            <i class="fas fa-check-circle"></i> You answered <b>{{ correct_answers }}</b> tasks correctly → Earned <b>{{ extra_earnings }} pesos</b> ({{ correct_answers }} × {{ piece_rate_decode }})
+        </p>
+<div class="callout callout-danger">
+    <strong>Important:</strong> Your earnings will only count in your final payoffs if this round is payoff-relevant to you.
+    Remember that half of the rounds are payoff-relevant.
+</div>
+-->
+
+{{ endblock }}
+
+{{ block scripts }}
+<script src="{% static 'global/myJs.js' %}"></script>
+<script src="https://kit.fontawesome.com/46026ecfac.js" crossorigin="anonymous"></script>
+{{ endblock }}

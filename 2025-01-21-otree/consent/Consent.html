@@ -1,0 +1,98 @@
+{{ block title }}
+Consentimiento y protección de datos para experimentos en JaBElab
+{{ endblock }}
+
+{{ block styles }}
+<!-- Load the custom css styles -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+
+{{ endblock }}
+
+{{ block content }}
+<p>
+    Usted ha sido invitado a participar en este experimento porque se
+    ha registrado nuestra página web de JaBElab. La presente investigación
+    fue aprobada por el Comité de Investigación y Ética de la Facultad de
+    Ciencias Económicas y Administrativas de la Pontificia Universidad Javeriana.
+</p>
+<p>
+    Antes de comenzar el experimento se le explicarán los procedimientos experimentales.
+    Durante el experimento se enfrentará a una serie de tareas diferentes y sus
+    respuestas serán registradas por nuestro sistema informático. Los datos registrados
+    en el experimento no permiten hacer ninguna inferencia sobre la participación o
+    las decisiones o respuestas de las personas que participan en el experimento.
+    En consecuencia, el análisis y la presentación de todos los resultados de este
+    experimento serán anónimos.
+</p>
+
+<p>
+    Los datos anónimos de la investigación se archivarán y posiblemente se pondrán
+    a disposición de otros científicos para su uso posterior. Los datos generados en
+    el experimento no se vincularán a los datos del sistema de inscripción.
+    Los datos recogidos para el pago de compensaciones (dirección de correo electrónico
+    o datos bancarios) se almacenarán siempre separados de los datos experimentales.
+</p>
+
+<p>
+    Por supuesto, la participación en el experimento de hoy es totalmente voluntaria.
+    No habrá desventajas para usted si decide no participar.
+    Tiene la posibilidad de abandonar el experimento en cualquier momento.
+</p>
+
+<p>
+Queremos pedirle su consentimiento para participar en el experimento y para el
+    tratamiento implícito de los datos. Puede revocar su consentimiento en cualquier
+    momento con efectos para el futuro, por ejemplo, enviando un correo electrónico a
+    jabelab@javeriana.edu.co. Su consentimiento es al mismo tiempo la base jurídica
+    para el tratamiento de los datos.
+
+</p>
+
+<p>
+    Uso de datos: En cumplimiento de la Ley 1581 de 2012 y demás normas aplicables,
+    consulte la política de la Pontificia Universidad Javeriana dando
+    <a href="#" data-bs-toggle="modal" data-bs-target="#dataConsentModal">click aquí</a>.
+</p>
+
+<p>
+    No puede participar en el experimento de hoy sin dar su consentimiento.
+</p>
+
+{{ formfields }}
+
+{{ next_button }}
+
+<!-- Modal de Bootstrap -->
+<div class="modal fade" id="dataConsentModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Autorización de Tratamiento de Datos</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                La autorización de tratamiento de datos personales que le otorga a la Pontificia Universidad Javeriana
+                se hace de manera voluntaria, previa, expresa e informada para que recolecte, almacene, use, disponga o
+                eventualmente llegue a transmitir o transferir a nivel nacional o internacional información referida a
+                sus datos personales y de imagen y voz, para efectos de ser utilizados en las siguientes finalidades:
+                <br><br>
+                i) Participar en las actividades y eventos académicos de la Universidad a través de diferentes plataformas virtuales, las cuales eventualmente podrán ser grabadas y compartidas con terceros aliados. <br>
+                ii) Para que su imagen y su voz hagan parte de fotografías y videos que podrán ser publicadas en los medios de comunicación y redes sociales institucionales, además de publicaciones impresas o digitales. <br>
+                iii) Tratar los datos personales y la imagen en video o fotografía en espacios académicos. <br>
+                iv) Mantener un canal de comunicación con la Universidad para recibir información sobre actividades y programas académicos. <br><br>
+
+                El canal de comunicación para el ejercicio de sus derechos es el correo electrónico:
+                <a href="mailto:usodedatos@javeriana.edu.co">usodedatos@javeriana.edu.co</a>.
+                La Universidad cuenta con una Política de Protección de Datos Personales, publicada en
+                <a href="https://www.javeriana.edu.co" target="_blank">www.javeriana.edu.co</a>.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{ endblock }}

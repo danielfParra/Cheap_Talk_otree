@@ -1,0 +1,41 @@
+{{ block title }}
+    ¡Te damos la bienvenida!
+{{ endblock }}
+
+{{ block styles }}
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+{{ endblock }}
+
+{{ block content }}
+
+    <p>
+        ¡Te damos la bienvenida al experimento!
+    </p>
+
+    <p>
+        Por favor, lee las instrucciones cuidadosamente. Si tienes preguntas, levanta la mano.
+        Iremos a ti y responderemos en privado.
+    </p>
+
+    <p>
+        El experimento de hoy tiene <strong>dos partes</strong>. Primero, completarás una <strong>actividad de decodificación</strong>.
+        Segundo, jugarás un <strong>juego</strong> con otro participante.
+    </p>
+
+    <p>
+        Durante el experimento, no puedes usar dispositivos electrónicos ni hablar con otros participantes.
+        Si rompes estas reglas, no podrás continuar con el experimento ni recibir el pago.
+    </p>
+
+    <p>
+        Ya has ganado <b>{{ Constants.SHOW_UP_FEE }}</b> pesos solo por estar aquí.
+        Puedes ganar dinero extra basado en tus elecciones, las elecciones de otras personas y algo de suerte.
+    </p>
+
+    <p>
+        Explicaremos exactamente cómo funciona el juego en las siguientes pantallas.
+    </p>
+
+<button class="otree-btn-next btn btn-primary">Continuar</button>
+
+{{ endblock }}

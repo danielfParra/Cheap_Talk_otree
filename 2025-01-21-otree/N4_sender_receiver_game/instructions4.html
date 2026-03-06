@@ -1,0 +1,65 @@
+{{ block title }}
+Instructions
+{{ endblock }}
+
+{{ block styles }}
+<!-- Load the custom css styles -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+{{ endblock }}
+
+{{ block content }}
+
+<div class="card bg-light m-3">
+    <div class="card-body ">
+
+<h3><i class="fas fa-list-ol"></i> Summary: Each Round of the Game Goes as Follows:</h3>
+        <ol>
+            <li><i class="fas fa-dice"></i> The computer generates a <b>secret number</b>.</li>
+            <li><i class="fas fa-envelope"></i> <b>Player A</b> sends a message to <b>Player B</b>.</li>
+            <li><i class="fas fa-question-circle"></i> <b>Player B</b> receives the message and guesses the secret number.</li>
+            <li><i class="fas fa-chart-bar"></i> Both players receive <b>feedback</b>.</li>
+        </ol>
+<p>
+    <input id="info_button3" type="button" value="&#xf178" onclick="buttonAppear(); button_click(info_button3, paragraph3);" />
+</p>
+
+<div id="paragraph3" class="hidden-paragraph">
+      <h3>Important Points to Remember</h3>
+<ul>
+    <li>Player A’s expected bonus is higher when Player B guesses a higher number.</li>
+    <li>Player B’s expected bonus is higher if the guess is closer to the secret number.</li>
+    <li>Player A does not know the secret number when sending a message.</li>
+    <li>Player A can choose to send any number 1, 2, 3, 4, 5, 6, 7{{ if player.participant.treatment != "Babbling" }} or can delegate the decision to the computer, who sends the true secret number{{ endif }}.</li>
+    {{ if player.participant.treatment != "Babbling" }}
+    <li>Player B will never learn whether Player A delegated the decision to the computer or not.</li>
+    {{ endif }}
+    {{ if player.participant.treatment == "Decode" }}
+    <li>Some Player B's will need to decode Player A's message before making the guess.</li>
+    {{ endif }}
+<!--    <li>Player B knows that Player A doesn't know the secret number.</li>-->
+</ul>
+
+<p>
+    The experiment ends after <b>{{Constants.num_rounds}} rounds</b>.
+</p>
+    </div>
+        </div>
+    </div>
+<div id="next" style="display: none">
+        {{ next_button }}
+</div>
+
+
+
+{{ endblock }}
+
+{% block scripts %}
+
+<!-- Load the custom javascript functions -->
+
+
+<script src="{% static 'global/myJs.js' %}"></script>
+<script src="https://kit.fontawesome.com/46026ecfac.js" crossOrigin="anonymous"></script>
+
+{% endblock %}

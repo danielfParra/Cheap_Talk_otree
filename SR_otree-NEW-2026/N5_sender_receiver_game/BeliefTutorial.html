@@ -1,0 +1,172 @@
+{% extends "global/Base.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+<style>
+.introjs-skipbutton { visibility: hidden !important; }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/5.0.0/introjs.min.css" />
+{% endblock %}
+
+{% block content %}
+<div style="display: flex; margin: 0;">
+
+    <!-- Left Pane -->
+    <div class="left-pane" style="width: 50%; background-color: #f8f9fa; padding: 20px; box-sizing: border-box; overflow-y: auto; border-right: 1px solid #ddd;">
+        {{ include Constants.ReceiverReminder }}
+    </div>
+
+    <!-- Right Pane -->
+    <div class="right-pane" style="width: 50%; background-color: #fff; padding: 20px; box-sizing: border-box; overflow-y: auto;">
+
+        <h3 data-intro="Round number" data-step="3">Round X: Report your belief</h3>
+
+        <p>You are Player B. Instead of guessing directly, you will <b>report your belief</b> about the likelihood that Player A delegated to the computer (in which case the sent number equals the true number).</p>
+
+        <!-- Message box -->
+        <div class="d-flex justify-content-center" data-intro="Player A's message." data-step="4" id="message-box">
+            <div class="card text-dark bg-light mb-3" style="width: 24rem;">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Player A's message:</h5>
+                    <p class="card-text">To receive the highest payoff, you should choose <b><span id="encoded_message"></span></b>.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Belief slider section -->
+        <div id="belief_section" data-intro="Move the slider to state your belief." data-step="5">
+
+            <p>
+                What is the likelihood that Player A <strong>delegated to the computer</strong>
+                (sent the true secret number)?
+            </p>
+
+            <div style="max-width: 420px; margin: 0 auto;">
+                <input id="belief_slider" value="0" type="range"
+                       oninput="updateBelief(this)" step="1"
+                       class="form-range" min="0" max="100"
+                       style="width: 100%; margin-bottom: 4px;">
+                <div style="display: flex; justify-content: space-between; padding: 0 3px; font-size: 0.85rem; color: #555;">
+                    <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
+                </div>
+                <div class="text-center mt-2">
+                    <span id="belief_description" style="background:#0d6efd; color:#fff; padding: 5px 20px; border-radius: 20px; font-size: 1.05rem; font-weight: 500;"></span>
+                </div>
+
+                <!-- Optimal guess card -->
+                <div class="card bg-light mt-3" id="optimal_card" style="display:none;"
+                     data-intro="This is the guess the computer will submit for you based on your belief." data-step="6">
+                    <div class="card-body text-center">
+                        <p class="mb-1"><small>Based on your belief, the optimal guess is:</small></p>
+                        <span id="optimal_guess_display" style="background:#198754; color:#fff; padding: 5px 20px; border-radius: 20px; font-size: 1.1rem; font-weight: 600;"></span>
+                        <p class="mt-2 mb-0"><small>The computer will submit this guess for you.</small></p>
+                    </div>
+                </div>
+
+                <!-- Hidden form field -->
+                <input type="hidden" name="belief_honest_pct" id="belief_honest_pct_input" value="0">
+            </div>
+        </div>
+
+        <!-- Submit button (hidden until slider is moved) -->
+        <div id="submit_button" class="hidden-paragraph mt-4" data-intro="Submit button" data-step="7">
+            <div class="d-grid gap-2 col-6 mx-auto">
+                <button type="submit" class="btn btn-success btn-lg btn-block">Submit</button>
+            </div>
+        </div>
+
+        {{ formfield_errors 'belief_honest_pct' }}
+
+    </div>
+</div>
+
+<!-- Intro.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/5.0.0/intro.min.js"></script>
+
+<script src="{% static 'global/myJs.js' %}"></script>
+<script src="https://kit.fontawesome.com/46026ecfac.js" crossOrigin="anonymous"></script>
+
+<script>
+    var intro = introJs();
+    intro.setOptions({
+        steps: [
+            {
+                title: 'Tutorial',
+                intro: "This is your decision screen. It will look the same in every round. Press 'Next' for a quick overview."
+            },
+            {
+                title: 'Game reminder',
+                element: '.left-pane',
+                intro: 'This panel reminds you of the game rules throughout the experiment.'
+            },
+            {
+                title: 'Round number',
+                element: 'h3',
+                intro: "Here you can see which round you are in. During the experiment, 'X' will be a number between 1 and {{ Constants.num_rounds }}."
+            },
+            {
+                title: "Player A's message",
+                element: '#message-box',
+                intro: "Here you can see the message that Player A sent."
+            },
+            {
+                title: 'Belief slider',
+                element: '#belief_section',
+                intro: 'Move the slider to state your belief about how often Player A delegated to the computer. The computer will calculate and submit the optimal guess for you. Please try it now.'
+            },
+            {
+                title: 'Your optimal guess',
+                element: '#optimal_card',
+                intro: 'Based on your belief, this is the guess the computer will submit for you. It is calculated to maximise your expected earnings. Every time you change the slider, this number updates automatically.'
+            },
+            {
+                title: 'Submit button',
+                element: '.btn-success',
+                intro: "Click here to submit your belief and proceed. You can submit now or close the tutorial first. Press 'Submit' when you're ready!"
+            }
+        ],
+        showStepNumbers: true,
+        nextLabel: 'Next',
+        prevLabel: 'Back',
+        doneLabel: 'Close',
+        exitOnOverlayClick: false,
+        exitOnEsc: false,
+        keyboardNavigation: false,
+    });
+
+    // Block advancing past "belief slider" step until slider has been moved
+    intro.onafterchange(function(targetElement) {
+        if (intro._currentStep == 4) {
+            $('.introjs-nextbutton').addClass('introjs-disabled');
+        }
+    });
+
+    window.onload = function () {
+        document.getElementById('encoded_message').innerHTML = js_vars.encoded_message;
+        intro.start();
+    };
+
+    let sliderMoved = false;
+
+    function updateBelief(input) {
+        const p = parseInt(input.value);
+        document.getElementById('belief_honest_pct_input').value = p;
+        document.getElementById('belief_description').innerText = p + '% likelihood that Player A delegated';
+
+        const sender_message = js_vars.sender_message;
+        const optimal = ((p / 100) * sender_message + (1 - p / 100) * 4).toFixed(2);
+        document.getElementById('optimal_guess_display').innerText = 'Optimal guess: ' + optimal;
+        document.getElementById('optimal_card').style.display = 'block';
+
+        // Reveal submit button and unblock the intro tour Next button once slider is touched
+        if (!sliderMoved) {
+            sliderMoved = true;
+            show_text(submit_button);
+            if (intro._currentStep == 4) {
+                $('.introjs-nextbutton').removeClass('introjs-disabled');
+            }
+        }
+    }
+</script>
+{% endblock %}

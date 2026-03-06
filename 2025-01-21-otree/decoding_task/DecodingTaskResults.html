@@ -1,0 +1,23 @@
+{{ block title }}
+    Decoding Task Results
+{{ endblock }}
+
+{{ block styles }}
+<!-- Load the custom css styles -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+{{ endblock }}
+
+{{ block content }}
+<div class="card bg-light border-dark mb-3">
+  <div class="card-body">
+      <h5>Decoding Task Results</h5>
+      <hr>
+      <p class="blocktext"> You completed all {{ total_tasks }} tasks.</p>
+      <p class="blocktext"> Your total score is: <span class="payoff"><b>{{ total_score }}</b></span> out of <b>{{ total_tasks }}</b>.</p>
+  </div>
+</div>
+
+{{ next_button }}
+
+{{ endblock }}

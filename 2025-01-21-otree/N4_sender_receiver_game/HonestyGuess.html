@@ -1,0 +1,192 @@
+{{ block title }}
+Instructions
+{{ endblock }}
+
+{{ block styles }}
+<!-- Load the custom css styles -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+
+<style>
+
+.content-box .content {
+    overflow: hidden;
+    padding: 10px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border: 2px solid;
+    border-color: #ffc107;
+    color: #533f00;
+}
+.content-box .title {
+    height:40px;
+    line-height:20px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background: #ffc107;
+    display:block;
+    color: #533f00;
+    display:block;
+    padding:10px;
+    border: 2px solid;
+    border-color: #ffc107;
+    border-bottom:none;
+}
+
+</style>
+
+
+{{ endblock }}
+
+{{ block content }}
+
+<div class="card bg-light m-3">
+    <div class="card-body ">
+
+    <h3><i class="fa fa-question-circle" aria-hidden="true"></i> How Many Sent the Truth?</h3>
+
+    <p>
+        You reached the end of the game. In the game, Player A always had the option to delegate the decision to the computer who sent the true secret number. We are interested in your <strong>estimate</strong> about how often the Player A's made use of this option.
+    </p>
+
+    <p>
+        Below, we ask you to consider the following scenario: Consider all the messages that all Player A's gave in today's game. <i>What is the proportion of messages that were delegated to the computer, who sent the true secret number?</i>
+    </p>
+
+    <p>
+      <input id="incentives_button" type="button" value="&#xf178" onclick="button_click(incentives_button, incentives);" />
+    </p>
+
+    <div id="incentives" class="hidden-paragraph">
+
+    <p>
+        Please think <strong>carefully</strong> about this question. Based on your answer, you can earn an <b>extra bonus</b> of <strong>{{ Constants.HONESTY_GUESS_BONUS }}</strong>: The closer your estimate is to the true proportion of messages that were delegated to the computer, the higher is the chance that you will receive the bonus. <button type="button" name="more_info2" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#moreinfo2">
+            Details of the extra bonus calculation
+        </button>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="moreinfo2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2">Extra bonus calculation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+         <p>
+             The proportion of messages that were delegated to the computer out of all messages sent by Player A is a number between 0 and 100. We calculate this number using all messages that were sent today, and we round it to the nearest integer.
+             This number is used to determine your extra bonus according to the following formula:
+        </p>
+        
+        <div class="card bg-light my-3">
+          <div class="card-body">
+            <p class="text-center" style="font-size: 0.8rem;">
+              <b>Probability of receiving {{ Constants.HONESTY_GUESS_BONUS }} pesos (in percent)=</b>
+            </p>
+            <p class="text-center" style="font-size: 1rem;">
+              <math>
+          <mn>100</mn>
+          <mo>-</mo>
+          <mo>(</mo>
+          <mi>Proportion delegated</mi>
+          <mo>-</mo>
+          <mi>Your guess</mi>
+          <mo>)</mo>
+          <msup>
+            <mrow>
+              <mo></mo>
+            </mrow>
+            <mn>2</mn>
+          </msup>
+        </math>
+        
+            </p>
+          </div>
+        </div>
+        
+        <p>
+            The formula takes the square of the difference between your guess and the true proportion.
+            The resulting number subtracted from 100.
+        </p>
+        
+        <p>
+            The principle underlying the formula is simple: The closer your guess is to the true proportion,
+            the higher your chance of receiving an extra <b>{{ Constants.HONESTY_GUESS_BONUS }} pesos</b>.
+        </p>
+        
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </p>
+
+    <p>
+      <input id="question_button" type="button" value="&#xf178" onclick="button_click(question_button, question);" />
+    </p>
+
+  </div>
+
+    <br>
+
+    <div class="content-box hidden-paragraph" id="question">
+        <div class="title">
+            What is the proportion of messages in today's game that were delegated to the computer?
+        </div>
+        <div class="content">
+
+            <p>
+                Please answer using the slider below. The slider ranges from 0% to 100%. You can move the slider by clicking on it and dragging it to the desired position.
+            </p>
+
+            <input id="slider" value="0" type="range" name="honesty_guess" oninput="updateDescription(this)" step="1" class="form-range" min="0" max="100">
+            <h5 id="description"></h5>
+        </div>
+    </div>
+
+    </div>
+</div>
+<div id="submit_button" class="hidden-paragraph">
+    {{ next_button }}
+</div>
+
+
+{{ endblock }}
+
+{% block scripts %}
+
+<!-- Load the custom javascript functions -->
+
+
+<script src="{% static 'global/myJs.js' %}"></script>
+<script src="https://kit.fontawesome.com/46026ecfac.js" crossOrigin="anonymous"></script>
+
+<script>
+
+  let description = document.getElementById('description');
+  function updateDescription(input) {
+      document.getElementById("slider").setAttribute("max", js_vars.max_guess);
+      document.getElementById("slider").setAttribute("min", js_vars.min_guess);
+      let receiver_guess = parseFloat(input.value).toFixed(0);
+      description.innerText = `Your estimated proportion: ${receiver_guess}%`;
+
+      if (parseFloat(input.value) >= 0 && parseFloat(input.value) <= 100) {
+          show_text(submit_button);
+      } else {
+          hide_text(submit_button);
+      }
+  }
+
+  function show_text (element) {
+        element.classList.remove('hidden-paragraph');
+    }
+
+    function hide_text (element) {
+        element.classList.add('hidden-paragraph');
+    }
+
+</script>
+
+{% endblock %}

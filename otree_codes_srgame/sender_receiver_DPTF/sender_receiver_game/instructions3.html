@@ -1,0 +1,59 @@
+{{ block title }}
+Instructions
+{{ endblock }}
+
+{{ block styles }}
+<!-- Load the custom css styles -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+{{ endblock }}
+
+{{ block content }}
+
+<div class="card bg-light m-3">
+    <div class="card-body ">
+
+        <h3>
+       How does the matching of Player As and Player Bs work?
+    </h3>
+<p>
+    At the beginning of the experiment, you will be randomly placed into <b>groups of ten participants</b>: five Player As
+    and five Player Bs. In every round of the experiment, Player As and Player Bs are <b>randomly re-matched into five pairs.</b>
+    This means that any Player A in your group can be matched with any Player B in your group during a round.
+</p>
+
+<p>
+    The computer does the matching for every round.
+    It randomly selects a Player A and a Player B to create each pair.
+    Watch the video below for an illustration of how the matching works.
+</p>
+
+<div class="d-flex justify-content-center align-items-center">
+    <video class="video-fluid" width="640" height="640" controls>
+        <source src="{% static 'global/Matching.mp4' %}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+<br>
+<p>
+    This process is repeated for every round of the experiment.
+</p>
+
+    </div>
+        </div>
+
+        {{ next_button }}
+
+
+
+{{ endblock }}
+
+{% block scripts %}
+
+<!-- Load the custom javascript functions -->
+
+
+<script src="{% static 'global/myJs.js' %}"></script>
+<script src="https://kit.fontawesome.com/46026ecfac.js" crossOrigin="anonymous"></script>
+
+{% endblock %}

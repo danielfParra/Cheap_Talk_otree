@@ -1,0 +1,302 @@
+{% extends "global/Base.html" %}
+
+{% block content %}
+<div style="display: flex; margin: 0;">
+
+
+    <!-- Left Pane -->
+<div class="left-pane" style="width: 50%; background-color: #f8f9fa; padding: 20px; box-sizing: border-box; overflow-y: auto; border-right: 1px solid #ddd;">
+    
+    {{ include Constants.ReceiverReminder }}
+    
+</div>
+
+    <!-- Right Pane -->
+    <div class="right-pane" style="width: 50%; background-color: #fff; padding: 20px; box-sizing: border-box; overflow-y: auto;">
+        <h3 data-intro="Round number" data-step="3">Round X: Guess the secret number</h3>
+
+        <p>
+            You are Player B. Your task is to guess the secret number.
+        </p>
+
+        <div class="d-flex justify-content-center" data-intro="Message Player A." data-step="5" id="message-box">
+            <div class="card text-dark bg-light mb-3" style="width: 24rem;">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Player A's message:</h5>
+                    <p class="card-text">To receive the highest payoff, you should guess <b><span id="encoded_message"></span> </b>.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row hidden-paragraph" id="decoding_part">
+
+            <div id="decode_task" class="column ">
+                <p>
+                    What is the number that Player A intended to send?
+                    <p>
+                        <select name="math_solution" id="math_solution" class="form-select form-select-lg" oninput="valueInput(this.value)">
+                            <option value="" selected>Choose here</option>
+                            <option value="0">❌ Player A did not send a number</option>
+                            <option value="1">1️⃣</option>
+                            <option value="2">2️⃣</option>
+                            <option value="3">3️⃣</option>
+                            <option value="4">4️⃣</option>
+                            <option value="5">5️⃣</option>
+                            <option value="6">6️⃣</option>
+                            <option value="7">7️⃣</option>
+                        </select>
+                </p>
+            </div>
+
+            <div class="column">
+                <div id="solution_button" class="hidden-paragraph">
+                    <div class="d-grid gap-2 col-6 mx-auto" style="margin-top: 20px;">
+                        <input id="info_button2" type="button" value="Submit solution" onclick="checkSolution();" />
+                    </div>
+                </div>
+            </div>
+
+            <p align="center">
+                <span id="warning_message" style="color: #dc3545;"></span>
+            </p>
+
+        </div>
+        
+        <div id="receiver_guess" class="hidden-paragraph">
+        <p>
+            Please guess the secret number. You can enter any number between 1 and 7, including decimals.
+        </p>
+
+        <h4 class="card-title" data-intro="Guess slider" data-step="6">Move the slider to select your guess.</h4>
+        <br>
+        <div class="slider-container">
+            <div class="slider-labels">
+                <span>1</span>
+                <span>2</span>
+                <span>3</span>
+                <span>4</span>
+                <span>5</span>
+                <span>6</span>
+                <span>7</span>
+            </div>
+
+                <input id="slider" value="0" type="range" name="receiver_guess" oninput="updateDescription(this)" step="0.1" class="form-range" min="1" max="7">
+                <h5 id="description"></h5>
+        </div>
+
+        <div id="submit_button" class="hidden-paragraph" data-intro="Submit-Button" data-step="7">
+            <div class="d-grid gap-2 col-6 mx-auto">
+                <button type="submit" class="btn btn-success btn-lg btn-block">Submit</button>
+            </div>
+        </div>
+
+
+        <script>
+            let description = document.getElementById('description');
+            let slider_used = 0;
+            function updateDescription(input) {
+                document.getElementById("slider").setAttribute("max", js_vars.max_guess);
+                document.getElementById("slider").setAttribute("min", js_vars.min_guess);
+                let receiver_guess = parseFloat(input.value).toFixed(1);
+                description.innerText = `Your guessed number: ${receiver_guess}`;
+
+                if (parseFloat(input.value) >= 1 && parseFloat(input.value) <= 7) {
+                    show_text(submit_button);
+                    if (js_vars.receiver_type == "decode" && intro._currentStep == 5) {
+                        intro.exit();
+                        intro.goToStep(7);
+                    }
+                    if (js_vars.receiver_type != "decode"  && intro._currentStep == 4) {
+                        intro.exit();
+                        intro.goToStep(6);
+                    }
+                    slider_used = 1;
+                } else {
+                    hide_text(submit_button);
+                }
+            }
+        </script>
+
+        {{ formfield_errors 'receiver_guess' }}
+    </div>
+</div>
+
+<!-- Intro.js Script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/5.0.0/intro.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/5.0.0/introjs.min.css" />
+
+<script>
+    let tourStarted = false; // Ensures the tour only runs once
+
+    if (js_vars.receiver_type != "decode") {
+        var intro = introJs();
+        intro.setOptions({
+            steps: [
+                {   title: 'Tutorial',
+                    intro: "This is your decision screen. It will remain constant for all rounds of the game. Press 'Next' for an overview."},
+                {   title: 'Game summary',
+                    element: '.left-pane', intro: 'This part of the screen helps you remember the setup of the game. All players will see such a reminder while playing the game.' },
+                {   title: 'Round number',
+                    element: 'h3', intro: 'Here you can see which round you are in. In the experiment, \'X\' will vary between 1-30.' },
+                {   title: 'Player A\'s message',
+                element: '#message-box', intro: 'Here you can see Player A\'s message.' },
+                {   title: 'Making a guess',
+                    element: '#receiver_guess', intro: 'You make a guess by moving the slider left or right.<br> Please guess any number now as a test.' },
+                {
+                    title: 'Time limit',
+                    element: 'h3',
+                    intro: 'In the real experiment, you will have a time limit to make your decision. You will see your remaining time in a countdown at the top of the page. <br> For this tutorial, there is no time limit.'
+                },
+                {   title: 'Submit button',
+                    element: '.btn-success', intro: 'Click here to submit your choice and proceed to the next page. You can either submit now or close this tutorial to further familiarize yourself with the screen. Press "Submit" once you are ready!' }
+            ],
+            showStepNumbers: true,
+            nextLabel: 'Next',
+            prevLabel: 'Back',
+            doneLabel: 'Close',
+            exitOnOverlayClick: false,
+            exitOnEsc: false, // Prevents exiting the tour prematurely
+            keyboardNavigation: false,
+        });
+    }
+    else {
+        var intro = introJs();
+        intro.setOptions({
+            steps: [
+                {   title: 'Tutorial',
+                    intro: "This is your decision screen. It will remain constant for all rounds of the game. Press 'Next' for an overview."},
+                {   title: 'Game summary',
+                    element: '.left-pane', intro: 'This part of the screen helps you remember the setup of the game. All players will see such a reminder while playing the game.' },
+                {   title: 'Round number',
+                    element: 'h3', intro: 'Here you can see which round you are in. In the experiment, \'X\' will vary between 1-30.' },
+                {   title: 'Player A\'s message',
+                element: '#message-box', intro: 'Here you can see Player A\'s message. You can observe that it is currently encoded.' },
+                {   title: 'Decoding the message',
+                    element: '#decoding_part', intro: 'You will need to decode Player A\'s message by solving the mathematical expression before making a guess. Please decode the message now to proceed with the tutorial.' },
+                {   title: 'Making a guess',
+                    element: '#receiver_guess', intro: 'After decoding the message, you make a guess by moving the slider left or right.<br> Please guess any number now as a test.' },
+                {
+                    title: 'Time limit',
+                    element: 'h3',
+                    intro: 'In the real experiment, you will have a time limit to make your decision. You will see your remaining time in a countdown at the top of the page. <br> For this tutorial, there is no time limit.'
+                },
+                {   title: 'Submit-Button',
+                    element: '.btn-success', intro: 'Click here to submit your choice and proceed to the next page. You can either submit now or close this tutorial to further familiarize yourself with the screen. Press "Submit" once you are ready!' }
+            ],
+            showStepNumbers: true,
+            nextLabel: 'Next',
+            prevLabel: 'Back',
+            doneLabel: 'Close',
+            exitOnOverlayClick: false,
+            exitOnEsc: false, // Prevents exiting the tour prematurely
+            keyboardNavigation: false,
+        });
+    };
+window.onload = function() {
+    if (!tourStarted) {
+        tourStarted = true;
+        intro.start();
+    }
+    
+    const encoded_message = js_vars.encoded_message;
+    document.getElementById('encoded_message').innerHTML = encoded_message;
+    if (js_vars.receiver_type == "decode") {
+        show_text(decoding_part);
+    }
+    else {
+        show_text(receiver_guess);
+    }
+};
+
+// Disable the next button when the user should interact with the decision screen first.
+intro.onafterchange(function(targetElement) {  
+  if(intro._currentStep == 4 && js_vars.receiver_type == "decode") { 
+    var original_onclick = $('.introjs-nextbutton').get(0).onclick;
+    $('.introjs-nextbutton').addClass('introjs-disabled');
+    $('.introjs-nextbutton').get(0).onclick = null;
+  }
+  if(intro._currentStep == 5 && js_vars.receiver_type == "decode") { 
+    var original_onclick = $('.introjs-nextbutton').get(0).onclick;
+    $('.introjs-nextbutton').addClass('introjs-disabled');
+    $('.introjs-nextbutton').get(0).onclick = null;
+  }
+  if(intro._currentStep == 4 && js_vars.receiver_type != "decode") { 
+    var original_onclick = $('.introjs-nextbutton').get(0).onclick;
+    $('.introjs-nextbutton').addClass('introjs-disabled');
+    $('.introjs-nextbutton').get(0).onclick = null;
+  }
+});
+
+function show_text (element) {
+    element.classList.remove('hidden-paragraph');
+}
+
+function hide_text (element) {
+    element.classList.add('hidden-paragraph');
+}
+
+function valueInput (input_answer) {
+    const solutionButton = document.getElementById('solution_button');
+
+    if (parseFloat(input_answer) >= 0 && parseFloat(input_answer) <= 7) {
+        show_text(solutionButton);
+    }
+    else {
+        hide_text(solutionButton);
+    };
+};
+
+function checkSolution() {
+    const decodeTask = document.getElementById('decode_task');
+    const solutionButton = document.getElementById('solution_button');
+    const sender_message = js_vars.sender_message;
+    const math_solution = document.getElementById('math_solution').value;
+
+    if (math_solution == sender_message) {
+        hide_text(decodeTask);
+        hide_text(solutionButton);
+        show_text(receiver_guess);
+        document.getElementById('encoded_message').innerHTML = sender_message;
+        intro.exit();
+        intro.goToStep(6);
+    }
+    else {
+        show_text(warning_message);
+        document.getElementById('warning_message').innerHTML = "Incorrect solution. Please wait 5 seconds and try again.";
+        hide_text(solutionButton);
+        hide_text(decodeTask);
+        setTimeout(show_text, 5000, solutionButton);
+        setTimeout(show_text, 5000, decodeTask);
+        setTimeout(hide_text, 5000, document.getElementById('warning_message'));
+    }
+}
+
+</script>
+{% endblock %}
+
+{% block styles %}
+<style>
+/* Hide the close button of the intro tour. 
+	This forces everyone to take the tutorial.
+*/
+.introjs-skipbutton{
+    visibility: hidden !important;
+}
+
+.test {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-around;
+    }
+.test > div {
+    margin-bottom: 10px;
+    padding: 0px;
+}
+
+</style>
+
+<!-- Load the custom css styles -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+
+{% endblock %}

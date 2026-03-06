@@ -1,0 +1,271 @@
+{% extends "global/Base.html" %}
+
+{% block content %}
+<div style="display: flex; margin: 0;">
+
+
+    <!-- Panel Izquierdo -->
+<div class="left-pane" style="width: 50%; background-color: #f8f9fa; padding: 20px; box-sizing: border-box; overflow-y: auto; border-right: 1px solid #ddd;">
+
+    {{ include Constants.ReceiverReminder }}
+    
+</div>
+
+    <!-- Panel Derecho -->
+    <div class="right-pane" style="width: 50%; background-color: #fff; padding: 20px; box-sizing: border-box; overflow-y: auto;">
+        <h3 data-intro="Número de ronda" data-step="3">Ronda {{player.round_number}}: Adivina el número secreto</h3>
+
+        <p>
+            Eres el Jugador B. Tu tarea es adivinar el número secreto.
+        </p>
+
+        <div class="d-flex justify-content-center" data-intro="Mensaje del Jugador A." data-step="5" id="message-box">
+            <div class="card text-dark bg-light mb-3" style="width: 24rem;">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Mensaje del Jugador A:</h5>
+                    <p class="card-text">Para recibir la mayor ganancia, deberías elegir <b><span id="encoded_message"></span> </b>.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row hidden-paragraph" id="decoding_part">
+
+        
+            <div id="decode_task" class="column ">
+                <p>
+                    ¿Cuál es el número que el Jugador A intentó enviar?
+                    <p>
+                        <select name="math_solution" id="math_solution" class="form-select form-select-lg" oninput="valueInput(this.value)">
+                            <option value="" selected>Elige aquí</option>
+                            <option value="0">❌ El Jugador A no envió un número</option>
+                            <option value="1">1️⃣</option>
+                            <option value="2">2️⃣</option>
+                            <option value="3">3️⃣</option>
+                            <option value="4">4️⃣</option>
+                            <option value="5">5️⃣</option>
+                            <option value="6">6️⃣</option>
+                            <option value="7">7️⃣</option>
+                        </select>
+                </p>
+            </div>
+
+            <div class="column">
+                <div id="solution_button" class="hidden-paragraph">
+                    <div class="d-grid gap-2 col-6 mx-auto">
+                        <input id="info_button2" type="button" value="Enviar solución" onclick="checkSolution();" />
+                    </div>
+                </div>
+            </div>
+
+            <p align="center">
+                <span id="warning_message" style="color: #dc3545;"></span>
+            </p>
+
+        </div>
+
+        <div id="receiver_guess" class="hidden-paragraph">
+
+        <!-- Regular treatment: direct guess slider -->
+        <div id="regular_guess_section">
+        <p>
+            Por favor, adivina el número secreto. Puedes ingresar cualquier número entre 1 y 7, incluyendo decimales.
+        </p>
+
+        <h4 class="card-title" data-intro="Deslizador de adivinanza" data-step="6">Mueve el deslizador para seleccionar tu adivinanza.</h4>
+        <br>
+        <div style="max-width: 420px; margin: 0 auto;">
+            <input id="slider" value="1" type="range" name="receiver_guess"
+                   oninput="updateDescription(this)" step="0.1"
+                   class="form-range" min="1" max="7"
+                   style="width: 100%; margin-bottom: 4px;">
+            <div style="display: flex; justify-content: space-between; padding: 0 3px; font-size: 0.85rem; color: #555;">
+                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+            </div>
+            <div class="text-center mt-3">
+                <span id="description" style="background:#0d6efd; color:#fff; padding: 5px 20px; border-radius: 20px; font-size: 1.05rem; font-weight: 500;"></span>
+            </div>
+        </div>
+        </div><!-- end regular_guess_section -->
+
+        <!-- Belief treatment: belief % slider -->
+        <div id="belief_guess_section" class="hidden-paragraph">
+        <p>
+            ¿Qué porcentaje de las veces crees que el Jugador A <strong>delegó al computador</strong> (envió el número secreto verdadero)?
+        </p>
+        <h4>Mueve el deslizador para indicar tu creencia.</h4>
+        <br>
+        <div style="max-width: 420px; margin: 0 auto;">
+            <input id="belief_slider" value="0" type="range"
+                   oninput="updateBelief(this)" step="1"
+                   class="form-range" min="0" max="100"
+                   style="width: 100%; margin-bottom: 4px;">
+            <div style="display: flex; justify-content: space-between; padding: 0 3px; font-size: 0.85rem; color: #555;">
+                <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
+            </div>
+            <div class="text-center mt-3">
+                <span id="belief_description" style="background:#0d6efd; color:#fff; padding: 5px 20px; border-radius: 20px; font-size: 1.05rem; font-weight: 500;"></span>
+            </div>
+            <div class="card bg-light mt-3">
+                <div class="card-body text-center">
+                    <p class="mb-1"><small>Basado en tu creencia, la adivinanza óptima es:</small></p>
+                    <span id="optimal_guess_display" style="background:#198754; color:#fff; padding: 5px 20px; border-radius: 20px; font-size: 1.1rem; font-weight: 600;"></span>
+                    <p class="mt-2 mb-0"><small>El computador enviará esta adivinanza por ti.</small></p>
+                </div>
+            </div>
+            <input type="hidden" name="belief_honest_pct" id="belief_honest_pct_input" value="0">
+        </div>
+        </div><!-- end belief_guess_section -->
+
+        <input type="hidden" name="guess_confirmed" id="guess_confirmed_input" value="false">
+
+        <div id="submit_button" class="hidden-paragraph" data-intro="Submit-Button" data-step="7">
+            <div class="d-grid gap-2 col-6 mx-auto">
+                <button id="submitBtn" type="button" class="btn btn-success btn-lg btn-block" onclick="lockAndWait()">Submit</button>
+            </div>
+            <!-- Add a waiting message div that will be hidden initially -->
+            <div id="waitingMessage" class="text-center mt-3" style="display: none;">
+                <div class="alert alert-info">
+                    Su elección ha sido registrada. Por favor, espere hasta que expire el tiempo...
+                </div>
+            </div>
+        </div>
+        </div>
+
+
+        <script>
+
+            let description = document.getElementById('description');
+            function updateDescription(input) {
+                document.getElementById("slider").setAttribute("max", js_vars.max_guess);
+                document.getElementById("slider").setAttribute("min", js_vars.min_guess);
+                let receiver_guess = parseFloat(input.value).toFixed(1);
+                description.innerText = `Tu número adivinado: ${receiver_guess}`;
+
+                if (parseFloat(input.value) >= 1 && parseFloat(input.value) <= 7) {
+                    show_text(submit_button);
+                } else {
+                    hide_text(submit_button);
+                }
+            }
+
+            function updateBelief(input) {
+                const p = parseInt(input.value);
+                document.getElementById('belief_honest_pct_input').value = p;
+                const sender_message = js_vars.sender_message;
+                const optimal = (p / 100) * sender_message + (1 - p / 100) * 4;
+                const optimalRounded = Math.max(1, Math.min(7, optimal)).toFixed(1);
+                document.getElementById('slider').value = optimalRounded;
+                document.getElementById('belief_description').innerText = `Tu creencia: ${p}% delegó al computador`;
+                document.getElementById('optimal_guess_display').innerText = `Adivinanza óptima: ${optimalRounded}`;
+                show_text(submit_button);
+            }
+        </script>
+
+        {{ formfield_errors 'receiver_guess' }}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+    window.onload = function() {
+        
+        const encoded_message = js_vars.encoded_message;
+        document.getElementById('encoded_message').innerHTML = encoded_message;
+
+        if (js_vars.treatment === 'Belief') {
+            document.getElementById('regular_guess_section').style.display = 'none';
+            show_text(document.getElementById('belief_guess_section'));
+            hide_text(document.getElementById('decoding_part'));
+            show_text(receiver_guess);
+            // Do NOT call updateBelief on load — slider starts blank until user moves it
+        } else {
+            show_text(receiver_guess);
+        }
+    };
+
+
+    function show_text (element) {
+        element.classList.remove('hidden-paragraph');
+    }
+
+    function hide_text (element) {
+        element.classList.add('hidden-paragraph');
+    }
+
+    function valueInput (input_answer) {
+        const solutionButton = document.getElementById('solution_button');
+
+        if (parseFloat(input_answer) >= 0 && parseFloat(input_answer) <= 7) {
+            show_text(solutionButton);
+        }
+        else {
+            hide_text(solutionButton);
+        };
+    };
+
+    function checkSolution() {
+        const decodeTask = document.getElementById('decode_task');
+        const solutionButton = document.getElementById('solution_button');
+        const sender_message = js_vars.sender_message;
+        const math_solution = document.getElementById('math_solution').value;
+
+        if (math_solution == sender_message) {
+            hide_text(decodeTask);
+            hide_text(solutionButton);
+            show_text(receiver_guess);
+            if (sender_message > 0) {
+                document.getElementById('encoded_message').innerHTML = sender_message;
+            };
+            intro.exit();
+            intro.goToStep(7);
+        }
+        else {
+            show_text(warning_message);
+            document.getElementById('warning_message').innerHTML = "Solución incorrecta. Por favor espera 5 segundos e inténtalo de nuevo.";
+            hide_text(solutionButton);
+            hide_text(decodeTask);
+            setTimeout(show_text, 5000, solutionButton);
+            setTimeout(show_text, 5000, decodeTask);
+            setTimeout(hide_text, 5000, document.getElementById('warning_message'));
+        }
+    };
+
+    function lockAndWait() {
+        // Get the slider value
+        const slider = document.getElementById('slider');
+        const sliderValue = parseFloat(slider.value);
+        
+        // Validate input
+        if (isNaN(sliderValue) || sliderValue < 1 || sliderValue > 7) {
+            alert("Please make a valid guess before submitting.");
+            return;
+        }
+        
+        // Set the confirmed field
+        document.getElementById('guess_confirmed_input').value = true;
+        
+        // Visual feedback
+        slider.style.pointerEvents = 'none';
+        slider.style.opacity = '0.7';
+        document.getElementById('submitBtn').disabled = true;
+        document.getElementById('waitingMessage').style.display = 'block';
+
+        if (js_vars.treatment === 'Belief') {
+            document.getElementById('belief_slider').style.pointerEvents = 'none';
+            document.getElementById('belief_slider').style.opacity = '0.7';
+        }
+    }
+
+</script>
+{% endblock %}
+
+{% block styles %}
+
+<!-- Cargar los estilos CSS personalizados -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+
+
+{% endblock %}

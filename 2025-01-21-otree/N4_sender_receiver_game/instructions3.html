@@ -1,0 +1,102 @@
+{{ block title }}
+Instructions
+{{ endblock }}
+
+{{ block styles }}
+<!-- Load the custom css styles -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+{{ endblock }}
+
+{{ block content }}
+
+<div class="card bg-light m-3">
+    <div class="card-body ">
+
+        <h3>
+       How does the Matching of Player As and Player Bs work?
+    </h3>
+
+
+ <p>
+    At the start of the experiment, you'll be randomly placed into a <b>group of {{ Constants.POOL_SIZE }} participants</b>
+     who share your same role (either all Player A's or all Player B's).
+     Your group will always be matched with another group containing participants with the opposite role.
+</p>
+
+<p>
+    Each round, Player A’s and Player B’s from these two groups are <b>randomly paired</b>.
+    This means any Player A can be matched with any Player B from the other group,
+    and pairings will change each round.
+</p>
+
+{{ if player.participant.treatment == "Decode" }}
+
+    {{ if Constants.POOL_SIZE == 5 }}
+        <p>
+            Each group of Player B’s will always include <b>two Decode-type</b> players and <b>three Direct-type</b> players.
+            Decode-type Player B’s must decode Player A’s message, while Direct-type players do not need to decode.
+        </p>
+        <p>
+            Player A never knows if they're matched with a Decode-type or Direct-type Player B.
+        </p>
+    {{ elif Constants.POOL_SIZE == 4 }}
+        <p>
+            Each group of Player B’s will always include <b>two Decode-type</b> players and <b>two Direct-type</b> players.
+            Decode-type Player B’s must decode Player A’s message, while Direct-type players do not need to decode.
+        </p>
+        <p>
+            Player A never knows if they're matched with a Decode-type or Direct-type Player B.
+        </p>
+    {{ endif }}
+
+{{ endif }}
+
+<p>
+    The computer randomly selects the pairings for each round. You can watch the video below to see how this works:
+</p>
+
+
+<div class="d-flex justify-content-center align-items-center">
+    {% if Constants.POOL_SIZE == 5 %}
+    <video class="video-fluid" width="640" height="640" controls>
+        <source src="{% static 'global/Matching.mp4' %}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    {% elif Constants.POOL_SIZE == 4 %}
+        <video class="video-fluid" width="640" height="640" controls>
+            <source src="{% static 'global/N4_Matching.mp4' %}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    {% else %}
+    <video class="video-fluid" width="640" height="640" controls>
+        <source src="{% static 'global/Matching.mp4' %}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    {% endif %}
+</div>
+<br>
+
+<br>
+<p>
+    This matching process repeats every round.
+</p>
+
+    </div>
+        </div>
+
+        {{ next_button }}
+
+
+
+{{ endblock }}
+
+{% block scripts %}
+
+<!-- Load the custom javascript functions -->
+
+
+<script src="{% static 'global/myJs.js' %}"></script>
+<script src="https://kit.fontawesome.com/46026ecfac.js" crossOrigin="anonymous"></script>
+
+{% endblock %}

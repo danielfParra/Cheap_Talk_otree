@@ -1,0 +1,41 @@
+{{ block title }}
+    Welcome!
+{{ endblock }}
+
+{{ block styles }}
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+{{ endblock }}
+
+{{ block content }}
+
+    <p>
+        Welcome to the experiment!
+    </p>
+
+    <p>
+        Please read the instructions carefully. If you have questions, raise your hand.
+        We will come to you and answer privately.
+    </p>
+
+    <p>
+        Today's experiment has <strong>two parts</strong>. First, you'll complete a <strong>decoding activity</strong>.
+        Second, you'll play a <strong>game</strong> with other participant.
+    </p>
+
+    <p>
+        During the experiment, you cannot use electronic devices or talk to other participants.
+        If you break these rules, you cannot continue the experiment or receive payment.
+    </p>
+
+    <p>
+        You have already earned <b>{{ Constants.SHOW_UP_FEE }}</b> pesos just for being here.
+        You can earn extra money based on your choices, other people's choices, and some luck.
+    </p>
+
+    <p>
+        We'll explain exactly how the game works on the next screens.
+    </p>
+
+    {{ next_button }}
+
+{{ endblock }}

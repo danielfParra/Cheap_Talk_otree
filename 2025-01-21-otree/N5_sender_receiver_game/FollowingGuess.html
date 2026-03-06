@@ -1,0 +1,196 @@
+{{ block title }}
+Instructions
+{{ endblock }}
+
+{{ block styles }}
+<!-- Load the custom css styles -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+
+<style>
+
+.content-box .content {
+    overflow: hidden;
+    padding: 10px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border: 2px solid;
+    border-color: #ffc107;
+    color: #533f00;
+}
+.content-box .title {
+    height:40px;
+    line-height:20px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background: #ffc107;
+    display:block;
+    color: #533f00;
+    display:block;
+    padding:10px;
+    border: 2px solid;
+    border-color: #ffc107;
+    border-bottom:none;
+}
+
+</style>
+
+
+{{ endblock }}
+
+{{ block content }}
+
+<div class="card bg-light m-3">
+    <div class="card-body ">
+
+    <h3><i class="fa fa-question-circle" aria-hidden="true"></i> How Many Followed the Message?</h3>
+
+    <p>
+        You reached the end of the game. In the game, Player B had to make a guess after receiving a message from Player A, which could be a number between 1-7. We are interested in how often you think Player B <strong>followed</strong> a message of 7.
+    </p>
+
+    <p>
+        Below, we ask you to consider the following scenario: Consider all the guess attempts that Player B's made in today's game after receiving the message "To receive the highest payoff, you should guess 7". <i>How often did Player B make a guess that was very close to 7?</i> With "very close to 7," we mean guesses that were between 6.8 and 7.
+    </p>
+
+    <p>
+        <strong>Note:</strong> In the game, Player B had a {{ Constants.TIME_PER_ROUND }} second time limit to make a guess. If Player B did not make a guess within the time limit after receiving the message "To receive the highest payoff, you should guess 7" we consider this as a case where Player B did follow the message, as their guess was automatically set to 7.
+    </p>
+
+    <p>
+      <input id="incentives_button" type="button" value="&#xf178" onclick="button_click(incentives_button, incentives);" />
+    </p>
+
+    <div id="incentives" class="hidden-paragraph">
+
+    <p>
+        Please think <strong>carefully</strong> about this question. Based on your answer, you can earn an <b>extra bonus</b> of <strong>{{ Constants.CREDULITY_GUESS_BONUS }}</strong>: The closer your estimate is to the true proportion of cases where Player B did make a guess very close to 7 after receiving the message <i>To receive the highest payoff, you should guess 7</i>, the higher is the chance that you will receive the bonus. <button type="button" name="more_info2" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#moreinfo2">
+            Details of the extra bonus calculation
+        </button>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="moreinfo2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2">Extra bonus calculation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+         <p>
+             The proportion of times where Player B guessed between 6.8 and 7 after receiving the message that <i>you should guess 7</i> is a number between 0 and 100. We calculate this number using all the instances where Player B received such message and was asked to make a guess. 
+             This number is used to determine your extra bonus according to the following formula:
+        </p>
+        
+        <div class="card bg-light my-3">
+          <div class="card-body">
+            <p class="text-center" style="font-size: 0.8rem;">
+              <b>Probability of receiving {{ Constants.CREDULITY_GUESS_BONUS }} pesos (in percent)=</b>
+            </p>
+            <p class="text-center" style="font-size: 1rem;">
+              <math>
+          <mn>100</mn>
+          <mo>-</mo>
+          <mo>(</mo>
+          <mi>Proportion of message following</mi>
+          <mo>-</mo>
+          <mi>Your guess</mi>
+          <mo>)</mo>
+          <msup>
+            <mrow>
+              <mo></mo>
+            </mrow>
+            <mn>2</mn>
+          </msup>
+        </math>
+        
+            </p>
+          </div>
+        </div>
+        
+        <p>
+            The formula takes the square of the difference between your guess and the true proportion.
+            The resulting number subtracted from 100.
+        </p>
+        
+        <p>
+            The principle underlying the formula is simple: The closer your guess is to the true proportion,
+            the higher your chance of receiving an extra <b>{{ Constants.CREDULITY_GUESS_BONUS }} pesos</b>.
+        </p>
+        
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </p>
+
+    <p>
+      <input id="question_button" type="button" value="&#xf178" onclick="button_click(question_button, question);" />
+    </p>
+
+  </div>
+
+    <br>
+
+    <div class="content-box hidden-paragraph" id="question">
+        <div class="title">
+            What is the proportion of cases where Player B followed a message of 7?
+        </div>
+        <div class="content">
+
+            <p>
+                Please answer using the slider below. The slider ranges from 0% to 100%. You can move the slider by clicking on it and dragging it to the desired position.
+            </p>
+
+            <input id="slider" value="0" type="range" name="credulity_guess" oninput="updateDescription(this)" step="1" class="form-range" min="0" max="100">
+            <h5 id="description"></h5>
+        </div>
+    </div>
+
+    </div>
+</div>
+<div id="submit_button" class="hidden-paragraph">
+    {{ next_button }}
+</div>
+
+
+{{ endblock }}
+
+{% block scripts %}
+
+<!-- Load the custom javascript functions -->
+
+
+<script src="{% static 'global/myJs.js' %}"></script>
+<script src="https://kit.fontawesome.com/46026ecfac.js" crossOrigin="anonymous"></script>
+
+<script>
+
+  let description = document.getElementById('description');
+  function updateDescription(input) {
+      document.getElementById("slider").setAttribute("max", js_vars.max_guess);
+      document.getElementById("slider").setAttribute("min", js_vars.min_guess);
+      let receiver_guess = parseFloat(input.value).toFixed(0);
+      description.innerText = `Your estimated proportion: ${receiver_guess}%`;
+
+      if (parseFloat(input.value) >= 0 && parseFloat(input.value) <= 100) {
+          show_text(submit_button);
+      } else {
+          hide_text(submit_button);
+      }
+  }
+
+  function show_text (element) {
+        element.classList.remove('hidden-paragraph');
+    }
+
+    function hide_text (element) {
+        element.classList.add('hidden-paragraph');
+    }
+
+</script>
+
+{% endblock %}

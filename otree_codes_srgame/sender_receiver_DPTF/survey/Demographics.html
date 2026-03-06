@@ -1,0 +1,31 @@
+{{ block title }} Final questionnaire {{ endblock }}
+{{ block content }}
+
+{{ block styles }}
+<!-- Load the custom css styles -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+
+<style>
+    .col-form-label{
+        font-size:20px;
+    }
+    .form-control{
+        font-size:20px;
+            }
+
+</style>
+
+{{ endblock }}
+
+
+    <p>
+        Please answer the following questions.
+    </p>
+
+    {{ formfields }}
+
+    {{ next_button }}
+
+{{ endblock }}
+

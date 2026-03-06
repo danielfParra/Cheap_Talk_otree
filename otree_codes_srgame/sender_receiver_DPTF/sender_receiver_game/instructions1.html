@@ -1,0 +1,128 @@
+{{ block title }}
+Instructions
+{{ endblock }}
+
+{{ block styles }}
+<!-- Load the custom css styles -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+
+
+{{ endblock }}
+
+{{ block content }}
+
+<div class="card bg-light m-3">
+    <div class="card-body ">
+
+    <h3>
+        Instructions
+    </h3>
+
+    <p>
+        Today, you will be randomly paired with another person to play a game.
+        he computer will assign you a random role: <b>Player A or Player B.</b>
+        You will keep this role for <b>{{ Constants.num_rounds }} rounds.</b>
+        On the next screen, we will tell you if you are Player A or Player B.
+        In each round, Player A will be paired with a new Player B, and vice versa.
+        <b>Your partner will change in every round.</b>
+        Neither of you will know the identity of the other, and all interactions will
+        be anonymized by the computers.
+    </p>
+
+      <p>
+        <input id="info_button2" type="button" value="&#xf178" onclick="button_click(info_button2, paragraph2);" />
+    </p>
+
+    <div id="paragraph2" class="hidden-paragraph">
+
+        <br>
+
+    <h3>
+         Game overview
+    </h3>
+
+ <p>
+     <br>
+    The game has <b>four steps</b> in each round.
+</p>
+<ol>
+    <li>
+        The computer picks a <b>secret number</b>. It can be <b>1, 2, 3, 4, 5, or 6.</b>
+    </li>
+    <br>
+    <li>
+        Player A sends a <b>message</b> to Player B that says, <b>"The secret number is X."</b>
+        <b>Player A can choose any number</b> 1, 2, 3, 4, 5, or 6 for X. For example, if Player A chooses “2”,
+        Player B will receive the message "The secret number is 2."
+        <b>Player A does not know the actual secret number when sending the message.</b>
+    </li>
+    <br>
+    <li>
+        Player B <b>sees the message</b> and <b>guesses the secret number.
+        </b> Player B can guess any number from 1 to 6, including two-digit numbers.
+        For example, a Player B who thinks that 1 and 2 are equally likely can guess 1.50, and a Player B
+        who thinks that the secret number is either 4 or 5 but most likely 5 can make a guess between
+        4 and 5 but closer to 5, such as 4.8.
+    </li>
+    <br>
+    <li>
+        Both Player A and Player B will receive <b>feedback.</b>
+        This feedback shows the secret number, the message sent, and Player B’s guess.
+    </li>
+</ol>
+
+<p>
+    <input id="info_button3" type="button" value="&#xf178" onclick="buttonAppear(); button_click(info_button3, paragraph3);" />
+</p>
+
+    </div>
+
+
+  <div id="paragraph3" class="hidden-paragraph">
+<p></p>
+
+<p>
+    <b> How does the computer pick the secret number?</b> <br>
+    Think of the computer as a machine that picks one ball from a jar.
+    The jar has six balls, numbered 1, 2, 3, 4, 5, and 6.
+</p>
+
+ <div class="d-flex justify-content-center">
+    <img src="{% static 'global/urn.png' %}" alt="Urn Image" class="img-fluid" style="max-width: 200px;">
+ </div>
+<br>
+
+<p>
+    Each ball has the same chance of being picked, so <b>each number from 1 to 6 is equally likely.</b>
+    Consequently, in the absence of any information,
+    <b>you can reasonably assume</b> that the secret number will, <b>on average, be equal to 3.5.</b>
+</p>
+
+<p>
+    The number chosen in each round is <b>completely random</b>.
+    This means that what happened in earlier rounds doesn’t affect the next round.
+    Don’t try to guess based on past rounds; the results are always new.
+</p>
+</p>
+  </div>
+
+    </div>
+    </div>
+
+<div id="next" style="display: none">
+        {{ next_button }}
+</div>
+
+
+{{ endblock }}
+
+{% block scripts %}
+
+<!-- Load the custom javascript functions -->
+
+
+<script src="{% static 'global/myJs.js' %}"></script>
+<script src="https://kit.fontawesome.com/46026ecfac.js" crossOrigin="anonymous"></script>
+
+{% endblock %}

@@ -1,0 +1,28 @@
+<div>
+    <h2 style="color: #343a40; font-weight: bold; text-transform: uppercase; border-bottom: 2px solid #6c757d; padding-bottom: 10px;">Remember</h2>
+    <p><strong>You are Player B.</strong> You will keep this role for all rounds.</p>
+    <p><strong>Your task:</strong> Guess the secret number as accurately as possible.</p>
+  
+    <br>
+    <h4 style="text-align: left">Payoff rules:</h4>
+    <ul>
+        <li>You guess a <strong>large</strong> 📈 number (on the 1-7 scale) → <strong>More</strong> money for Player A.</li>
+        <li>You guess an <strong>accurate</strong> 🎯 number (close to the secret number) → <strong>More</strong> money for you.</li>
+    </ul>
+
+    <br> 
+    <h4 style="text-align: left">Message rules:</h4>
+    <ul>
+        <li>Player A <strong>did NOT know</strong> the secret number when sending a message.</li>
+        {{ if player.participant.treatment != "Babbling" }} 
+        <li>If Player A <strong>delegated to the computer</strong> 🤖, the message contains the <strong>true secret number</strong>.</li>
+        {{ endif }}
+        {{ if player.participant.treatment == "Decode" }}
+        <li>Two out of five Player Bs must <strong>decode</strong> the message before guessing.</li>
+        {{ endif }}
+    </ul>
+
+    <br>
+    <h4 style="text-align: left">⏳ Time limit: 20 seconds</h4>
+    <p>If you <strong>don’t submit a guess</strong>, your guess will be set to <strong>Player A’s message</strong>.</p>
+</div>

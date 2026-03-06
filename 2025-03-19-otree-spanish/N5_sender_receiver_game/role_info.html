@@ -1,0 +1,45 @@
+{{ block title }}
+ Tu Rol
+{{ endblock }}
+
+{{ block styles }}
+<!-- Cargar los estilos CSS personalizados -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+{{ endblock }}
+
+{{ block content }}
+<div class="card bg-light m-3">
+    <div class="card-body">
+        <p>
+            Hoy, eres
+            <b>
+                {{ if player.participant.role == "Player A" }}
+                    Jugador A
+                {{ else }}
+                    Jugador B
+                {{ endif }}
+            </b>
+            {{ if player.participant.role == "Player B" }}
+                del tipo
+                {{ if player.participant.receiver_type == "direct" }}
+                    <b>directo</b>
+                {{ else }}
+                    <b>decodificador</b>
+                {{ endif }}
+            {{ endif }}.
+        </p>
+
+    <p>
+        Mantendrás este rol durante las <b>{{Constants.num_rounds}}</b> rondas del juego.
+    </p>
+
+    <p>
+        <i> Antes de comenzar, nos gustaría que respondieras las preguntas en la siguiente página para verificar tu comprensión.</i>
+    </p>
+
+    </div>
+</div>
+    <button class="otree-btn-next btn btn-primary">Continuar</button>
+
+{{ endblock }}

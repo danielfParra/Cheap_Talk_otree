@@ -1,0 +1,91 @@
+{{ block title }} Final Questionnaire {{ endblock }}
+{{ block content }}
+
+{{ block styles }}
+<!-- Load the custom CSS styles -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+
+<style>
+    .col-form-label {
+        font-size: 20px;
+    }
+    .form-control {
+        font-size: 20px;
+    }
+</style>
+
+{{ endblock }}
+
+<p>Please answer the following questions.</p>
+
+<!-- ✅ Display General Demographic Fields (Excludes Table Fields) -->
+{{ formfield 'age' }}
+{{ formfield 'gender' }}
+{{ formfield 'education' }}
+{{ formfield 'student' }}
+{{ formfield 'experiments' }}
+{{ formfield 'reasoning' }}
+{{ formfield 'chosen_role' }}
+
+<br>
+
+<h2>Please share your opinion about the following organizations.</h2>
+
+<table class="table">
+    <tr>
+        <th>Organization</th>
+        <th>Very Favorable</th>
+        <th>Somewhat Favorable</th>
+        <th>Somewhat Unfavorable</th>
+        <th>Very Unfavorable</th>
+        <th>No Opinion</th>
+        <th>Do Not Know</th>
+    </tr>
+
+    <tr>
+        <th>{{ form.org_fundacion_ideas.label }}</th>
+        {% for choice in form.org_fundacion_ideas %}
+            <th>{{ choice }}</th>
+        {% endfor %}
+    </tr>
+
+    <tr>
+        <th>{{ form.org_fundacion_mujer.label }}</th>
+        {% for choice in form.org_fundacion_mujer %}
+            <th>{{ choice }}</th>
+        {% endfor %}
+    </tr>
+
+    <tr>
+        <th>{{ form.org_fundacion_corona.label }}</th>
+        {% for choice in form.org_fundacion_corona %}
+            <th>{{ choice }}</th>
+        {% endfor %}
+    </tr>
+
+    <tr>
+        <th>{{ form.org_fundacion_santo_domingo.label }}</th>
+        {% for choice in form.org_fundacion_santo_domingo %}
+            <th>{{ choice }}</th>
+        {% endfor %}
+    </tr>
+
+    <tr>
+        <th>{{ form.org_fundacion_mujer_futuro.label }}</th>
+        {% for choice in form.org_fundacion_mujer_futuro %}
+            <th>{{ choice }}</th>
+        {% endfor %}
+    </tr>
+
+    <tr>
+        <th>{{ form.org_unicef_colombia.label }}</th>
+        {% for choice in form.org_unicef_colombia %}
+            <th>{{ choice }}</th>
+        {% endfor %}
+    </tr>
+</table>
+
+{{ next_button }}
+
+{{ endblock }}

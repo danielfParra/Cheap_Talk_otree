@@ -1,0 +1,27 @@
+{% extends "otree/Page.html" %}
+
+{% block title %}
+    The Decoding Task Will Start Soon
+{% endblock %}
+
+{% block content %}
+
+<div class="card bg-light m-3">
+    <div class="card-body ">
+
+    After you click the button below, the decoding task will start.  
+
+    </div>
+</div>
+
+
+
+{{ next_button }}
+
+
+{% endblock %}
+
+{{ block styles }}
+<!-- Load the custom css styles -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+{{ endblock }}

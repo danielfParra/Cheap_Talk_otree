@@ -1,0 +1,38 @@
+{{ block title }}
+We Will Start the Game on the Next Screen
+ {{ endblock }}
+
+{{ block styles }}
+<!-- Load the custom css styles -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+{{ endblock }}
+
+{{ block content }}
+<div class="card bg-light m-3">
+    <div class="card-body ">
+
+    {{ if player.participant.role == "Player A" }}
+    <p>
+        We will now start the game. In each round, you will have <b>{{Constants.TIME_PER_ROUND }} seconds time</b> to
+        choose which message to send to Player B. Player B will then have {{Constants.TIME_PER_ROUND }} seconds
+        time to make a guess. After Player B makes a guess, you will observe feedback for 5 seconds.
+        Then, a new round starts.
+    </p>
+
+    {{ else }}
+
+    <p>
+        We will now start the game. In each round, Player A will have <b>{{Constants.TIME_PER_ROUND }} seconds time</b> to
+        choose which message to send to you. You will then have {{Constants.TIME_PER_ROUND }} seconds time
+        to make a guess. After you make a guess, you will observe feedback for 5 seconds.
+        Then, a new round starts.
+    </p>
+
+    {{ endif }}    
+
+    </div>
+</div>
+    {{ next_button }}
+
+{{ endblock }}

@@ -1,0 +1,91 @@
+{{ block title }} Cuestionario Final {{ endblock }}
+{{ block content }}
+
+{{ block styles }}
+<!-- Cargar los estilos CSS personalizados -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+
+<style>
+    .col-form-label {
+        font-size: 20px;
+    }
+    .form-control {
+        font-size: 20px;
+    }
+</style>
+
+{{ endblock }}
+
+<p>Por favor, responde las siguientes preguntas.</p>
+
+<!-- ✅ Mostrar Campos Demográficos Generales (Excluye Campos de Tabla) -->
+{{ formfield 'age' }}
+{{ formfield 'gender' }}
+{{ formfield 'education' }}
+{{ formfield 'student' }}
+{{ formfield 'experiments' }}
+{{ formfield 'reasoning' }}
+{{ formfield 'chosen_role' }}
+
+<br>
+
+<h2>Por favor, comparte tu opinión sobre las siguientes organizaciones.</h2>
+
+<table class="table">
+    <tr>
+        <th>Organización</th>
+        <th>Muy Favorable</th>
+        <th>Algo Favorable</th>
+        <th>Algo Desfavorable</th>
+        <th>Muy Desfavorable</th>
+        <th>Sin Opinión</th>
+        <th>No la conozco</th>
+    </tr>
+
+    <tr>
+        <th>{{ form.org_fundacion_ideas.label }}</th>
+        {% for choice in form.org_fundacion_ideas %}
+            <th>{{ choice }}</th>
+        {% endfor %}
+    </tr>
+
+    <tr>
+        <th>{{ form.org_fundacion_mujer.label }}</th>
+        {% for choice in form.org_fundacion_mujer %}
+            <th>{{ choice }}</th>
+        {% endfor %}
+    </tr>
+
+    <tr>
+        <th>{{ form.org_fundacion_corona.label }}</th>
+        {% for choice in form.org_fundacion_corona %}
+            <th>{{ choice }}</th>
+        {% endfor %}
+    </tr>
+
+    <tr>
+        <th>{{ form.org_fundacion_santo_domingo.label }}</th>
+        {% for choice in form.org_fundacion_santo_domingo %}
+            <th>{{ choice }}</th>
+        {% endfor %}
+    </tr>
+
+    <tr>
+        <th>{{ form.org_fundacion_mujer_futuro.label }}</th>
+        {% for choice in form.org_fundacion_mujer_futuro %}
+            <th>{{ choice }}</th>
+        {% endfor %}
+    </tr>
+
+    <tr>
+        <th>{{ form.org_unicef_colombia.label }}</th>
+        {% for choice in form.org_unicef_colombia %}
+            <th>{{ choice }}</th>
+        {% endfor %}
+    </tr>
+</table>
+
+<button class="otree-btn-next btn btn-primary">Continuar</button>
+
+{{ endblock }}

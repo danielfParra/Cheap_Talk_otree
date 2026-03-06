@@ -1,0 +1,128 @@
+{{ block title }}
+One more task
+{{ endblock }}
+
+{{ block styles }}
+<!-- Cargar los estilos CSS personalizados -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+{{ endblock }}
+
+{{ block content }}
+
+<div class="card bg-light m-3">
+    <div class="card-body">
+
+        <h3><i class="fa fa-pencil" aria-hidden="true"></i> Explain your strategy</h3>
+
+        <p>We will now ask you to briefly explain how you made your guesses.</p>
+
+        <p><strong>Your explanation</strong></p>
+        <p>Please write clear instructions describing the rule or method you used to convert Player A's message into your guess.</p>
+        <p>Imagine you are writing instructions for an AI, for instance ChatGPT, that should reproduce your guesses when it sees the same messages. You can think of this as sending a message to someone who will try to replace you and will only see your written explanation and the original messages.</p>
+        <ul>
+            <li>Describe your general rule.</li>
+            <li>Be as specific as possible.</li>
+            <li>Do not list your guesses round by round.</li>
+            <li>Do not write your guesses again.</li>
+            <li>Explain the method you used.</li>
+        </ul>
+
+        <p><strong>How your explanation will be used</strong></p>
+        <p>After the session, the computer will randomly select 5 rounds from your game.</p>
+        <p>For those 5 rounds:</p>
+        <ul>
+            <li>An AI (ChatGPT) will receive:
+                <ul>
+                    <li>The message you saw from Player A</li>
+                    <li>The original game rules</li>
+                    <li>Your written explanation</li>
+                </ul>
+            </li>
+            <li>The AI will then try to reproduce your guesses in those rounds using your explanation.</li>
+        </ul>
+
+        <p><strong>How the bonus is calculated</strong></p>
+        <p>For each selected round, we compute a score based on how close ChatGPT's guess is to your guess.</p>
+        <ul>
+            <li>The closer ChatGPT's guess is to your guess, the higher the score for that round.</li>
+            <li>If ChatGPT's guess is exactly equal to your guess, the score for that round is 100%.</li>
+            <li>If ChatGPT's guess is very far from your guess, the score is lower.</li>
+        </ul>
+
+        <button type="button" class="btn btn-warning mb-2" data-bs-toggle="modal" data-bs-target="#formulaModal">
+            Score calculation details
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="formulaModal" tabindex="-1" aria-labelledby="formulaModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header d-flex justify-content-between align-items-center">
+                <h5 class="modal-title m-0" id="formulaModalLabel">Round score calculation</h5>
+                <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p>The formula used is:</p>
+                <div class="card bg-light my-3">
+                  <div class="card-body text-center" style="font-size: 1rem;">
+                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                        <mrow>
+                            <mtext>Round score (in percent)</mtext>
+                            <mo>=</mo>
+                            <mn>100</mn>
+                            <mo>-</mo>
+                            <mfrac>
+                                <mn>100</mn>
+                                <mn>36</mn>
+                            </mfrac>
+                            <mo>&#xD7;</mo>
+                            <msup>
+                                <mrow>
+                                    <mo>(</mo>
+                                    <mtext>Your guess</mtext>
+                                    <mo>-</mo>
+                                    <mtext>ChatGPT's guess</mtext>
+                                    <mo>)</mo>
+                                </mrow>
+                                <mn>2</mn>
+                            </msup>
+                        </mrow>
+                    </math>
+                  </div>
+                </div>
+                <p>If this value is negative, it is set to 0%.</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p>We then compute the average score across the 5 selected rounds.</p>
+
+        <p><strong>Final bonus</strong></p>
+        <p>You can earn an additional bonus of <strong>{{ Constants.EXPLANATION_BONUS }}</strong>.</p>
+        <p>Your probability of receiving this bonus is equal to your average score (in percent).</p>
+        <p><strong>Example:</strong></p>
+        <ul>
+            <li>If your average score is 80%, you have an 80% chance of receiving the bonus.</li>
+            <li>If your average score is 25%, you have a 25% chance of receiving the bonus.</li>
+        </ul>
+        <p><strong>The better your explanation allows ChatGPT to reproduce your guesses, the higher your chance of receiving the bonus.</strong></p>
+
+        <p class="mt-4">Now please use the box below to provide your explanation.</p>
+        {{ formfield 'strategy_explanation' }}
+
+    </div>
+</div>
+
+<button class="otree-btn-next btn btn-primary">Next</button>
+
+{{ endblock }}
+
+{% block scripts %}
+<script src="{% static 'global/myJs.js' %}"></script>
+<script src="https://kit.fontawesome.com/46026ecfac.js" crossOrigin="anonymous"></script>
+{% endblock %}

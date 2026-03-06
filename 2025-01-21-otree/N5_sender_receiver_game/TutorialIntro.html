@@ -1,0 +1,21 @@
+{{ block title }}
+ Tutorial
+{{ endblock }}
+
+{{ block styles }}
+<!-- Load the custom css styles -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+{{ endblock }}
+
+{{ block content }}
+<div class="card bg-light m-3">
+    <div class="card-body ">
+    <p>
+        After clicking the "Next" button, you will see a tutorial that guides you through your decision screen. 
+    </p>
+    </div>
+</div>
+    {{ next_button }}
+
+{{ endblock }}

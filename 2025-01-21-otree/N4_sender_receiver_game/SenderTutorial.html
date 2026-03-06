@@ -1,0 +1,198 @@
+{% extends "global/Base.html" %}
+
+{% block content %}
+
+<div style="display: flex; margin: 0;">
+    <!-- Left Pane -->
+    <div class="left-pane" style="width: 50%; background-color: #f8f9fa; padding: 20px; box-sizing: border-box; overflow-y: auto; border-right: 1px solid #ddd;">
+        
+        {{ include Constants.SenderReminder }}
+
+    </div>
+
+    <!-- Right Pane -->
+    <div class="right-pane" style="width: 50%; background-color: #fff; padding: 20px; box-sizing: border-box; overflow-y: auto;">
+        <h3 data-intro="Round number" data-step="3">Round X: Send a Message to Player B</h3>
+
+        <p>You are Player A. Your task is to send a message to Player B.</p>
+
+        <p>
+            <label for="id_sender_choice" style="font-size: 20px;">
+                Choose a number to send as your message to Player B.
+            </label>
+            <p data-intro="Choose your number" data-step="5">
+            <select name="sender_choice" id="sender_choice" class="form-select form-select-lg" oninput="valueInput(this.value)">
+                <option value="" selected>Choose here</option>
+                {{ if player.participant.treatment != "Babbling" }}
+                <option value="8">🤖 Send True Secret Number (via Computer)</option>
+                {{ endif }}
+                <option value="1">1️⃣</option>
+                <option value="2">2️⃣</option>
+                <option value="3">3️⃣</option>
+                <option value="4">4️⃣</option>
+                <option value="5">5️⃣</option>
+                <option value="6">6️⃣</option>
+                <option value="7">7️⃣</option>
+            </select>
+        </p>
+        </p>
+
+        <div id="confirm_button" class="hidden-paragraph">
+            <div id="message-box">
+                <p>
+                    <span id="pre_message"></span>
+                </p>
+                <div class="d-flex justify-content-center">
+                    <div class="card text-dark bg-light mb-3" style="width: 24rem;">
+                        <div class="card-body text-center">
+                            <p class="card-text">To receive the highest payoff, you should guess <b><span id="message"></span></b>.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-grid gap-2 col-6 mx-auto" data-intro="Submit-Button" data-step="7">
+                <button type="submit" class="btn btn-success btn-lg btn-block">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Intro.js Script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/5.0.0/intro.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/5.0.0/introjs.min.css" />
+
+<script>
+    let tourStarted = false; // Ensures the tour only runs once
+    var intro = introJs();
+
+    intro.setOptions({
+            steps: [
+                {   title: 'Tutorial',
+                    intro: "This is your decision screen. It will remain constant for all rounds of the game. Press 'Next' for an overview."},
+                {   title: 'Game summary',
+                    element: '.left-pane', intro: 'This part of the screen helps you remember the setup of the game. All players will see such a reminder while playing the game.' },
+                {   title: 'Round number',
+                    element: 'h3', intro: 'Here you can see which round you are in. In the experiment, \'X\' will vary between 1-30.' },
+                {   title: 'Choosing a message',
+                    element: '#sender_choice', intro: 'You select your message by choosing one of the options from the dropdown menu.<br> Please choose any option now as a test.' },
+                {   title: 'Your message to Player B',
+                    element: '#message-box', intro: 'Player B will see this message before making a guess.' },
+                {
+                    title: 'Time limit',
+                    element: 'h3',
+                    intro: 'In the experiment, you will have a time limit to make your decision. You will see your remaining time in a countdown at the top of the page. <br> For this tutorial, there is no time limit.'
+                },
+                {   title: 'Submit button',
+                    element: '.btn-success', intro: 'Click here to finalize your message. You can either submit now or close this tutorial to further familiarize yourself with the screen. Press "Submit" once you are ready!' }
+            ],
+            showStepNumbers: true,
+            nextLabel: 'Next',
+            prevLabel: 'Back',
+            doneLabel: 'Close',
+            exitOnOverlayClick: false,
+            exitOnEsc: false, // Prevents exiting the tour prematurely
+            keyboardNavigation: false,
+        });
+
+    window.onload = function() {
+    if (!tourStarted) {
+        tourStarted = true;
+        intro.start();
+        }
+    };
+
+    let first_round = 1;
+    function Disablefirst_round() {
+        first_round = 0;
+    }
+
+    // Disable the next button when the user should interact with the decision screen first.
+    intro.onafterchange(function(targetElement) {  
+    if(intro._currentStep == 3) { 
+        var original_onclick = $('.introjs-nextbutton').get(0).onclick;
+        $('.introjs-nextbutton').addClass('introjs-disabled');
+        $('.introjs-nextbutton').get(0).onclick = null;
+    }
+    });
+
+    function valueInput (input_answer) {
+        const confirmButton = document.getElementById('confirm_button');
+        const messageSpan = document.getElementById('message');
+        const preMessageSpan = document.getElementById('pre_message');
+
+        if (parseFloat(input_answer) >= 1 && parseFloat(input_answer) <= 7) {
+            preMessageSpan.innerHTML = "Based on your choice, Player B will receive the following message:";
+            messageSpan.innerHTML = input_answer;
+            show_text(confirmButton);
+
+            if (first_round == 1) {
+                intro.exit();
+                intro.goToStep(5);
+                Disablefirst_round();
+            }
+            
+        } else if (parseFloat(input_answer) === 8) {
+            preMessageSpan.innerHTML = "Based on your choice, the computer will replace the \"X\" below with the true secret number:";
+            messageSpan.innerHTML = "X";
+            show_text(confirmButton);
+            
+            if (first_round == 1) {
+                intro.exit();
+                intro.goToStep(5);
+                Disablefirst_round();
+            }
+
+        }{{player.round_number}}
+    }
+
+    function hide_text (element) {
+        element.classList.add('hidden-paragraph');
+    }
+
+    // Submit-Button Validierung
+    document.querySelector('.btn-success').addEventListener('click', function(event) {
+        const selectedValue = document.getElementById('sender_message').value;
+        if (!selectedValue) {
+            event.preventDefault();
+            const errorDiv = document.createElement('div');
+            errorDiv.style.color = 'red';
+            errorDiv.style.marginTop = '10px';
+            errorDiv.style.fontWeight = 'bold';
+            errorDiv.innerText = 'Please enter your number before continuing!';
+            const parentDiv = document.querySelector('.right-pane');
+            if (!parentDiv.querySelector('.error-message')) {
+                errorDiv.classList.add('error-message');
+                parentDiv.appendChild(errorDiv);
+            }
+        }
+    });
+
+    function show_text (element) {
+        element.classList.remove('hidden-paragraph');
+    }
+
+    function hide_text (element) {
+        element.classList.add('hidden-paragraph');
+    }
+</script>
+{% endblock %}
+
+{% block styles %}
+<style>
+/* Hide the close button of the intro tour. 
+	This forces everyone to take the tutorial.
+*/
+.introjs-skipbutton{
+    visibility: hidden !important;
+}
+
+
+
+
+</style>
+
+<!-- Load the custom css styles -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+
+{% endblock %}
