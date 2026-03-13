@@ -1,0 +1,174 @@
+{% extends "global/Base.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+<style>
+.introjs-skipbutton { visibility: hidden !important; }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/5.0.0/introjs.min.css" />
+{% endblock %}
+
+{% block content %}
+<div style="display: flex; margin: 0;">
+
+    <div class="left-pane" style="width: 50%; background-color: #f8f9fa; padding: 20px; box-sizing: border-box; overflow-y: auto; border-right: 1px solid #ddd;">
+        {{ include Constants.ReceiverReminder }}
+    </div>
+
+    <div class="right-pane" style="width: 50%; background-color: #fff; padding: 20px; box-sizing: border-box; overflow-y: auto;">
+
+        <h3 data-intro="Round number" data-step="3">Round X: Guess the secret number</h3>
+
+        <p>You are Player B. Your task is to guess the secret number.</p>
+
+        <div id="fixbelief_info" class="alert alert-info" role="alert" data-intro="FixBelief information" data-step="4">
+            In each round, your sender is one of 4 senders who sent the same message.
+            You will be told how many out of those 4 delegated to the computer (X),
+            and how many freely chose that message (4 - X).
+        </div>
+
+        <div class="d-flex justify-content-center" data-intro="Player A's message" data-step="5" id="message-box">
+            <div class="card text-dark bg-light mb-3" style="width: 24rem;">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Player A's message:</h5>
+                    <p class="card-text">To receive the highest payoff, you should choose <b><span id="encoded_message"></span></b>.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="receiver_guess" class="hidden-paragraph" data-intro="Guess slider" data-step="6">
+            <p>
+                Please guess the secret number. You may enter any number between 1 and 7, including decimals.
+            </p>
+
+            <div style="max-width: 420px; margin: 0 auto;">
+                <input id="slider" value="1" type="range" name="receiver_guess"
+                       oninput="updateDescription(this)" step="0.1"
+                       class="form-range" min="1" max="7"
+                       style="width: 100%; margin-bottom: 4px;">
+                <div style="display: flex; justify-content: space-between; padding: 0 3px; font-size: 0.85rem; color: #555;">
+                    <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+                </div>
+                <div class="text-center mt-3">
+                    <span id="description" style="background:#0d6efd; color:#fff; padding: 5px 20px; border-radius: 20px; font-size: 1.05rem; font-weight: 500;"></span>
+                </div>
+            </div>
+        </div>
+
+        <div id="submit_button" class="hidden-paragraph mt-4" data-intro="Submit button" data-step="7">
+            <div class="d-grid gap-2 col-6 mx-auto">
+                <button type="submit" class="btn btn-success btn-lg btn-block">Submit</button>
+            </div>
+        </div>
+
+        {{ formfield_errors 'receiver_guess' }}
+
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/5.0.0/intro.min.js"></script>
+<script src="{% static 'global/myJs.js' %}"></script>
+<script src="https://kit.fontawesome.com/46026ecfac.js" crossOrigin="anonymous"></script>
+
+<script>
+    let description = document.getElementById('description');
+
+    function updateDescription(input) {
+        document.getElementById('slider').setAttribute('max', js_vars.max_guess);
+        document.getElementById('slider').setAttribute('min', js_vars.min_guess);
+        let receiver_guess = parseFloat(input.value).toFixed(1);
+        description.innerText = `Your guessed number: ${receiver_guess}`;
+
+        if (parseFloat(input.value) >= 1 && parseFloat(input.value) <= 7) {
+            show_text(submit_button);
+        } else {
+            hide_text(submit_button);
+        }
+    }
+
+    function show_text(element) {
+        element.classList.remove('hidden-paragraph');
+    }
+
+    function hide_text(element) {
+        element.classList.add('hidden-paragraph');
+    }
+
+    let tourStarted = false;
+    var intro = introJs();
+    intro.setOptions({
+        steps: [
+            {
+                title: 'Tutorial',
+                intro: "This is your decision screen. It will look similar in every round. Press 'Next' for a quick overview."
+            },
+            {
+                title: 'Game reminder',
+                element: '.left-pane',
+                intro: 'This panel reminds you of the game rules throughout the experiment.'
+            },
+            {
+                title: 'Round number',
+                element: 'h3',
+                intro: "Here you can see which round you are in. During the experiment, 'X' will vary between 1 and {{ Constants.num_rounds }}."
+            },
+            {
+                title: 'FixBelief information',
+                element: '#fixbelief_info',
+                intro: 'In each round, you will learn how many out of 4 comparable senders delegated to the computer. This determines how trustworthy the message is.'
+            },
+            {
+                title: "Player A's message",
+                element: '#message-box',
+                intro: "Here you can see the message sent by Player A."
+            },
+            {
+                title: 'Your guess',
+                element: '#receiver_guess',
+                intro: 'Move the slider to choose your guess. Please try any value now.'
+            },
+            {
+                title: 'Submit button',
+                element: '.btn-success',
+                intro: "Click here to submit your choice and continue. Press 'Submit' when you are ready."
+            }
+        ],
+        showStepNumbers: true,
+        nextLabel: 'Next',
+        prevLabel: 'Back',
+        doneLabel: 'Close',
+        exitOnOverlayClick: false,
+        exitOnEsc: false,
+        keyboardNavigation: false,
+    });
+
+    intro.onafterchange(function() {
+        if (intro._currentStep == 5) {
+            $('.introjs-nextbutton').addClass('introjs-disabled');
+        }
+    });
+
+    window.onload = function() {
+        if (!tourStarted) {
+            tourStarted = true;
+            intro.start();
+        }
+
+        document.getElementById('encoded_message').innerHTML = js_vars.encoded_message;
+        show_text(receiver_guess);
+    };
+
+    let sliderUsed = false;
+    const originalUpdate = updateDescription;
+    updateDescription = function(input) {
+        originalUpdate(input);
+        if (!sliderUsed) {
+            sliderUsed = true;
+            if (intro._currentStep == 5) {
+                $('.introjs-nextbutton').removeClass('introjs-disabled');
+            }
+        }
+    }
+</script>
+{% endblock %}

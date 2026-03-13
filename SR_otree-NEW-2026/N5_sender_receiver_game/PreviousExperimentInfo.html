@@ -3,7 +3,7 @@
 {{ endblock }}
 
 {{ block styles }}
-<!-- Cargar los estilos CSS personalizados -->
+<!-- Load custom CSS styles -->
 <link rel="stylesheet" href="{{ static 'global/myStyle.css' }}">
 <link rel="stylesheet" href="{{ static 'global/myStyleButton.css' }}">
 {{ endblock }}
@@ -44,6 +44,25 @@
                 However, rather than entering a guess directly, you will report your <b>belief about the likelihood that Player A delegated to the computer</b> (in which case the sent number equals the true number).
                 Based on that belief, the computer will automatically calculate and submit your <b>optimal guess</b> on your behalf.
                 Your earnings will therefore depend on the <b>accuracy of your stated belief</b>.
+  {{ elif player.participant.treatment == "FixBelief" }}
+
+</p>
+
+<p>
+    For each message, you will be told that it was sent by <b>one of four people</b>
+    who sent that same message in a previous experiment.
+</p>
+
+<p>
+    You will also be told <b>how many of those four people let the computer choose the message for them</b>.
+</p>
+
+<p>
+    This information tells you <b>how likely it is that the message is honest in that round</b>.
+</p>
+
+<p>
+
                 {{ else }}
                 Your earnings will depend on how close your guess is to the true secret number.
                 {{ endif }}

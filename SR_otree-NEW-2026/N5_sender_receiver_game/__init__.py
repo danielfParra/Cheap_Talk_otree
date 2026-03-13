@@ -115,6 +115,16 @@ class Constants(BaseConstants):
     A_message_origin = 'Fueron escritos por participantes del Jugador A que participaron en un experimento anterior'
     H_message_origin = 'Los mensajes que verás no fueron generados durante tu sesión. Piensa en quién los envió y cuándo fueron enviados.'
 
+    Q_fixbelief_understanding = 'Which statement is correct about the sender and the message you observe?'
+    O_fixbelief_understanding = [
+        'Your sender is selected from 4 senders who sent this message, and if a sender delegated to the computer, that sender sent the true secret number',
+        'Your sender changes every round, and delegating means sending a random number',
+        'Your sender is selected from all participants in the previous experiment, and delegating means sending the highest number',
+        'Your sender is selected from 4 senders who sent this message, and delegating means choosing any number strategically'
+    ]
+    A_fixbelief_understanding = 'Your sender is selected from 4 senders who sent this message, and if a sender delegated to the computer, that sender sent the true secret number'
+    H_fixbelief_understanding = 'Remember: your sender comes from a group of 4 senders who sent that message, and delegation means the computer sent the true secret number.'
+
     wrong_answer_message = 'No respondiste correctamente a esta pregunta. La siguiente pista puede ayudarte cuando intentes responder de nuevo:'
     correct_answer_message = 'Respondiste correctamente a esta pregunta. No necesitas cambiarla.'
 
@@ -124,6 +134,12 @@ class Constants(BaseConstants):
 
 class Subsession(BaseSubsession):
     pass
+
+
+def get_sender_messages_csv_path(session):
+    if session.config.get('treatment') == 'FixBelief':
+        return __name__ + '/messages_for_receivers_with_X.csv'
+    return __name__ + '/messages_for_receivers.csv'
 
 
 def creating_session(subsession: Subsession):
@@ -138,15 +154,21 @@ def creating_session(subsession: Subsession):
         player.participant.vars['role'] = 'Player B'
         player.participant.vars['payoff_relevant_rounds'] = Constants.PREDEFINED_RECEIVER_ROUNDS.copy()
 
-    with open(__name__ + '/messages_for_receivers.csv', encoding='utf-8-sig') as f:
+    csv_path = get_sender_messages_csv_path(subsession.session)
+
+    with open(csv_path, encoding='utf-8-sig') as f:
         all_rows = list(csv.DictReader(f))
     code_row_map = {r['code']: r for r in all_rows}
+    has_used_column = bool(all_rows) and 'used' in all_rows[0]
 
     if round_num == 1:
         # Round 1: assign a sender code to each participant from the CSV
-        available = [r['code'] for r in all_rows if str(r.get('used', '0')) == '0']
-        if len(available) < len(players):
-            # Not enough unused codes — refill from the full pool to avoid duplicates
+        if has_used_column:
+            available = [r['code'] for r in all_rows if str(r.get('used', '0')) == '0']
+            if len(available) < len(players):
+                # Not enough unused codes — refill from the full pool to avoid duplicates
+                available = [r['code'] for r in all_rows]
+        else:
             available = [r['code'] for r in all_rows]
         random.shuffle(available)
 
@@ -157,14 +179,15 @@ def creating_session(subsession: Subsession):
             used_codes.append(code)
             print(f'[creating_session R1] player id_in_subsession={player.id_in_subsession} → code={code}')
 
-        # Mark codes as used in CSV
-        for r in all_rows:
-            if r['code'] in used_codes:
-                r['used'] = '1'
-        with open(__name__ + '/messages_for_receivers.csv', 'w', newline='', encoding='utf-8') as f:
-            writer = csv.DictWriter(f, fieldnames=list(all_rows[0].keys()))
-            writer.writeheader()
-            writer.writerows(all_rows)
+        if has_used_column:
+            # Mark codes as used only in CSVs that track reuse.
+            for r in all_rows:
+                if r['code'] in used_codes:
+                    r['used'] = '1'
+            with open(csv_path, 'w', newline='', encoding='utf-8') as f:
+                writer = csv.DictWriter(f, fieldnames=list(all_rows[0].keys()))
+                writer.writeheader()
+                writer.writerows(all_rows)
 
     # Write THIS round's player data (each round writes its own data)
     # In round 1 the participant field was just set above; in rounds 2+ it was set in round 1.
@@ -182,6 +205,7 @@ def creating_session(subsession: Subsession):
         player.secret_number  = int(float(row[f'secret_number_R{round_num}']))
         player.sender_message = int(float(row[f'sender_message_R{round_num}']))
         player.sender_choice  = int(float(row[f'sender_choice_R{round_num}']))
+        player.x_count = int(float(row.get(f'X_R{round_num}', 0) or 0))
 
         if player.sender_message == 0:
             player.sender_message_encoded = 'El Jugador A no envió un número'
@@ -203,6 +227,7 @@ class Player(BasePlayer):
     secret_number = models.IntegerField(initial=4)
     sender_choice = models.IntegerField(initial=0)
     sender_message = models.IntegerField(initial=0)
+    x_count = models.IntegerField(initial=0)
     sender_message_encoded = models.StringField(initial='')
     sender_code = models.StringField(initial='')
     receiver_guess = models.FloatField(min=0, max=7, initial=0)
@@ -228,6 +253,8 @@ class Player(BasePlayer):
     Q_payoff_count = models.IntegerField(initial = 0)
     Q_message_origin = models.StringField(label = Constants.Q_message_origin, initial = 'na')
     Q_message_origin_count = models.IntegerField(initial = 0)
+    Q_fixbelief_understanding = models.StringField(label=Constants.Q_fixbelief_understanding, initial='na')
+    Q_fixbelief_understanding_count = models.IntegerField(initial=0)
     Q_payoff_other = models.StringField(initial = 'na')
     Q_payoff_other_count = models.IntegerField(initial = 0)
     Q_independence = models.StringField(label = Constants.Q_independence, initial = 'na')
@@ -290,6 +317,11 @@ def Q_no_knowledge_guess_choices(player):
 
 def Q_message_origin_choices(player):
     L = Constants.O_message_origin.copy()
+    random.shuffle(L)
+    return L
+
+def Q_fixbelief_understanding_choices(player):
+    L = Constants.O_fixbelief_understanding.copy()
     random.shuffle(L)
     return L
 
@@ -433,7 +465,13 @@ class ControlQuestions(Page):
         return player.round_number == 1 and player.wrong_answer > 0
     
     form_model = 'player'
-    form_fields = ['Q_task', 'Q_payoff', 'Q_payoff_other', 'Q_independence', 'Q_no_knowledge_guess', 'Q_secret_number_generation', 'Q_message_origin']
+
+    @staticmethod
+    def get_form_fields(player: Player):
+        fields = ['Q_task', 'Q_payoff', 'Q_payoff_other', 'Q_independence', 'Q_no_knowledge_guess', 'Q_secret_number_generation', 'Q_message_origin']
+        if player.participant.treatment == 'FixBelief':
+            fields.append('Q_fixbelief_understanding')
+        return fields
 
     @staticmethod
     def before_next_page(player,timeout_happened):
@@ -447,9 +485,17 @@ class ControlQuestions(Page):
         e, player.Q_no_knowledge_guess_count = check_cq_answers(player.Q_no_knowledge_guess, Constants.A_no_knowledge_guess, player.Q_no_knowledge_guess_count)
         f, player.Q_secret_number_generation_count = check_cq_answers(player.Q_secret_number_generation, Constants.A_secret_number_generation, player.Q_secret_number_generation_count)
         g, player.Q_message_origin_count = check_cq_answers(player.Q_message_origin, Constants.A_message_origin, player.Q_message_origin_count)
+        if player.participant.treatment == 'FixBelief':
+            h, player.Q_fixbelief_understanding_count = check_cq_answers(
+                player.Q_fixbelief_understanding,
+                Constants.A_fixbelief_understanding,
+                player.Q_fixbelief_understanding_count,
+            )
+        else:
+            h = 0
 
 
-        player.wrong_answer = max(a,b,c,d,e,f,g)
+        player.wrong_answer = max(a,b,c,d,e,f,g,h)
         player.wrong_answer_count += player.wrong_answer
 
 
@@ -500,7 +546,43 @@ class ReceiverTutorial(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == 1 and player.participant.treatment != 'Belief'
+        return player.round_number == 1 and player.participant.treatment not in ['Belief', 'FixBelief']
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        current_round = player.round_number
+        is_sender_payoff_relevant = current_round in Constants.PREDEFINED_SENDER_ROUNDS
+        return dict(
+            is_sender_payoff_relevant=is_sender_payoff_relevant
+        )
+
+    @staticmethod
+    def js_vars(player: Player):
+        return dict(
+            encoded_message=player.tutorial_message_encoded,
+            sender_message=player.tutorial_message,
+            treatment=player.participant.treatment,
+            max_guess=7,
+            min_guess=1
+        )
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        # Reset tutorial guess — doesn't affect game payoffs
+        player.receiver_guess = 0
+
+
+class FixBeliefTutorial(Page):
+    """Interactive tutorial for FixBelief treatment with X-based explanation."""
+    form_model = 'player'
+
+    @staticmethod
+    def get_form_fields(player: Player):
+        return ['receiver_guess']
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1 and player.participant.treatment == 'FixBelief'
 
     @staticmethod
     def vars_for_template(player: Player):
@@ -583,7 +665,9 @@ class ReceiverGuess(Page):
         is_sender_payoff_relevant = current_round in Constants.PREDEFINED_SENDER_ROUNDS
         return dict(
             sender_message=player.sender_message,
-            is_sender_payoff_relevant=is_sender_payoff_relevant
+            is_sender_payoff_relevant=is_sender_payoff_relevant,
+            x_count=player.x_count,
+            strategic_sender_count=max(0, 4 - player.x_count),
         )
 
     @staticmethod
@@ -592,6 +676,7 @@ class ReceiverGuess(Page):
             sender_message=player.sender_message,
             encoded_message=player.sender_message_encoded,
             treatment=player.participant.treatment,
+            x_count=player.x_count,
             max_guess=7,
             min_guess=1
         )
@@ -627,6 +712,8 @@ class Results(Page):
             'extra_earnings': player.correct_answers * Constants.PIECE_RATE_DECODE,
             'piece_rate_decode': Constants.PIECE_RATE_DECODE,
             'belief_honest_pct': player.belief_honest_pct,
+            'x_count': player.x_count,
+            'strategic_sender_count': max(0, 4 - player.x_count),
             'treatment': player.participant.treatment,
         }
 
@@ -721,7 +808,7 @@ page_sequence = [
     PreviousExperimentInfo, instructions1, instructions2, TimeLimit, Decode, instructions3, instructions4,
     role_info,
     ControlQuestions, ControlQuestions, ControlQuestions, ControlQuestions, ControlQuestions,
-    TutorialIntro, ReceiverTutorial, BeliefTutorial, start_page,
+    TutorialIntro, ReceiverTutorial, FixBeliefTutorial, BeliefTutorial, start_page,
     Round_number, ReceiverGuess, Results,
     HonestyGuess, HonestyCertainty, FollowingGuess, ExplanationTask
 ]

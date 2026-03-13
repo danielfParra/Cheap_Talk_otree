@@ -14,7 +14,7 @@ class PlayerBot(Bot):
             yield role_info
 
             for _ in range(5):
-                yield ControlQuestions, {
+                cq_data = {
                     'Q_task': random.choice(Constants.O_task),
                     'Q_payoff': random.choice(Constants.O_payoff_PA if self.player.id_in_group == 1 else Constants.O_payoff_PB),
                     'Q_payoff_other': random.choice(Constants.O_payoff_other_PA if self.player.id_in_group == 1 else Constants.O_payoff_other_PB),
@@ -22,6 +22,9 @@ class PlayerBot(Bot):
                     'Q_secret_number_generation': random.choice(Constants.O_secret_number_generation),
                     'Q_no_knowledge_guess': random.choice(Constants.O_no_knowledge_guess),
                 }
+                if self.player.participant.treatment == 'FixBelief':
+                    cq_data['Q_fixbelief_understanding'] = random.choice(Constants.O_fixbelief_understanding)
+                yield ControlQuestions, cq_data
 
             yield TutorialIntro
             if self.player.id_in_group == 1:

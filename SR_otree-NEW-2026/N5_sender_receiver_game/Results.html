@@ -3,7 +3,7 @@
 {{ endblock }}
 
 {{ block styles }}
-<!-- Cargar los estilos CSS personalizados -->
+<!-- Load custom CSS styles -->
 <link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
 <link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
 
@@ -13,15 +13,15 @@
 {{ block content }}
 
 
-<!-- Ocultar el temporizador inicialmente y mostrarlo cuando queden 10 segundos -->
+<!-- Hide the timer initially and show it when 10 seconds remain -->
 <script>
     document.addEventListener("DOMContentLoaded", function (event) {
-        $('.otree-timer').hide();  // Ocultar el temporizador inicialmente
+        $('.otree-timer').hide();
 
         $('.otree-timer__time-left').on('update.countdown', function (event) {
-            // Mostrar el temporizador cuando solo queden 10 segundos
+            // Show the timer when only 10 seconds remain
             if (event.offset.totalSeconds === 10) {
-                $('.otree-timer').show().addClass('blinking-timer');  // Añadir efecto de parpadeo
+                $('.otree-timer').show().addClass('blinking-timer');
             }
         });
     });
@@ -39,29 +39,29 @@
         {% endif %}
         {% if treatment == 'Belief' %}
             {% if receiver_guess > 0 %}
-                <p class="blocktext">Tu creencia declarada: <b>{{ belief_honest_pct }}%</b> de probabilidad de que el Jugador A delegó al computador</p>
-                <p class="blocktext">Suposición óptima calculada por el computador: <b>{{ receiver_guess }}</b></p>
+                <p class="blocktext">Your stated belief: <b>{{ belief_honest_pct }}%</b> probability that Player A delegated to the computer</p>
+                <p class="blocktext">Optimal guess calculated by the computer: <b>{{ receiver_guess }}</b></p>
             {% else %}
-                <p class="blocktext">No reportaste una creencia a tiempo.</p>
+                <p class="blocktext">You did not report a belief in time.</p>
             {% endif %}
         {% else %}
             {% if receiver_guess > 0 %}
-                <p class="blocktext">La suposición del Jugador B fue: <b>{{ receiver_guess }}</b></p>
+                <p class="blocktext">Player B's guess was: <b>{{ receiver_guess }}</b></p>
             {% else %}
                 {% if sender_message > 0 %}
-                        <p class="blocktext">La suposición del Jugador B fue: <b>{{ sender_message }}</b></p>
+                        <p class="blocktext">Player B's guess was: <b>{{ sender_message }}</b></p>
                 {% else %}
-                        <p class="blocktext">El Jugador B no adivinó a tiempo.</p>
+                        <p class="blocktext">Player B did not guess in time.</p>
                 {% endif %}
             {% endif %}
         {% endif %}
-        <p class="blocktext"> El número secreto era: <span class="payoff">{{ secret_number }}</span> </p>
+        <p class="blocktext"> The secret number was: <span class="payoff">{{ secret_number }}</span> </p>
     </div>
 </div>
 
 <!---
       <br>
-        <h5><i class="fas fa-coins"></i> Tus Ganancias Adicionales</h5>
+        <h5><i class="fas fa-coins"></i> Your Additional Earnings</h5>
         <p class="blocktext">
             <i class="fas fa-check-circle"></i> Respondiste correctamente <b>{{ correct_answers }}</b> tareas → Ganaste <b>{{ extra_earnings }} pesos</b> ({{ correct_answers }} × {{ piece_rate_decode }})
         </p>

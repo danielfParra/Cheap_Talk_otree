@@ -4,20 +4,27 @@
 <div style="display: flex; margin: 0;">
 
 
-    <!-- Panel Izquierdo -->
+    <!-- Left panel -->
 <div class="left-pane" style="width: 50%; background-color: #f8f9fa; padding: 20px; box-sizing: border-box; overflow-y: auto; border-right: 1px solid #ddd;">
 
     {{ include Constants.ReceiverReminder }}
     
 </div>
 
-    <!-- Panel Derecho -->
+    <!-- Right panel -->
     <div class="right-pane" style="width: 50%; background-color: #fff; padding: 20px; box-sizing: border-box; overflow-y: auto;">
         <h3 data-intro="Número de ronda" data-step="3">Ronda {{player.round_number}}: Adivina el número secreto</h3>
 
         <p>
-            Eres el Jugador B. Tu tarea es adivinar el número secreto.
+            You are Player B. Your task is to guess the secret number.
         </p>
+
+        {% if player.participant.treatment == 'FixBelief' %}
+        <div class="alert alert-info" role="alert">
+            Your sender is one of 4 senders who sent this message. Out of these 4 senders,
+            <b>{{ x_count }}</b> delegated to the computer and <b>{{ strategic_sender_count }}</b> freely chose to send this message.
+        </div>
+        {% endif %}
 
         <div class="d-flex justify-content-center" data-intro="Mensaje del Jugador A." data-step="5" id="message-box">
             <div class="card text-dark bg-light mb-3" style="width: 24rem;">
@@ -92,7 +99,7 @@
         <p>
             ¿Cuál es la probabilidad (en porcentaje) de que el Jugador A <strong>haya delegado al computador</strong> (es decir, que haya enviado el número secreto verdadero)?
         </p>
-        <h4>Mueve el deslizador para indicar tu creencia.</h4>
+        <h4>Move the slider to report your belief.</h4>
         <br>
         <div style="max-width: 420px; margin: 0 auto;">
             <input id="belief_slider" value="0" type="range"
@@ -107,9 +114,9 @@
             </div>
             <div class="card bg-light mt-3">
                 <div class="card-body text-center">
-                    <p class="mb-1"><small>Basado en tu creencia, la adivinanza óptima es:</small></p>
+                    <p class="mb-1"><small>Based on your belief, the optimal guess is:</small></p>
                     <span id="optimal_guess_display" style="background:#198754; color:#fff; padding: 5px 20px; border-radius: 20px; font-size: 1.1rem; font-weight: 600;"></span>
-                    <p class="mt-2 mb-0"><small>El computador enviará esta adivinanza por ti.</small></p>
+                    <p class="mt-2 mb-0"><small>The computer will submit this guess for you.</small></p>
                 </div>
             </div>
             <input type="hidden" name="belief_honest_pct" id="belief_honest_pct_input" value="0">
@@ -122,7 +129,7 @@
             <div class="d-grid gap-2 col-6 mx-auto">
                 <button id="submitBtn" type="button" class="btn btn-success btn-lg btn-block" onclick="lockAndWait()">Submit</button>
             </div>
-            <!-- Add a waiting message div that will be hidden initially -->
+            <!-- Waiting message shown after submission -->
             <div id="waitingMessage" class="text-center mt-3" style="display: none;">
                 <div class="alert alert-info">
                     Su elección ha sido registrada. Por favor, espere hasta que expire el tiempo...
@@ -155,8 +162,8 @@
                 const optimal = (p / 100) * sender_message + (1 - p / 100) * 4;
                 const optimalRounded = Math.max(1, Math.min(7, optimal)).toFixed(1);
                 document.getElementById('slider').value = optimalRounded;
-                document.getElementById('belief_description').innerText = `Tu creencia: ${p}% de probabilidad de delegación`;
-                document.getElementById('optimal_guess_display').innerText = `Adivinanza óptima: ${optimalRounded}`;
+                document.getElementById('belief_description').innerText = `Your belief: ${p}% probability of delegation`;
+                document.getElementById('optimal_guess_display').innerText = `Optimal guess: ${optimalRounded}`;
                 show_text(submit_button);
             }
         </script>
@@ -263,7 +270,7 @@
 
 {% block styles %}
 
-<!-- Cargar los estilos CSS personalizados -->
+<!-- Load custom CSS styles -->
 <link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
 <link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
 
