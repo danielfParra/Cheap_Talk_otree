@@ -15,59 +15,39 @@
     <div class="right-pane" style="width: 50%; background-color: #fff; padding: 20px; box-sizing: border-box; overflow-y: auto;">
         <h3 data-intro="Número de ronda" data-step="3">Ronda {{player.round_number}}: Adivina el número secreto</h3>
 
-        <p>
-            You are Player B. Your task is to guess the secret number.
-        </p>
+        <p>Eres el Jugador B. Tu tarea es enviar una sola adivinanza.</p>
 
-        {% if player.participant.treatment == 'FixBelief' %}
-        <div class="alert alert-info" role="alert">
-            Your sender is one of 4 senders who sent this message. Out of these 4 senders,
-            <b>{{ x_count }}</b> delegated to the computer and <b>{{ strategic_sender_count }}</b> freely chose to send this message.
+        {% if player.participant.treatment == 'NoUncertainty' %}
+        <div class="card border-info mb-3" role="alert">
+            <div class="card-header bg-info-subtle"><b>NoUncertainty: round summary</b></div>
+            <div class="card-body py-2">
+                <p class="mb-1">This message comes from a bundle of <b>4 Player A participants</b> who all sent the same message.</p>
+                <div id="bundle_visual" class="mb-2"></div>
+                <p class="mb-1"><b>{{ x_count }}</b> delegated to the computer and <b>{{ strategic_sender_count }}</b> did not delegate (they chose the message themselves).</p>
+                <p class="mb-0">Your round payoff uses <b>one single guess</b> evaluated against <b>all 4 secret numbers</b> (your performance is averaged across the 4 cases).</p>
+            </div>
+        </div>
+        {% elif player.participant.treatment == 'FixBelief' %}
+        <div class="card border-info mb-3" role="alert">
+            <div class="card-header bg-info-subtle"><b>Información de esta ronda</b></div>
+            <div class="card-body py-2">
+                <div id="bundle_visual" class="mb-2"></div>
+                <p class="mb-0">Este mensaje viene de 4 participantes A: <b>{{ x_count }}</b> delegaron al computador y <b>{{ strategic_sender_count }}</b> no delegaron (eligieron el mensaje por su cuenta).</p>
+            </div>
         </div>
         {% endif %}
 
         <div class="d-flex justify-content-center" data-intro="Mensaje del Jugador A." data-step="5" id="message-box">
             <div class="card text-dark bg-light mb-3" style="width: 24rem;">
                 <div class="card-body text-center">
+                    {% if player.participant.treatment == 'NoUncertainty' %}
+                    <h5 class="card-title">Players' A message:</h5>
+                    {% else %}
                     <h5 class="card-title">Mensaje del Jugador A:</h5>
+                    {% endif %}
                     <p class="card-text">Para recibir la mayor ganancia, deberías elegir <b><span id="encoded_message"></span> </b>.</p>
                 </div>
             </div>
-        </div>
-
-        <div class="row hidden-paragraph" id="decoding_part">
-
-        
-            <div id="decode_task" class="column ">
-                <p>
-                    ¿Cuál es el número que el Jugador A intentó enviar?
-                    <p>
-                        <select name="math_solution" id="math_solution" class="form-select form-select-lg" oninput="valueInput(this.value)">
-                            <option value="" selected>Elige aquí</option>
-                            <option value="0">❌ El Jugador A no envió un número</option>
-                            <option value="1">1️⃣</option>
-                            <option value="2">2️⃣</option>
-                            <option value="3">3️⃣</option>
-                            <option value="4">4️⃣</option>
-                            <option value="5">5️⃣</option>
-                            <option value="6">6️⃣</option>
-                            <option value="7">7️⃣</option>
-                        </select>
-                </p>
-            </div>
-
-            <div class="column">
-                <div id="solution_button" class="hidden-paragraph">
-                    <div class="d-grid gap-2 col-6 mx-auto">
-                        <input id="info_button2" type="button" value="Enviar solución" onclick="checkSolution();" />
-                    </div>
-                </div>
-            </div>
-
-            <p align="center">
-                <span id="warning_message" style="color: #dc3545;"></span>
-            </p>
-
         </div>
 
         <div id="receiver_guess" class="hidden-paragraph">
@@ -176,15 +156,46 @@
 {% block scripts %}
 
 <script>
+    function renderBundleVisual(containerId, xCount) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        const total = 4;
+        const delegated = Math.max(0, Math.min(total, parseInt(xCount || 0)));
+        const strategic = total - delegated;
+        let html = '<div style="display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:8px; margin-bottom:6px;">';
+
+        for (let i = 0; i < total; i++) {
+            const isDelegated = i < delegated;
+            const bg = isDelegated ? '#e8f7ff' : '#fff3e8';
+            const border = isDelegated ? '#7cc5e8' : '#f0b27a';
+            const icon = isDelegated ? '🤖' : '👤';
+            const label = isDelegated ? 'Computador' : 'Eligio';
+
+            html +=
+                '<div style="border:1px solid ' + border + '; background:' + bg + '; border-radius:8px; padding:8px; text-align:center;">' +
+                '<div style="font-size:1.25rem; line-height:1;">' + icon + '</div>' +
+                '<div style="font-size:0.72rem; margin-top:4px;">' + label + '</div>' +
+                '</div>';
+        }
+
+        html += '</div>';
+        html += '<div style="font-size:0.82rem; color:#444;">🤖 Delegated: <b>' + delegated + '</b> | 👤 Did not delegate: <b>' + strategic + '</b></div>';
+        container.innerHTML = html;
+    }
+
     window.onload = function() {
         
         const encoded_message = js_vars.encoded_message;
         document.getElementById('encoded_message').innerHTML = encoded_message;
 
+        if (js_vars.treatment === 'FixBelief' || js_vars.treatment === 'NoUncertainty') {
+            renderBundleVisual('bundle_visual', js_vars.x_count);
+        }
+
         if (js_vars.treatment === 'Belief') {
             document.getElementById('regular_guess_section').style.display = 'none';
             show_text(document.getElementById('belief_guess_section'));
-            hide_text(document.getElementById('decoding_part'));
             show_text(receiver_guess);
             // Do NOT call updateBelief on load — slider starts blank until user moves it
         } else {
@@ -200,44 +211,6 @@
     function hide_text (element) {
         element.classList.add('hidden-paragraph');
     }
-
-    function valueInput (input_answer) {
-        const solutionButton = document.getElementById('solution_button');
-
-        if (parseFloat(input_answer) >= 0 && parseFloat(input_answer) <= 7) {
-            show_text(solutionButton);
-        }
-        else {
-            hide_text(solutionButton);
-        };
-    };
-
-    function checkSolution() {
-        const decodeTask = document.getElementById('decode_task');
-        const solutionButton = document.getElementById('solution_button');
-        const sender_message = js_vars.sender_message;
-        const math_solution = document.getElementById('math_solution').value;
-
-        if (math_solution == sender_message) {
-            hide_text(decodeTask);
-            hide_text(solutionButton);
-            show_text(receiver_guess);
-            if (sender_message > 0) {
-                document.getElementById('encoded_message').innerHTML = sender_message;
-            };
-            intro.exit();
-            intro.goToStep(7);
-        }
-        else {
-            show_text(warning_message);
-            document.getElementById('warning_message').innerHTML = "Solución incorrecta. Por favor espera 5 segundos e inténtalo de nuevo.";
-            hide_text(solutionButton);
-            hide_text(decodeTask);
-            setTimeout(show_text, 5000, solutionButton);
-            setTimeout(show_text, 5000, decodeTask);
-            setTimeout(hide_text, 5000, document.getElementById('warning_message'));
-        }
-    };
 
     function lockAndWait() {
         // Get the slider value

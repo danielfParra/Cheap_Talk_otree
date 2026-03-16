@@ -125,6 +125,16 @@ class Constants(BaseConstants):
     A_fixbelief_understanding = 'Your sender is selected from 4 senders who sent this message, and if a sender delegated to the computer, that sender sent the true secret number'
     H_fixbelief_understanding = 'Remember: your sender comes from a group of 4 senders who sent that message, and delegation means the computer sent the true secret number.'
 
+    Q_nouncertainty_understanding = 'Which statement is correct about how your guess is evaluated in this treatment?'
+    O_nouncertainty_understanding = [
+        'My single guess is evaluated against the 4 secret numbers of the 4 senders in the bundle, and my round performance is aggregated across those 4 cases',
+        'After I guess, the computer randomly selects one of the 4 senders, and only that sender determines my payoff',
+        'I submit 4 separate guesses, one for each sender in the bundle',
+        'My guess is evaluated only against the senders who delegated to the computer'
+    ]
+    A_nouncertainty_understanding = 'My single guess is evaluated against the 4 secret numbers of the 4 senders in the bundle, and my round performance is aggregated across those 4 cases'
+    H_nouncertainty_understanding = 'Remember: you submit one guess, it is compared with all 4 secret numbers in the bundle, and your round performance aggregates those 4 comparisons.'
+
     wrong_answer_message = 'No respondiste correctamente a esta pregunta. La siguiente pista puede ayudarte cuando intentes responder de nuevo:'
     correct_answer_message = 'Respondiste correctamente a esta pregunta. No necesitas cambiarla.'
 
@@ -137,9 +147,43 @@ class Subsession(BaseSubsession):
 
 
 def get_sender_messages_csv_path(session):
+    if session.config.get('treatment') == 'Belief':
+        return __name__ + '/messages_for_receivers_belief.csv'
+    if session.config.get('treatment') == 'NoUncertainty':
+        return __name__ + '/messages_for_receivers_with_X_secrets.csv'
     if session.config.get('treatment') == 'FixBelief':
         return __name__ + '/messages_for_receivers_with_X.csv'
     return __name__ + '/messages_for_receivers.csv'
+
+
+def get_bundle_secret_numbers_from_row(row, round_num):
+    secret_numbers = []
+    for sender_index in range(1, 5):
+        key = f'secret_number_{sender_index}_R{round_num}'
+        raw_value = row.get(key)
+        if raw_value in [None, '']:
+            continue
+        secret_numbers.append(int(float(raw_value)))
+    return secret_numbers
+
+
+def get_bundle_secret_numbers(player: 'Player'):
+    if not player.bundle_secret_numbers_json:
+        return []
+    try:
+        return json.loads(player.bundle_secret_numbers_json)
+    except json.JSONDecodeError:
+        return []
+
+
+def get_effective_receiver_guess(player: 'Player'):
+    if player.receiver_guess == 0 and player.sender_message > 0:
+        return float(player.sender_message)
+    return float(player.receiver_guess)
+
+
+def get_receiver_accuracy(secret_number, guess):
+    return max(0.0, 1 - (1 / 36) * (secret_number - guess) ** 2)
 
 
 def creating_session(subsession: Subsession):
@@ -147,11 +191,14 @@ def creating_session(subsession: Subsession):
 
     round_num = subsession.round_number
     players = subsession.get_players()
+    treatment = subsession.session.config.get('treatment', 'ExpertRep')
 
     # Set role via player.participant — same mechanism that successfully writes all other fields
     for player in players:
         player.participant.role = 'Player B'
         player.participant.vars['role'] = 'Player B'
+        player.participant.treatment = treatment
+        player.participant.vars['treatment'] = treatment
         player.participant.vars['payoff_relevant_rounds'] = Constants.PREDEFINED_RECEIVER_ROUNDS.copy()
 
     csv_path = get_sender_messages_csv_path(subsession.session)
@@ -206,6 +253,15 @@ def creating_session(subsession: Subsession):
         player.sender_message = int(float(row[f'sender_message_R{round_num}']))
         player.sender_choice  = int(float(row[f'sender_choice_R{round_num}']))
         player.x_count = int(float(row.get(f'X_R{round_num}', 0) or 0))
+        if treatment == 'NoUncertainty':
+            bundle_secret_numbers = get_bundle_secret_numbers_from_row(row, round_num)
+            if not bundle_secret_numbers:
+                bundle_secret_numbers = [player.secret_number]
+            player.bundle_secret_numbers_json = json.dumps(bundle_secret_numbers)
+        else:
+            player.bundle_secret_numbers_json = json.dumps([])
+        player.bundle_receiver_scores_json = json.dumps([])
+        player.bundle_receiver_average_score = 0
 
         if player.sender_message == 0:
             player.sender_message_encoded = 'El Jugador A no envió un número'
@@ -228,10 +284,14 @@ class Player(BasePlayer):
     sender_choice = models.IntegerField(initial=0)
     sender_message = models.IntegerField(initial=0)
     x_count = models.IntegerField(initial=0)
+    bundle_secret_numbers_json = models.LongStringField(initial='[]')
+    bundle_receiver_scores_json = models.LongStringField(initial='[]')
+    bundle_receiver_average_score = models.FloatField(initial=0)
     sender_message_encoded = models.StringField(initial='')
     sender_code = models.StringField(initial='')
     receiver_guess = models.FloatField(min=0, max=7, initial=0)
     tutorial_message = models.IntegerField(initial=0)
+    tutorial_x_count = models.IntegerField(initial=2)
     tutorial_message_encoded = models.StringField(initial='')
     math_solution = models.IntegerField(label=None, initial=0)
     sender_win_prob = models.FloatField(initial=0)
@@ -255,6 +315,8 @@ class Player(BasePlayer):
     Q_message_origin_count = models.IntegerField(initial = 0)
     Q_fixbelief_understanding = models.StringField(label=Constants.Q_fixbelief_understanding, initial='na')
     Q_fixbelief_understanding_count = models.IntegerField(initial=0)
+    Q_nouncertainty_understanding = models.StringField(label=Constants.Q_nouncertainty_understanding, initial='na')
+    Q_nouncertainty_understanding_count = models.IntegerField(initial=0)
     Q_payoff_other = models.StringField(initial = 'na')
     Q_payoff_other_count = models.IntegerField(initial = 0)
     Q_independence = models.StringField(label = Constants.Q_independence, initial = 'na')
@@ -325,6 +387,11 @@ def Q_fixbelief_understanding_choices(player):
     random.shuffle(L)
     return L
 
+def Q_nouncertainty_understanding_choices(player):
+    L = Constants.O_nouncertainty_understanding.copy()
+    random.shuffle(L)
+    return L
+
 def check_cq_answers(answer, solution, count):
     if answer != solution:
         return 1, count + 1
@@ -337,27 +404,31 @@ def set_payoffs(player: Player):
     if player.round_number == 1:
         player.payoff = player.correct_answers * Constants.PIECE_RATE_DECODE
 
-    # Calculate the sender's probability
-    if player.receiver_guess == 0 and player.sender_message > 0:
-        sender_prob = (player.sender_message - 1) / 6
-    elif player.sender_message == 0:
+    effective_guess = get_effective_receiver_guess(player)
+
+    if player.sender_message == 0:
         sender_prob = 0
     else:
-        sender_prob = (player.receiver_guess - 1) / 6
+        sender_prob = (effective_guess - 1) / 6 if effective_guess > 0 else 0
 
-    # Calculate the receiver's probability
-    if player.receiver_guess == 0 and player.sender_message > 0:
-        receiver_prob = 1 - (1 / 36) * (player.secret_number - player.sender_message) ** 2
-    elif player.sender_message == 0:
+    if player.sender_message == 0 or effective_guess == 0:
+        bundle_scores = []
         receiver_prob = 0
+    elif player.participant.treatment == 'NoUncertainty':
+        bundle_secret_numbers = get_bundle_secret_numbers(player) or [player.secret_number]
+        bundle_scores = [get_receiver_accuracy(secret_number, effective_guess) for secret_number in bundle_secret_numbers]
+        receiver_prob = sum(bundle_scores) / len(bundle_scores)
     else:
-        receiver_prob = 1 - (1 / 36) * (player.secret_number - player.receiver_guess) ** 2
+        bundle_scores = [get_receiver_accuracy(player.secret_number, effective_guess)]
+        receiver_prob = bundle_scores[0]
 
     sender_wins = random.random() < sender_prob
     receiver_wins = random.random() < receiver_prob
 
     player.sender_win_prob = sender_prob
     player.receiver_win_prob = receiver_prob
+    player.bundle_receiver_scores_json = json.dumps(bundle_scores)
+    player.bundle_receiver_average_score = receiver_prob
     player.sender_wins = sender_wins
     player.receiver_wins = receiver_wins
 
@@ -368,6 +439,8 @@ def set_payoffs(player: Player):
 
     print(f"Round {player.round_number}:")
     print(f"  - Secret number: {player.secret_number}")
+    if player.participant.treatment == 'NoUncertainty':
+        print(f"  - Bundle secret numbers: {get_bundle_secret_numbers(player)}")
     print(f"  - Sender's message: {player.sender_message}")
     print(f"  - Receiver's guess: {player.receiver_guess}")
     print(f"  - Sender probability: {sender_prob}, Receiver probability: {receiver_prob}")
@@ -471,6 +544,8 @@ class ControlQuestions(Page):
         fields = ['Q_task', 'Q_payoff', 'Q_payoff_other', 'Q_independence', 'Q_no_knowledge_guess', 'Q_secret_number_generation', 'Q_message_origin']
         if player.participant.treatment == 'FixBelief':
             fields.append('Q_fixbelief_understanding')
+        if player.participant.treatment == 'NoUncertainty':
+            fields.append('Q_nouncertainty_understanding')
         return fields
 
     @staticmethod
@@ -494,8 +569,17 @@ class ControlQuestions(Page):
         else:
             h = 0
 
+        if player.participant.treatment == 'NoUncertainty':
+            i, player.Q_nouncertainty_understanding_count = check_cq_answers(
+                player.Q_nouncertainty_understanding,
+                Constants.A_nouncertainty_understanding,
+                player.Q_nouncertainty_understanding_count,
+            )
+        else:
+            i = 0
 
-        player.wrong_answer = max(a,b,c,d,e,f,g,h)
+
+        player.wrong_answer = max(a,b,c,d,e,f,g,h,i)
         player.wrong_answer_count += player.wrong_answer
 
 
@@ -537,6 +621,7 @@ class TutorialIntro(Page):
         tutorial_message = random.randint(1, 7)
         player.tutorial_message = tutorial_message
         player.tutorial_message_encoded = str(tutorial_message)
+        player.tutorial_x_count = random.randint(0, 4)
 
 class ReceiverTutorial(Page):
     form_model = 'player'
@@ -546,7 +631,7 @@ class ReceiverTutorial(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == 1 and player.participant.treatment not in ['Belief', 'FixBelief']
+        return player.round_number == 1 and player.participant.treatment not in ['Belief', 'FixBelief', 'NoUncertainty']
 
     @staticmethod
     def vars_for_template(player: Player):
@@ -561,6 +646,7 @@ class ReceiverTutorial(Page):
         return dict(
             encoded_message=player.tutorial_message_encoded,
             sender_message=player.tutorial_message,
+            x_count=player.tutorial_x_count,
             treatment=player.participant.treatment,
             max_guess=7,
             min_guess=1
@@ -597,6 +683,7 @@ class FixBeliefTutorial(Page):
         return dict(
             encoded_message=player.tutorial_message_encoded,
             sender_message=player.tutorial_message,
+            x_count=player.tutorial_x_count,
             treatment=player.participant.treatment,
             max_guess=7,
             min_guess=1
@@ -605,6 +692,40 @@ class FixBeliefTutorial(Page):
     @staticmethod
     def before_next_page(player, timeout_happened):
         # Reset tutorial guess — doesn't affect game payoffs
+        player.receiver_guess = 0
+
+
+class NoUncertaintyTutorial(Page):
+    form_model = 'player'
+
+    @staticmethod
+    def get_form_fields(player: Player):
+        return ['receiver_guess']
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1 and player.participant.treatment == 'NoUncertainty'
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        current_round = player.round_number
+        is_sender_payoff_relevant = current_round in Constants.PREDEFINED_SENDER_ROUNDS
+        return dict(
+            is_sender_payoff_relevant=is_sender_payoff_relevant
+        )
+
+    @staticmethod
+    def js_vars(player: Player):
+        return dict(
+            encoded_message=player.tutorial_message_encoded,
+            sender_message=player.tutorial_message,
+            treatment=player.participant.treatment,
+            max_guess=7,
+            min_guess=1
+        )
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
         player.receiver_guess = 0
 
 
@@ -668,6 +789,7 @@ class ReceiverGuess(Page):
             is_sender_payoff_relevant=is_sender_payoff_relevant,
             x_count=player.x_count,
             strategic_sender_count=max(0, 4 - player.x_count),
+            bundle_sender_count=4,
         )
 
     @staticmethod
@@ -703,10 +825,16 @@ class ReceiverGuess(Page):
 class Results(Page):
     @staticmethod
     def vars_for_template(player: Player):
+        bundle_secret_numbers = get_bundle_secret_numbers(player)
+        try:
+            bundle_receiver_scores = json.loads(player.bundle_receiver_scores_json)
+        except json.JSONDecodeError:
+            bundle_receiver_scores = []
         return {
             'secret_number': player.secret_number,
             'sender_message': player.sender_message,
             'receiver_guess': player.receiver_guess,
+            'evaluated_guess': get_effective_receiver_guess(player),
             'player_payoff': player.payoff,
             'correct_answers': player.correct_answers,
             'extra_earnings': player.correct_answers * Constants.PIECE_RATE_DECODE,
@@ -714,6 +842,10 @@ class Results(Page):
             'belief_honest_pct': player.belief_honest_pct,
             'x_count': player.x_count,
             'strategic_sender_count': max(0, 4 - player.x_count),
+            'bundle_sender_count': len(bundle_secret_numbers),
+            'bundle_secret_numbers_display': ', '.join(str(number) for number in bundle_secret_numbers),
+            'bundle_average_score_percent': round(player.bundle_receiver_average_score * 100, 1),
+            'bundle_receiver_scores_display': ', '.join(f'{score * 100:.1f}%' for score in bundle_receiver_scores),
             'treatment': player.participant.treatment,
         }
 
@@ -808,7 +940,7 @@ page_sequence = [
     PreviousExperimentInfo, instructions1, instructions2, TimeLimit, Decode, instructions3, instructions4,
     role_info,
     ControlQuestions, ControlQuestions, ControlQuestions, ControlQuestions, ControlQuestions,
-    TutorialIntro, ReceiverTutorial, FixBeliefTutorial, BeliefTutorial, start_page,
+    TutorialIntro, ReceiverTutorial, FixBeliefTutorial, NoUncertaintyTutorial, BeliefTutorial, start_page,
     Round_number, ReceiverGuess, Results,
     HonestyGuess, HonestyCertainty, FollowingGuess, ExplanationTask
 ]

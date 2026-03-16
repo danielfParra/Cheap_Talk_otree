@@ -1,82 +1,60 @@
 from otree.api import Bot, Submission
 from . import *
-import random
+
 
 class PlayerBot(Bot):
     def play_round(self):
         if self.player.round_number == 1:
+            yield PreviousExperimentInfo
             yield instructions1
             yield instructions2
             yield TimeLimit
-            yield Decode
             yield instructions3
             yield instructions4
             yield role_info
 
-            for _ in range(5):
-                cq_data = {
-                    'Q_task': random.choice(Constants.O_task),
-                    'Q_payoff': random.choice(Constants.O_payoff_PA if self.player.id_in_group == 1 else Constants.O_payoff_PB),
-                    'Q_payoff_other': random.choice(Constants.O_payoff_other_PA if self.player.id_in_group == 1 else Constants.O_payoff_other_PB),
-                    'Q_independence': random.choice(Constants.O_independence),
-                    'Q_secret_number_generation': random.choice(Constants.O_secret_number_generation),
-                    'Q_no_knowledge_guess': random.choice(Constants.O_no_knowledge_guess),
-                }
-                if self.player.participant.treatment == 'FixBelief':
-                    cq_data['Q_fixbelief_understanding'] = random.choice(Constants.O_fixbelief_understanding)
-                yield ControlQuestions, cq_data
+            cq_data = {
+                'Q_task': Constants.A_task_PB_Belief if self.player.participant.treatment == 'Belief' else Constants.A_task_PB,
+                'Q_payoff': Constants.A_payoff_PB,
+                'Q_payoff_other': Constants.A_payoff_other_PB,
+                'Q_independence': Constants.A_independence,
+                'Q_secret_number_generation': Constants.A_secret_number_generation,
+                'Q_no_knowledge_guess': Constants.A_no_knowledge_guess,
+                'Q_message_origin': Constants.A_message_origin,
+            }
+            if self.player.participant.treatment == 'FixBelief':
+                cq_data['Q_fixbelief_understanding'] = Constants.A_fixbelief_understanding
+            if self.player.participant.treatment == 'NoUncertainty':
+                cq_data['Q_nouncertainty_understanding'] = Constants.A_nouncertainty_understanding
+            yield ControlQuestions, cq_data
 
             yield TutorialIntro
-            if self.player.id_in_group == 1:
-                yield SenderTutorial, {'sender_choice': random.randint(1, 7)}
+            if self.player.participant.treatment == 'Belief':
+                yield BeliefTutorial, {'belief_honest_pct': 50}
+            elif self.player.participant.treatment == 'FixBelief':
+                yield FixBeliefTutorial, {'receiver_guess': 4}
+            elif self.player.participant.treatment == 'NoUncertainty':
+                yield NoUncertaintyTutorial, {'receiver_guess': 4}
             else:
-                if self.player.participant.treatment == "Decode":
-                    yield ReceiverTutorial, {'receiver_guess': random.randint(1, 7), 'math_solution': random.randint(1, 100)}
-                else:
-                    yield ReceiverTutorial, {'receiver_guess': random.randint(1, 7)}
+                yield ReceiverTutorial, {'receiver_guess': 4}
 
             yield start_page
 
         yield Submission(Round_number, check_html=False)
 
-        if self.player.id_in_group == 1:
-            yield Submission(SenderMessage, {'sender_choice': random.randint(1, 7)}, check_html=False)
+        guess_data = {
+            'receiver_guess': 4,
+            'guess_confirmed': True,
+        }
+        if self.player.participant.treatment == 'Belief':
+            guess_data['belief_honest_pct'] = 50
 
-        else:
-            if self.player.participant.treatment == "Decode":
-                yield Submission(
-                    ReceiverGuess,
-                    {
-                        'receiver_guess': random.randint(1, 7),
-                        'math_solution': random.randint(1, 100),
-                        'guess_confirmed': True,  # ✅ include this!
-                    },
-                    check_html=False
-                )
-            else:
-                yield Submission(
-                    ReceiverGuess,
-                    {
-                        'receiver_guess': random.randint(1, 7),
-                        'guess_confirmed': True,
-                    },
-                    check_html=False
-                )
-
+        yield Submission(ReceiverGuess, guess_data, check_html=False)
         yield Submission(Results, check_html=False)
 
         if self.player.round_number == Constants.num_rounds:
-            yield HonestyGuess, {'honesty_guess': random.randint(1, 7)}
-            yield FollowingGuess, {'credulity_guess': random.randint(1, 7)}
-
-
-page_sequence = [
-    instructions1, instructions2, TimeLimit, Decode, instructions3, instructions4,
-    role_info,
-    ControlQuestions, ControlQuestions, ControlQuestions, ControlQuestions, ControlQuestions,
-    TutorialIntro, SenderTutorial, ReceiverTutorial, MyWaitPage, start_page,
-    Round_number, SenderMessage, WaitForSender, ReceiverGuess, ResultsWaitPage, Results,
-    MyWaitPage,
-    HonestyGuess, FollowingGuess,
-]
+            yield HonestyGuess, {'honesty_guess': 50}
+            yield HonestyCertainty, {'honesty_certainty': 50}
+            yield FollowingGuess, {'credulity_guess': 50}
+            yield ExplanationTask, {'strategy_explanation': 'Segui una estrategia simple basada en el mensaje y las reglas del tratamiento.'}
 

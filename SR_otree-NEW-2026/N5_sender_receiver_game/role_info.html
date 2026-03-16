@@ -112,6 +112,45 @@
     </div>
     {{ endif }}
 
+    {{ if player.participant.treatment == "NoUncertainty" }}
+    <div class="card border-info mb-3">
+        <div class="card-header bg-info text-dark fst-italic" style="font-size: 0.9em;">Important: How your task differs from the previous experiment</div>
+        <div class="card-body">
+
+            <h5><i class="fas fa-info-circle"></i> How today's game works</h5>
+
+            <p>
+                The instructions you just read described a previous experiment in which Player B's payoff depended on one hidden secret number.
+            </p>
+
+            <p>
+                <b>Your task is different.</b> In each round, the message you see comes from a <strong>bundle of 4 previous senders</strong>
+                who all sent that same message. Some of those senders delegated to the computer, and some chose the message strategically.
+                You will be told how many delegated.
+            </p>
+
+            <div class="card border-warning my-3">
+                <div class="card-body">
+                    <h5><i class="fas fa-layer-group"></i> How your guess is evaluated</h5>
+                    <p class="mb-2">
+                        You still submit <b>one guess</b> between 1 and 7.
+                    </p>
+                    <p class="mb-0">
+                        That single guess is then compared with the <b>4 secret numbers in the bundle</b>, and your round performance is based on your
+                        <strong>average accuracy across those 4 comparisons</strong>.
+                    </p>
+                </div>
+            </div>
+
+            <p class="mb-0">
+                <i class="fas fa-arrow-right text-info"></i>
+                The next pages will ask some comprehension questions and then show you a short tutorial of this bundled evaluation task.
+            </p>
+
+        </div>
+    </div>
+    {{ endif }}
+
     <p>
         <i> Antes de comenzar, nos gustaría que respondieras las preguntas en la siguiente página para verificar tu comprensión.</i>
     </p>

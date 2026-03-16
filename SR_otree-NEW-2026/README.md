@@ -23,8 +23,10 @@ This experiment has been restructured from a live 2-player interactive game into
 ### CSV files
 | File | Description |
 |---|---|
-| `messages_for_receivers.csv` | Active file used by the app. Columns: `code`, `secret_number_R1`–`R24`, `sender_message_R1`–`R24`, `sender_choice_R1`–`R24`, `used` |
-| `messages_for_receivers_with_X.csv` | Extended version with additional `X_R1`–`X_R24` columns (extra variable per round, not yet loaded by the app) |
+| `messages_for_receivers.csv` | Default file for `ExpertRep`. Columns: `code`, `secret_number_R1`–`R24`, `sender_message_R1`–`R24`, `sender_choice_R1`–`R24`, `used` |
+| `messages_for_receivers_belief.csv` | File used by `Belief` treatment (same structure as default file, with independent `used` tracking) |
+| `messages_for_receivers_with_X.csv` | File used by `FixBelief`. Adds `X_R1`–`X_R24` (how many of 4 senders delegated each round) |
+| `messages_for_receivers_with_X_secrets.csv` | File used by `NoUncertainty`. Includes `X_R1`–`X_R24` and bundled secret numbers `secret_number_1_R1`–`secret_number_4_R24` for 4-sender evaluation |
 
 ### `sender_choice` values
 - `1`–`7`: Sender manually chose that number to send.
@@ -51,8 +53,8 @@ Active treatments:
 |---|---|---|
 | `ExpertRep` | `sender_receiver_game_expertrep` | Baseline: receiver enters a direct guess via slider |
 | `Belief` | `sender_receiver_game_belief` | Receiver states a belief % about lying; computer computes optimal guess |
-| `FixBelief` | `sender_receiver_game_fixbelief` | TBD |
-| `NoUncertainty` | `sender_receiver_game_nouncertainty` | TBD |
+| `FixBelief` | `sender_receiver_game_fixbelief` | Receiver sees delegation composition from a 4-sender message bundle (`X` delegated, `4-X` did not delegate) and enters one direct guess |
+| `NoUncertainty` | `sender_receiver_game_nouncertainty` | Receiver sees one message from a 4-sender bundle, enters one direct guess, and payoff is computed by aggregating performance against all 4 bundled secret numbers |
 
 ### **ExpertRep**
 The baseline treatment. Player A had the option to delegate message selection to a computer that always sends the true secret number. Player B sees the message and moves a slider to enter a direct guess of the secret number.
@@ -65,10 +67,12 @@ $$g^* = p \cdot \text{message} + (1 - p) \cdot 4$$
 where $p$ is the stated belief (fraction honest/delegated) and $4$ is the unconditional mean of the secret number. The belief is stored in `player.belief_honest_pct` (0–100 integer, `initial=0`). The optimal guess is computed server-side in `ReceiverGuess.before_next_page` and written to `player.receiver_guess`. The belief slider starts at 0% (left) and only reveals the submit button once the participant moves it. On timeout without interaction, `belief_honest_pct` remains 0, so the computer submits `g* = 4` (no trust). The decoding step is skipped for this treatment.
 
 ### **FixBelief**
-TBD.
+Receiver sees that each observed message comes from a bundle of 4 prior senders and is informed how many delegated (`X`) vs did not delegate (`4-X`). Receiver still submits one direct guess.
 
 ### **NoUncertainty**
-TBD.
+Receiver sees one message per round from a 4-sender bundle (plus `X` delegation composition) and submits one guess. Unlike other direct-guess treatments, this single guess is evaluated against all 4 sender secret numbers from the bundle (`secret_number_1_Rt` to `secret_number_4_Rt`), and round performance is based on the average accuracy across those 4 realizations.
+
+**Important:** the binary scoring rule is still used in `NoUncertainty`. The only change is how the receiver win probability is constructed: first compute accuracy against each of the 4 bundled secret numbers, then average those 4 accuracies into a single receiver probability, and finally apply the same binary draw used in other treatments.
 
 ## **6️⃣ Page Sequence**
 
@@ -79,6 +83,8 @@ PreviousExperimentInfo → instructions1 → instructions2 → TimeLimit → Dec
 → ControlQuestions ×5       [round 1, repeats until all correct]
 → TutorialIntro
 → ReceiverTutorial          [ExpertRep only, round 1]
+→ FixBeliefTutorial         [FixBelief only, round 1]
+→ NoUncertaintyTutorial     [NoUncertainty only, round 1]
 → BeliefTutorial            [Belief only, round 1]
 → start_page
 → Round_number → ReceiverGuess → Results    [every round]
@@ -87,14 +93,13 @@ PreviousExperimentInfo → instructions1 → instructions2 → TimeLimit → Dec
 
 Key per-treatment differences:
 
-| Page | ExpertRep | Belief |
-|---|---|---|
-| `role_info` | standard role page | includes BeliefTransition content (explains belief task & formula via modal) |
-| `ReceiverTutorial` | shown (direct-guess slider + intro.js tour) | hidden |
-| `BeliefTutorial` | hidden | shown (belief slider + intro.js tour with optimal-guess step) |
-| `ReceiverGuess` form fields | `receiver_guess`, `guess_confirmed` | `receiver_guess`, `guess_confirmed`, `belief_honest_pct` |
-| `Results` feedback | Guess shown directly | Stated belief % + computer's optimal guess both shown |
-| `ControlQuestions` Q_task answer | "Adivinar el número secreto" | "Reportar mi creencia sobre cuántas veces el Jugador A delegó al computador" |
+| Page / Logic | ExpertRep | Belief | FixBelief | NoUncertainty |
+|---|---|---|---|---|
+| CSV source | `messages_for_receivers.csv` | `messages_for_receivers_belief.csv` | `messages_for_receivers_with_X.csv` | `messages_for_receivers_with_X_secrets.csv` |
+| Tutorial page | `ReceiverTutorial` | `BeliefTutorial` | `FixBeliefTutorial` | `NoUncertaintyTutorial` |
+| `ReceiverGuess` inputs | direct guess | belief slider + computed guess | direct guess + X info | direct guess + X info + 4-box bundle visual |
+| Payoff evaluation | vs one secret number | vs one secret number (computer guess) | vs one secret number | vs 4 secret numbers (average score) |
+| Results feedback | direct guess and true number | belief + computed guess | direct guess and true number + bundle context | direct guess + full 4-secret bundle evaluation summary |
 
 ## **7️⃣ Key Pages**
 
@@ -129,6 +134,16 @@ In Belief treatment, the Spanish elicitation is framed as a **probability/likeli
 - ExpertRep: correct answer = *"Adivinar el número secreto"*; options list = `O_task`
 - Belief: correct answer = *"Reportar mi creencia sobre cuántas veces el Jugador A delegó al computador"*; options list = `O_task_Belief` (no "Adivinar" option shown)
 - Hint (`H_task_Belief`) explains the belief mechanism on wrong answer.
+
+Additional treatment-specific checks:
+- FixBelief includes `Q_fixbelief_understanding`.
+- NoUncertainty includes `Q_nouncertainty_understanding`.
+
+### `ReceiverGuess.html` (NoUncertainty)
+The decision screen explicitly displays the message as coming from a 4-sender bundle and includes a 4-box visual (computer vs chose) to show delegation composition (`X` delegated, `4-X` did not delegate).
+
+### `Results.html` (NoUncertainty)
+Results page shows that the single submitted guess was evaluated against all 4 secret numbers in the bundle and reports the round's average accuracy across those 4 comparisons.
 
 ## **8️⃣ Survey**
 The final survey (`survey` app) collects: `age`, `gender`, `education`, `student`, `experiments`, `reasoning`, `chosen_role`. The fundaciones opinion table was removed. All fields are in Spanish.

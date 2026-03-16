@@ -272,6 +272,30 @@
     </div>
     {{ endif }}
 
+    {{ if player.participant.treatment == 'NoUncertainty' }}
+    <br>
+    <div class="content-box">
+        <div class="title">
+            {{ form.Q_nouncertainty_understanding.label }}
+        </div>
+        <div class="content">
+            {{ form.Q_nouncertainty_understanding }}
+
+            {{ if player.Q_nouncertainty_understanding != Constants.A_nouncertainty_understanding and player.Q_nouncertainty_understanding != 'na' }}
+            <span style="color: rgba(195,69,22, 1);">
+            <span>⚠&#xFE0F;</span> Please try again. <strong>Hint:</strong> <i>{{ Constants.H_nouncertainty_understanding }}</i>
+            </span>
+            {{ endif }}
+
+            {{ if player.Q_nouncertainty_understanding == Constants.A_nouncertainty_understanding and player.Q_nouncertainty_understanding != 'na' }}
+            <span style="color: rgba(76,111,66, 1);">
+            <span>✅ </span> Your answer is correct.
+            </span>
+            {{ endif }}
+        </div>
+    </div>
+    {{ endif }}
+
 
 
 
