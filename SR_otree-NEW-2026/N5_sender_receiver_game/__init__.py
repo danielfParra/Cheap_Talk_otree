@@ -225,7 +225,7 @@ def creating_session(subsession: Subsession):
             code = available[i % len(available)]
             player.participant.assigned_sender_code = code
             used_codes.append(code)
-            print(f'[creating_session R1] player id_in_subsession={player.id_in_subsession} → code={code}')
+            print(f'[creating_session R1] player id_in_subsession={player.id_in_subsession} -> code={code}')
 
         if has_used_column:
             # Mark codes as used only in CSVs that track reuse.

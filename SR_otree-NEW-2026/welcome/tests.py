@@ -1,10 +1,8 @@
-from otree.api import Bot
+from otree.api import Bot, Submission
 from . import *
+
 
 class PlayerBot(Bot):
     def play_round(self):
-        # ✅ Ensure session is correctly set up before yielding pages
-        if not hasattr(self.session, 'config'):
-            self.session.config = {'treatment': 'ExpertRep'}
-
+        yield Submission(ComputerPage, {'computer_number': 1}, check_html=False)
         yield Welcome
