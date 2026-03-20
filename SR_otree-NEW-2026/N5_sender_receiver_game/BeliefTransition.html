@@ -1,5 +1,5 @@
 {{ block title }}
-    Your Task: Reporting Beliefs
+    Tu Tarea: Reportar Creencias
 {{ endblock }}
 
 {{ block styles }}
@@ -10,43 +10,45 @@
 {{ block content }}
 
 <div class="card border-info mb-3">
-    <div class="card-header bg-info text-dark fst-italic" style="font-size: 0.9em;">Important: How your task differs from the previous experiment</div>
+    <div class="card-header bg-info text-dark fst-italic" style="font-size: 0.9em;">Importante: En qué se diferencia tu tarea del experimento anterior</div>
     <div class="card-body">
 
-        <h3><i class="fas fa-info-circle"></i> What you just read vs. what you will do</h3>
+        <h3><i class="fas fa-info-circle"></i> Lo que acabas de leer vs. lo que harás tú</h3>
 
         <p>
-            The instructions you just read described how participants in the <b>previous experiment</b> played.
-            In that session, <b>Player B directly guessed the secret number</b> by choosing a number between 1 and 7.
+            Las instrucciones que acabas de leer describen cómo jugaron los participantes en el <b>experimento anterior</b>.
+            En esa sesión, el <b>Jugador B adivinaba directamente el número secreto</b> eligiendo un número entre 1 y 7.
         </p>
 
         <p>
-            <b>Your task is different.</b> Instead of entering a direct guess, you will report your
-            <strong>belief about the probability that Player A delegated to the computer</strong>.
-            You will move a slider from <b>0%</b> (Player A never delegated to the computer) to <b>100%</b> (Player A always delegated to the computer).
-        </p>
+            <b>Tu tarea es diferente.</b> En lugar de ingresar una adivinanza directa, <strong>reportarás tu creencia</strong>
+            sobre qué tan probable crees que es que el Jugador A haya delegado al computador.
+            Para eso, moverás un deslizador:</p>
+        <ul>
+            <li><b>0%</b> → crees que el Jugador A <b>no</b> delegó (eligió libremente)</li>
+            <li><b>100%</b> → crees que el Jugador A <b>sí</b> delegó al computador</li>
+        </ul>
 
         <div class="card border-warning my-3">
             <div class="card-body">
-                <h5><i class="fas fa-cogs"></i> How the computer uses your belief</h5>
+                <h5><i class="fas fa-cogs"></i> Cómo usa el computador tu creencia</h5>
                 <p class="mb-2">
-                    Once you report your belief, the computer will automatically calculate and submit
-                    the <b>guess that best maximises your chances of earning the bonus</b> given what you stated.
+                    Una vez que muevas el deslizador, el computador calculará y enviará automáticamente
+                    la <b>adivinanza que maximiza tus probabilidades de ganar el bono</b>.
                 </p>
                 <p class="mb-2">
-                    This means your <strong>best strategy is to report your true belief</strong> — the more
-                    accurately your belief reflects Player A's actual behaviour, the higher your expected earnings.
+                    Esto significa que tu <strong>mejor estrategia es reportar tu creencia verdadera</strong> — cuanto más
+                    fielmente refleje tu creencia el comportamiento real del Jugador A, mayores serán tus ganancias esperadas.
                 </p>
                 <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#formulaModal">
-                    <i class="fas fa-square-root-alt"></i> Show the formula
+                    <i class="fas fa-square-root-alt"></i> Mostrar la fórmula
                 </button>
             </div>
         </div>
 
         <p class="mb-0">
             <i class="fas fa-arrow-right text-info"></i>
-            The next pages will ask some comprehension questions and then show you a short tutorial
-            of the belief slider before the game begins.
+            A continuación, responderás unas preguntas de comprensión y harás un tutorial breve del deslizador antes de comenzar el juego.
         </p>
 
     </div>
@@ -57,37 +59,39 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="formulaModalLabel">How the computer calculates the optimal guess</h5>
+                <h5 class="modal-title" id="formulaModalLabel">Cómo calcula el computador la adivinanza óptima</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p>
-                    Let <em>p</em> be your stated belief (as a fraction between 0 and 1) about the probability
-                    that Player A delegated to the computer, and let <em>m</em> be the message you observe.
-                    The computer submits:
+                    Sea <em>p</em> tu creencia (entre 0 y 1) sobre la probabilidad de que el Jugador A haya delegado,
+                    y sea <em>m</em> el mensaje que observas. El computador envía:
                 </p>
                 <div class="card bg-light my-3">
                     <div class="card-body text-center" style="font-size: 1.15rem;">
-                        <b>Optimal guess = p × m + (1 − p) × 4</b>
+                        <b>Adivinanza óptima = p × m + (1 − p) × 4</b>
                     </div>
                 </div>
                 <p class="text-muted" style="font-size: 0.9rem;">
-                    This formula follows maximizes your expected earnings. When Player A tells the truth
-                    because when Player A delegates (probability <em>p</em>), the message <em>m</em> equals
-                    the secret number, so the best guess is <em>m</em>. When Player A does not delegate
-                    (probability 1 − p), the message carries no
-                    information and the best guess is the unconditional mean of the secret number, which is 4.
-                    The optimal guess is a weighted average of these two cases.
+                    La lógica es la siguiente:
+                </p>
+                <ul class="text-muted" style="font-size: 0.9rem;">
+                    <li>Si el Jugador A <b>delegó</b> (con probabilidad <em>p</em>), el mensaje <em>m</em> es igual al número secreto, así que la mejor adivinanza es <em>m</em>.</li>
+                    <li>Si el Jugador A <b>no delegó</b> (con probabilidad 1 − <em>p</em>), el mensaje no dice nada sobre el número secreto, así que la mejor adivinanza es el promedio de todos los posibles, que es 4.</li>
+                </ul>
+                <p class="text-muted" style="font-size: 0.9rem;">
+                    <b>Ejemplo:</b> Si crees que hay un 75% de probabilidad de que delegó (<em>p</em> = 0.75) y el mensaje es <em>m</em> = 6,
+                    la adivinanza óptima es 0.75 × 6 + 0.25 × 4 = <b>5.5</b>.
                 </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
 </div>
 
-<button class="otree-btn-next btn btn-primary">Continue</button>
+<button class="otree-btn-next btn btn-primary">Continuar</button>
 
 {{ endblock }}
 

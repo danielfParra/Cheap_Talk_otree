@@ -48,7 +48,7 @@ Instrucciones
 
     <p>
         Has llegado al final del juego. En el juego, el Jugador A siempre tuvo la opción de delegar la decisión al computador
-        que enviaría el número secreto verdadero. Estamos interesados en tu <strong>estimación</strong> sobre cuán a menudo los Jugadores A hicieron uso de esta opción.
+        que enviaría el número secreto verdadero. Estamos interesados en tu <strong>creencia</strong> sobre cuán a menudo los Jugadores A hicieron uso de esta opción.
     </p>
 
     <p>
@@ -63,7 +63,7 @@ Instrucciones
     <div id="incentives" class="hidden-paragraph">
 
     <p>
-        Por favor, piensa <strong>cuidadosamente</strong> sobre esta pregunta. Basado en tu respuesta, puedes ganar un <b>bono extra</b> de <strong>{{ Constants.HONESTY_GUESS_BONUS }}</strong>: Cuanto más cercana sea tu estimación a la verdadera probabilidad con la que un mensaje fue delegado al computador, mayor será la probabilidad de que recibas el bono. <button type="button" name="more_info2" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#moreinfo2">
+        Por favor, piensa <strong>cuidadosamente</strong> sobre esta pregunta. Basado en tu respuesta, puedes ganar un <b>bono extra</b> de <strong>{{ Constants.HONESTY_GUESS_BONUS }}</strong>: Cuanto más cercana sea tu creencia a la verdadera probabilidad con la que un mensaje fue delegado al computador, mayor será la probabilidad de que recibas el bono. <button type="button" name="more_info2" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#moreinfo2">
             Detalles del cálculo del bono extra
         </button>
         
@@ -99,7 +99,7 @@ Instrucciones
                     <mo>(</mo>
                     <mn>100</mn>
                     <mo>-</mo>
-                    <mi>Tu estimación</mi>
+                    <mi>Tu creencia</mi>
                     <mo>)</mo>
                   </mrow>
                   <mn>2</mn>
@@ -121,7 +121,7 @@ Instrucciones
                     <mo>(</mo>
                     <mn>0</mn>
                     <mo>-</mo>
-                    <mi>Tu estimación</mi>
+                    <mi>Tu creencia</mi>
                     <mo>)</mo>
                   </mrow>
                   <mn>2</mn>
@@ -134,10 +134,10 @@ Instrucciones
         </div>
         
         <p>
-            Si el mensaje fue delegado y adivinas 100, ganas el bono con seguridad. Estimaciones más bajas disminuyen tus posibilidades.
+            Si el mensaje fue delegado y reportas 100, ganas el bono con seguridad. Valores más bajos disminuyen tus posibilidades.
         </p>
         <p>
-            Si el mensaje no fue delegado y adivinas 0, ganas el bono con seguridad. Estimaciones más altas aumentan tus posibilidades.
+            Si el mensaje no fue delegado y reportas 0, ganas el bono con seguridad. Valores más altos disminuyen tus posibilidades.
         </p>
         <p>
             Ganas más en promedio reportando tu creencia honesta. Si crees que hay un X% de probabilidad de que el mensaje haya sido delegado, ingresar "X%" maximiza tus ganancias esperadas.
@@ -199,7 +199,7 @@ Instrucciones
       document.getElementById("slider").setAttribute("max", js_vars.max_guess);
       document.getElementById("slider").setAttribute("min", js_vars.min_guess);
       let receiver_guess = parseFloat(input.value).toFixed(0);
-      description.innerText = `Tu estimación de la proporción: ${receiver_guess}%`;
+      description.innerText = `Tu creencia reportada: ${receiver_guess}%`;
 
       if (parseFloat(input.value) >= 0 && parseFloat(input.value) <= 100) {
           show_text(submit_button);

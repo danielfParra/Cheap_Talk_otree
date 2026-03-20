@@ -46,11 +46,11 @@ Instrucciones
     <h3><i class="fa fa-question-circle" aria-hidden="true"></i> ¿Cuántos siguieron el mensaje?</h3>
 
     <p>
-        Has llegado al final del juego. En el juego, el Jugador B recibió mensajes del Jugador A, incluyendo el mensaje: "Para recibir la mayor ganancia, deberías elegir 7". Estamos interesados en tu estimación sobre con qué frecuencia el Jugador B siguió este mensaje adivinando muy cerca de 7 (entre 6.8 y 7).
+        Has llegado al final del juego. En el juego, el Jugador B recibió mensajes del Jugador A, incluyendo el mensaje: "Para recibir el pago más alto, deberías elegir 7". Estamos interesados en tu creencia sobre con qué frecuencia el Jugador B siguió este mensaje adivinando muy cerca de 7 (entre 6.8 y 7).
     </p>
 
     <p>
-        A continuación, te pedimos que consideres el siguiente escenario: Considera una instancia elegida al azar en la que el Jugador B recibió el mensaje "Para recibir la mayor ganancia, deberías elegir 7". <i>¿Cuál es la probabilidad de que el Jugador B haya adivinado muy cerca de 7 (entre 6.8 y 7) en esa instancia?</i>
+        A continuación, te pedimos que consideres el siguiente escenario: Considera una instancia elegida al azar en la que el Jugador B recibió el mensaje "Para recibir el pago más alto, deberías elegir 7". <i>¿Cuál es la probabilidad de que el Jugador B haya adivinado muy cerca de 7 (entre 6.8 y 7) en esa instancia?</i>
     </p>
 
     <p>
@@ -60,7 +60,7 @@ Instrucciones
     <div id="incentives" class="hidden-paragraph">
 
     <p>
-        Por favor, piensa <strong>cuidadosamente</strong> sobre esta pregunta. Basado en tu respuesta, puedes ganar un <b>bono extra</b> de <strong>{{ Constants.CREDULITY_GUESS_BONUS }}</strong>: Cuanto más cercana sea tu estimación a la verdadera probabilidad de que el Jugador B haya adivinado muy cerca de 7 después de recibir este mensaje, mayor será la probabilidad de que recibas el bono. <button type="button" name="more_info2" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#moreinfo2">
+        Por favor, piensa <strong>cuidadosamente</strong> sobre esta pregunta. Basado en tu respuesta, puedes ganar un <b>bono extra</b> de <strong>{{ Constants.CREDULITY_GUESS_BONUS }}</strong>: Cuanto más cercana sea tu creencia a la verdadera probabilidad de que el Jugador B haya adivinado muy cerca de 7 después de recibir este mensaje, mayor será la probabilidad de que recibas el bono. <button type="button" name="more_info2" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#moreinfo2">
             Detalles del cálculo del bono extra
         </button>
         
@@ -96,7 +96,7 @@ Instrucciones
                     <mo>(</mo>
                     <mn>100</mn>
                     <mo>-</mo>
-                    <mi>Tu estimación</mi>
+                    <mi>Tu creencia</mi>
                     <mo>)</mo>
                   </mrow>
                   <mn>2</mn>
@@ -118,7 +118,7 @@ Instrucciones
                     <mo>(</mo>
                     <mn>0</mn>
                     <mo>-</mo>
-                    <mi>Tu estimación</mi>
+                    <mi>Tu creencia</mi>
                     <mo>)</mo>
                   </mrow>
                   <mn>2</mn>
@@ -131,10 +131,10 @@ Instrucciones
         </div>
         
         <p>
-            Si el Jugador B adivinó muy cerca de 7 y adivinas 100, ganas el bono con seguridad. Estimaciones más bajas disminuyen tus posibilidades.
+            Si el Jugador B adivinó muy cerca de 7 y reportas 100, ganas el bono con seguridad. Valores más bajos disminuyen tus posibilidades.
         </p>
         <p>
-            Si el Jugador B no adivinó muy cerca de 7 y adivinas 0, ganas el bono con seguridad. Estimaciones más altas aumentan tus posibilidades.
+            Si el Jugador B no adivinó muy cerca de 7 y reportas 0, ganas el bono con seguridad. Valores más altos disminuyen tus posibilidades.
         </p>
         <p>
             Ganas más en promedio reportando tu creencia honesta. Si crees que hay un Y% de probabilidad de que el Jugador B haya adivinado muy cerca de 7, ingresar "Y%" maximiza tus ganancias esperadas.
@@ -196,7 +196,7 @@ Instrucciones
       document.getElementById("slider").setAttribute("max", js_vars.max_guess);
       document.getElementById("slider").setAttribute("min", js_vars.min_guess);
       let receiver_guess = parseFloat(input.value).toFixed(0);
-      description.innerText = `Tu proporción estimada: ${receiver_guess}%`;
+      description.innerText = `Tu creencia reportada: ${receiver_guess}%`;
 
       if (parseFloat(input.value) >= 0 && parseFloat(input.value) <= 100) {
           show_text(submit_button);

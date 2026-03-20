@@ -18,15 +18,15 @@
 
     <div class="right-pane" style="width: 50%; background-color: #fff; padding: 20px; box-sizing: border-box; overflow-y: auto;">
 
-        <h3 data-intro="Round number" data-step="3">Round X: Guess the secret number</h3>
+        <h3 data-intro="Número de ronda" data-step="3">Ronda X: Adivina el número secreto</h3>
 
-        <p>You are Player B. Your task is to guess the secret numbers.</p>
+        <p>Eres el Jugador B. Tu tarea es adivinar los números secretos.</p>
 
-        <div class="d-flex justify-content-center" data-intro="Player A's message" data-step="7" id="message-box">
+        <div class="d-flex justify-content-center" data-intro="Mensaje de los Jugadores A" data-step="7" id="message-box">
             <div class="card text-dark bg-light mb-3" style="width: 24rem;">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Players' A message:</h5>
-                    <p class="card-text">To receive the highest payoff, you should choose <b><span id="encoded_message"></span></b>.</p>
+                    <h5 class="card-title">Mensaje de los Jugadores A:</h5>
+                    <p class="card-text">Para recibir el pago más alto, deberías elegir <b><span id="encoded_message"></span></b>.</p>
                 </div>
             </div>
         </div>
@@ -41,7 +41,7 @@
 
         <div id="receiver_guess" class="hidden-paragraph" data-intro="Guess slider" data-step="8">
             <p>
-                Please guess the secret numbers. You may enter any number between 1 and 7, including decimals.
+                Por favor adivina los números secretos. Puedes ingresar cualquier número entre 1 y 7, incluyendo decimales.
             </p>
 
             <div style="max-width: 420px; margin: 0 auto;">
@@ -60,7 +60,7 @@
 
         <div id="submit_button" class="hidden-paragraph mt-4" data-intro="Submit button" data-step="9">
             <div class="d-grid gap-2 col-6 mx-auto">
-                <button type="submit" class="btn btn-success btn-lg btn-block">Submit</button>
+                <button type="submit" class="btn btn-success btn-lg btn-block">Enviar</button>
             </div>
         </div>
 
@@ -88,7 +88,7 @@
             const bg = isDelegated ? '#e8f7ff' : '#fff3e8';
             const border = isDelegated ? '#7cc5e8' : '#f0b27a';
             const icon = isDelegated ? '🤖' : '👤';
-            const label = isDelegated ? 'Computer' : 'Chose';
+            const label = isDelegated ? 'Computador' : 'Eligió';
 
             html +=
                 '<div style="border:1px solid ' + border + '; background:' + bg + '; border-radius:8px; padding:8px; text-align:center;">' +
@@ -98,7 +98,7 @@
         }
 
         html += '</div>';
-        html += '<div style="font-size:0.82rem; color:#444;">🤖 Delegated: <b>' + delegated + '</b> | 👤 Did not delegate: <b>' + strategic + '</b></div>';
+        html += '<div style="font-size:0.82rem; color:#444;">🤖 Delegaron: <b>' + delegated + '</b> | 👤 No delegaron: <b>' + strategic + '</b></div>';
         container.innerHTML = html;
     }
 
@@ -108,7 +108,7 @@
         document.getElementById('slider').setAttribute('max', js_vars.max_guess);
         document.getElementById('slider').setAttribute('min', js_vars.min_guess);
         let receiver_guess = parseFloat(input.value).toFixed(1);
-        description.innerText = `Your guessed number: ${receiver_guess}`;
+        description.innerText = `Tu número adivinado: ${receiver_guess}`;
 
         if (parseFloat(input.value) >= 1 && parseFloat(input.value) <= 7) {
             show_text(submit_button);
@@ -135,32 +135,32 @@
         steps: [
             {
                 title: 'Tutorial',
-                intro: "This is your decision screen. It will look similar in every round. Press 'Next' for a quick overview."
+                intro: "Esta es tu pantalla de decisión. Se verá similar en cada ronda. Presiona 'Siguiente' para un resumen rápido."
             },
             {
-                title: 'Game reminder',
+                title: 'Recordatorio del juego',
                 element: '.left-pane',
-                intro: 'This panel reminds you of the game rules throughout the experiment.'
+                intro: 'Este panel te recuerda las reglas del juego durante todo el experimento.'
             },
             {
-                title: 'Round number',
+                title: 'Número de ronda',
                 element: 'h3',
-                intro: "Here you can see which round you are in. During the experiment, 'X' will vary between 1 and {{ Constants.num_rounds }}."
+                intro: "Aquí puedes ver en qué ronda estás. Durante el experimento, la 'X' variará entre 1 y {{ Constants.num_rounds }}."
             },
             {
-                title: "Player A's messages",
+                title: 'Mensajes de los Jugadores A',
                 element: '#message-box',
-                intro: "Here you can see the message sent by 4 previous Player A\'s."
+                intro: 'Aquí puedes ver el mensaje enviado por 4 Jugadores A del experimento anterior.'
             },
             {
-                title: 'Bundle information',
+                title: 'Información del grupo',
                 element: '#NoUncertainty_info',
-                intro: 'Here you see how many out of 4 Player A\'s delegated to the computer when sending this message. Your guess will be evaluated against the secret numbers of all Player A\'s from that group of 4.'
+                intro: 'Aquí ves cuántos de 4 Jugadores A delegaron al computador al enviar este mensaje. Tu adivinanza se evaluará contra los números secretos de todos los Jugadores A de ese grupo de 4.'
             },
             {
-                title: 'Your guess',
+                title: 'Tu adivinanza',
                 element: '#receiver_guess',
-                intro: 'Move the slider to choose your guess. Please try any value now.'
+                intro: 'Mueve el deslizador para elegir tu adivinanza. Por favor prueba cualquier valor ahora.'
             },
             {
                 title: 'Límite de tiempo',
@@ -168,15 +168,15 @@
                 intro: 'En el experimento real, tendrás un límite de tiempo para tomar tu decisión. Verás tu tiempo restante en una cuenta regresiva en la parte superior de la página. <br> Para este tutorial, no hay límite de tiempo.'
             },
             {
-                title: 'Submit button',
+                title: 'Botón de envío',
                 element: '.btn-success',
-                intro: "Click here to submit your choice and continue. Press 'Submit' when you are ready."
+                intro: "Haz clic aquí para enviar tu elección y continuar. Presiona 'Enviar' cuando estés listo/a."
             }
         ],
         showStepNumbers: true,
-        nextLabel: 'Next',
-        prevLabel: 'Back',
-        doneLabel: 'Close',
+        nextLabel: 'Siguiente',
+        prevLabel: 'Atrás',
+        doneLabel: 'Cerrar',
         exitOnOverlayClick: false,
         exitOnEsc: false,
         keyboardNavigation: false,
@@ -220,7 +220,7 @@
             const bg = isDelegated ? '#e8f7ff' : '#fff3e8';
             const border = isDelegated ? '#7cc5e8' : '#f0b27a';
             const icon = isDelegated ? '🤖' : '👤';
-            const label = isDelegated ? 'Computador' : 'Eligio';
+            const label = isDelegated ? 'Computador' : 'Eligió';
 
             html +=
                 '<div style="border:1px solid ' + border + '; background:' + bg + '; border-radius:8px; padding:8px; text-align:center;">' +
@@ -230,7 +230,7 @@
         }
 
         html += '</div>';
-        html += '<div style="font-size:0.82rem; color:#444;">🤖 Delegated: <b>' + delegated + '</b> | 👤 Did not delegate: <b>' + strategic + '</b></div>';
+        html += '<div style="font-size:0.82rem; color:#444;">🤖 Delegaron: <b>' + delegated + '</b> | 👤 No delegaron: <b>' + strategic + '</b></div>';
         container.innerHTML = html;
     }
 </script>

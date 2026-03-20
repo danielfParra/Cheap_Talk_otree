@@ -17,7 +17,7 @@ class Constants(BaseConstants):
     POOL_SIZE = 5
     TIME_PER_ROUND = 60
     TIME_PER_ROUND_PREV = 20
-    FEEDBACK_TIME = 5
+    FEEDBACK_TIME = 10
     ATTEMPT_DELAY = 5
 
   
@@ -116,25 +116,25 @@ class Constants(BaseConstants):
     A_message_origin = 'Fueron escritos por participantes del Jugador A que participaron en un experimento anterior'
     H_message_origin = 'Los mensajes que verás no fueron generados durante tu sesión. Piensa en quién los envió y cuándo fueron enviados.'
 
-    Q_fixbelief_understanding = 'Which statement is correct about the sender and the message you observe?'
+    Q_fixbelief_understanding = '¿Cuál afirmación es correcta sobre el Jugador A y el mensaje que observas?'
     O_fixbelief_understanding = [
-        'Your sender is selected from 4 senders who sent this message, and if a sender delegated to the computer, that sender sent the true secret number',
-        'Your sender changes every round, and delegating means sending a random number',
-        'Your sender is selected from all participants in the previous experiment, and delegating means sending the highest number',
-        'Your sender is selected from 4 senders who sent this message, and delegating means choosing any number strategically'
+        'Tu Jugador A es seleccionado de 4 Jugadores A que enviaron este mensaje, y si un Jugador A delegó al computador, ese Jugador A envió el verdadero número secreto',
+        'Tu Jugador A cambia cada ronda, y delegar significa enviar un número aleatorio',
+        'Tu Jugador A es seleccionado de todos los participantes del experimento anterior, y delegar significa enviar el número más alto',
+        'Tu Jugador A es seleccionado de 4 Jugadores A que enviaron este mensaje, y delegar significa elegir cualquier número estratégicamente'
     ]
-    A_fixbelief_understanding = 'Your sender is selected from 4 senders who sent this message, and if a sender delegated to the computer, that sender sent the true secret number'
-    H_fixbelief_understanding = 'Remember: your sender comes from a group of 4 senders who sent that message, and delegation means the computer sent the true secret number.'
+    A_fixbelief_understanding = 'Tu Jugador A es seleccionado de 4 Jugadores A que enviaron este mensaje, y si un Jugador A delegó al computador, ese Jugador A envió el verdadero número secreto'
+    H_fixbelief_understanding = 'Recuerda: tu Jugador A proviene de un grupo de 4 Jugadores A que enviaron ese mensaje, y delegar significa que el computador envió el verdadero número secreto.'
 
-    Q_nouncertainty_understanding = 'Which statement is correct about how your guess is evaluated in this treatment?'
+    Q_nouncertainty_understanding = '¿Cuál afirmación es correcta sobre cómo se evalúa tu adivinanza en este tratamiento?'
     O_nouncertainty_understanding = [
-        'My single guess is evaluated against the 4 secret numbers of the 4 senders in the bundle, and my round performance is aggregated across those 4 cases',
-        'After I guess, the computer randomly selects one of the 4 senders, and only that sender determines my payoff',
-        'I submit 4 separate guesses, one for each sender in the bundle',
-        'My guess is evaluated only against the senders who delegated to the computer'
+        'Mi única adivinanza se compara con los 4 números secretos de los 4 Jugadores A del grupo, y mi desempeño en la ronda se calcula como el promedio de esas 4 comparaciones',
+        'Después de adivinar, el computador selecciona aleatoriamente a uno de los 4 Jugadores A, y solo ese Jugador A determina mi pago',
+        'Envío 4 adivinanzas separadas, una por cada Jugador A del grupo',
+        'Mi adivinanza solo se compara con los Jugadores A que delegaron al computador'
     ]
-    A_nouncertainty_understanding = 'My single guess is evaluated against the 4 secret numbers of the 4 senders in the bundle, and my round performance is aggregated across those 4 cases'
-    H_nouncertainty_understanding = 'Remember: you submit one guess, it is compared with all 4 secret numbers in the bundle, and your round performance aggregates those 4 comparisons.'
+    A_nouncertainty_understanding = 'Mi única adivinanza se compara con los 4 números secretos de los 4 Jugadores A del grupo, y mi desempeño en la ronda se calcula como el promedio de esas 4 comparaciones'
+    H_nouncertainty_understanding = 'Recuerda: envías una sola adivinanza, se compara con los 4 números secretos del grupo, y tu desempeño en la ronda es el promedio de esas 4 comparaciones.'
 
     wrong_answer_message = 'No respondiste correctamente a esta pregunta. La siguiente pista puede ayudarte cuando intentes responder de nuevo:'
     correct_answer_message = 'Respondiste correctamente a esta pregunta. No necesitas cambiarla.'

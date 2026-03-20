@@ -1,5 +1,5 @@
 {{ block title }}
-One more task
+Una tarea más
 {{ endblock }}
 
 {{ block styles }}
@@ -13,45 +13,49 @@ One more task
 <div class="card bg-light m-3">
     <div class="card-body">
 
-        <h3><i class="fa fa-pencil" aria-hidden="true"></i> Explain your strategy</h3>
+        <h3><i class="fa fa-pencil" aria-hidden="true"></i> Explica tu estrategia</h3>
 
-        <p>We will now ask you to briefly explain how you made your guesses.</p>
+        <p>Ahora te pediremos que expliques brevemente cómo hiciste tus adivinanzas.</p>
 
-        <p><strong>Your explanation</strong></p>
-        <p>Please write clear instructions describing the rule or method you used to convert Player A's message into your guess.</p>
-        <p>Imagine you are writing instructions for an AI, for instance ChatGPT, that should reproduce your guesses when it sees the same messages. You can think of this as sending a message to someone who will try to replace you and will only see your written explanation and the original messages.</p>
+        <p><strong>Tu explicación</strong></p>
+        <p>Por favor escribe instrucciones claras que describan la regla o el método que usaste para
+             convertir el mensaje del Jugador A en tu adivinanza.</p>
+           <p>Imagina que le estás escribiendo instrucciones a una IA, por ejemplo ChatGPT, que debería reproducir
+             tus adivinanzas cuando vea los mismos mensajes.
+             No escribas un prompt completo: escribe solo la regla o el método que usabas para decidir qué número adivinar,
+             para que esa regla pueda incorporarse dentro de un prompt ya definido para ChatGPT.</p>
         <ul>
-            <li>Describe your general rule.</li>
-            <li>Be as specific as possible.</li>
-            <li>Do not list your guesses round by round.</li>
-            <li>Do not write your guesses again.</li>
-            <li>Explain the method you used.</li>
+            <li>Describe tu regla general.</li>
+            <li>Sé lo más específico/a posible.</li>
+            <li>No listes tus adivinanzas ronda por ronda.</li>
+            <li>No escribas tus adivinanzas de nuevo.</li>
+            <li>Explica el método que usaste.</li>
         </ul>
 
-        <p><strong>How your explanation will be used</strong></p>
-        <p>After the session, the computer will randomly select 5 rounds from your game.</p>
-        <p>For those 5 rounds:</p>
+        <p><strong>Cómo se usará tu explicación</strong></p>
+        <p>Después de la sesión, el computador seleccionará aleatoriamente 5 rondas de tu juego.</p>
+        <p>Para esas 5 rondas:</p>
         <ul>
-            <li>An AI (ChatGPT) will receive:
+            <li>Una IA (ChatGPT) recibirá:
                 <ul>
-                    <li>The message you saw from Player A</li>
-                    <li>The original game rules</li>
-                    <li>Your written explanation</li>
+                    <li>El mensaje que viste del Jugador A</li>
+                    <li>Las reglas originales del juego</li>
+                    <li>Tu explicación escrita</li>
                 </ul>
             </li>
-            <li>The AI will then try to reproduce your guesses in those rounds using your explanation.</li>
+            <li>La IA intentará reproducir tus adivinanzas en esas rondas usando tu explicación.</li>
         </ul>
 
-        <p><strong>How the bonus is calculated</strong></p>
-        <p>For each selected round, we compute a score based on how close ChatGPT's guess is to your guess.</p>
+        <p><strong>Cómo se calcula el bono</strong></p>
+        <p>Para cada ronda seleccionada, calculamos un puntaje según qué tan cerca está la adivinanza de ChatGPT de la tuya.</p>
         <ul>
-            <li>The closer ChatGPT's guess is to your guess, the higher the score for that round.</li>
-            <li>If ChatGPT's guess is exactly equal to your guess, the score for that round is 100%.</li>
-            <li>If ChatGPT's guess is very far from your guess, the score is lower.</li>
+            <li>Cuanto más cerca esté la adivinanza de ChatGPT de la tuya, mayor será el puntaje de esa ronda.</li>
+            <li>Si la adivinanza de ChatGPT es exactamente igual a la tuya, el puntaje de esa ronda es 100%.</li>
+            <li>Si la adivinanza de ChatGPT está muy lejos de la tuya, el puntaje será menor.</li>
         </ul>
 
         <button type="button" class="btn btn-warning mb-2" data-bs-toggle="modal" data-bs-target="#formulaModal">
-            Score calculation details
+            Detalles del cálculo del puntaje
         </button>
 
         <!-- Modal -->
@@ -59,16 +63,16 @@ One more task
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header d-flex justify-content-between align-items-center">
-                <h5 class="modal-title m-0" id="formulaModalLabel">Round score calculation</h5>
+                <h5 class="modal-title m-0" id="formulaModalLabel">Cálculo del puntaje por ronda</h5>
                 <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <p>The formula used is:</p>
+                <p>La fórmula utilizada es:</p>
                 <div class="card bg-light my-3">
                   <div class="card-body text-center" style="font-size: 1rem;">
                     <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
                         <mrow>
-                            <mtext>Round score (in percent)</mtext>
+                            <mtext>Puntaje por ronda (en porcentaje)</mtext>
                             <mo>=</mo>
                             <mn>100</mn>
                             <mo>-</mo>
@@ -80,9 +84,9 @@ One more task
                             <msup>
                                 <mrow>
                                     <mo>(</mo>
-                                    <mtext>Your guess</mtext>
+                                    <mtext>Tu adivinanza</mtext>
                                     <mo>-</mo>
-                                    <mtext>ChatGPT's guess</mtext>
+                                    <mtext>Adivinanza de ChatGPT</mtext>
                                     <mo>)</mo>
                                 </mrow>
                                 <mn>2</mn>
@@ -93,31 +97,33 @@ One more task
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
               </div>
             </div>
           </div>
         </div>
 
-        <p>We then compute the average score across the 5 selected rounds.</p>
+        <p>Luego calculamos el puntaje promedio de las 5 rondas seleccionadas.</p>
 
-        <p><strong>Final bonus</strong></p>
-        <p>You can earn an additional bonus of <strong>{{ Constants.EXPLANATION_BONUS }}</strong>.</p>
-        <p>Your probability of receiving this bonus is equal to your average score (in percent).</p>
-        <p><strong>Example:</strong></p>
+        <p><strong>Bono final</strong></p>
+        <p>Puedes ganar un bono adicional de <strong>{{ Constants.EXPLANATION_BONUS }}</strong>.</p>
+        <p>Tu probabilidad de recibir este bono es igual a tu puntaje promedio (en porcentaje).</p>
+        <p><strong>Ejemplo:</strong></p>
         <ul>
-            <li>If your average score is 80%, you have an 80% chance of receiving the bonus.</li>
-            <li>If your average score is 25%, you have a 25% chance of receiving the bonus.</li>
+            <li>Si tu puntaje promedio es 80%, tienes un 80% de probabilidad de recibir el bono.</li>
+            <li>Si tu puntaje promedio es 25%, tienes un 25% de probabilidad de recibir el bono.</li>
         </ul>
-        <p><strong>The better your explanation allows ChatGPT to reproduce your guesses, the higher your chance of receiving the bonus.</strong></p>
+        <p><strong>Cuanto mejor permita tu explicación que ChatGPT reproduzca tus adivinanzas, mayor será tu probabilidad de recibir el bono.</strong></p>
 
-        <p class="mt-4">Now please use the box below to provide your explanation.</p>
+        <p class="mt-4">Por favor usa el recuadro de abajo para escribir tu explicación.</p>
+        <p><strong>Importante:</strong> Lo único de lo que debes preocuparte es describir, de la forma más clara posible, 
+            cómo decidías el número que querías adivinar.</p>
         {{ formfield 'strategy_explanation' }}
 
     </div>
 </div>
 
-<button class="otree-btn-next btn btn-primary">Next</button>
+<button class="otree-btn-next btn btn-primary">Continuar</button>
 
 {{ endblock }}
 

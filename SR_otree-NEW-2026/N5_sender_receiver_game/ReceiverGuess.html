@@ -16,20 +16,20 @@
         <h3 data-intro="Número de ronda" data-step="3">Ronda {{player.round_number}}: Adivina el número secreto</h3>
 
         {% if player.participant.treatment == 'NoUncertainty' %}
-        <p>You are Player B. Your task is to guess the secret numbers.</p>
+        <p>Eres el Jugador B. Tu tarea es adivinar los números secretos.</p>
         {% else %}
-        <p>You are Player B. Your task is to guess the secret number.</p>
+        <p>Eres el Jugador B. Tu tarea es adivinar el número secreto.</p>
         {% endif %}
 
         <div class="d-flex justify-content-center" data-intro="Mensaje del Jugador A." data-step="5" id="message-box">
             <div class="card text-dark bg-light mb-3" style="width: 24rem;">
                 <div class="card-body text-center">
                     {% if player.participant.treatment == 'NoUncertainty' %}
-                    <h5 class="card-title">Players' A message:</h5>
+                    <h5 class="card-title">Mensaje de los Jugadores A:</h5>
                     {% else %}
                     <h5 class="card-title">Mensaje del Jugador A:</h5>
                     {% endif %}
-                    <p class="card-text">Para recibir la mayor ganancia, deberías elegir <b><span id="encoded_message"></span> </b>.</p>
+                    <p class="card-text">Para recibir el pago más alto, deberías elegir <b><span id="encoded_message"></span> </b>.</p>
                 </div>
             </div>
         </div>
@@ -59,11 +59,11 @@
 
         {% if player.participant.treatment == 'NoUncertainty' %}
         <p>
-            Please guess the secret numbers. You may enter any number between 1 and 7, including decimals.
+            Por favor adivina los números secretos. Puedes ingresar cualquier número entre 1 y 7, incluyendo decimales.
         </p>
         {% else %}
         <p>
-            Please guess the secret number. You may enter any number between 1 and 7, including decimals.
+            Por favor adivina el número secreto. Puedes ingresar cualquier número entre 1 y 7, incluyendo decimales.
         </p>
         {% endif %}
 
@@ -88,7 +88,7 @@
         <p>
             ¿Cuál es la probabilidad (en porcentaje) de que el Jugador A <strong>haya delegado al computador</strong> (es decir, que haya enviado el número secreto verdadero)?
         </p>
-        <h4>Move the slider to report your belief.</h4>
+        <h4>Mueve el deslizador para reportar tu creencia.</h4>
         <br>
         <div style="max-width: 420px; margin: 0 auto;">
             <input id="belief_slider" value="0" type="range"
@@ -103,9 +103,9 @@
             </div>
             <div class="card bg-light mt-3">
                 <div class="card-body text-center">
-                    <p class="mb-1"><small>Based on your belief, the optimal guess is:</small></p>
+                    <p class="mb-1"><small>Según tu creencia, la adivinanza óptima es:</small></p>
                     <span id="optimal_guess_display" style="background:#198754; color:#fff; padding: 5px 20px; border-radius: 20px; font-size: 1.1rem; font-weight: 600;"></span>
-                    <p class="mt-2 mb-0"><small>The computer will submit this guess for you.</small></p>
+                    <p class="mt-2 mb-0"><small>El computador enviará esta adivinanza por ti.</small></p>
                 </div>
             </div>
             <input type="hidden" name="belief_honest_pct" id="belief_honest_pct_input" value="0">
@@ -117,7 +117,7 @@
         <br>
         <div id="submit_button" class="hidden-paragraph" data-intro="Submit-Button" data-step="7">
             <div class="d-grid gap-2 col-6 mx-auto">
-                <button id="submitBtn" type="button" class="btn btn-success btn-lg btn-block" onclick="lockAndWait()">Submit</button>
+                <button id="submitBtn" type="button" class="btn btn-success btn-lg btn-block" onclick="lockAndWait()">Continuar</button>
             </div>
             <!-- Waiting message shown after submission 
             <div id="waitingMessage" class="text-center mt-3" style="display: none;">
@@ -159,8 +159,8 @@
                 const optimal = (p / 100) * sender_message + (1 - p / 100) * 4;
                 const optimalRounded = Math.max(1, Math.min(7, optimal)).toFixed(1);
                 document.getElementById('slider').value = optimalRounded;
-                document.getElementById('belief_description').innerText = `Your belief: ${p}% probability of delegation`;
-                document.getElementById('optimal_guess_display').innerText = `Optimal guess: ${optimalRounded}`;
+                document.getElementById('belief_description').innerText = `Tu creencia: ${p}% de probabilidad de delegación`;
+                document.getElementById('optimal_guess_display').innerText = `Adivinanza óptima: ${optimalRounded}`;
                 show_text(submit_button);
             }
         </script>
@@ -180,7 +180,7 @@
             const bg = isDelegated ? '#e8f7ff' : '#fff3e8';
             const border = isDelegated ? '#7cc5e8' : '#f0b27a';
             const icon = isDelegated ? '🤖' : '👤';
-            const label = isDelegated ? 'Computador' : 'Eligio';
+            const label = isDelegated ? 'Computador' : 'Eligió';
 
             html +=
                 '<div style="border:1px solid ' + border + '; background:' + bg + '; border-radius:8px; padding:8px; text-align:center;">' +
@@ -190,7 +190,7 @@
         }
 
         html += '</div>';
-        html += '<div style="font-size:0.82rem; color:#444;">🤖 Delegated: <b>' + delegated + '</b> | 👤 Did not delegate: <b>' + strategic + '</b></div>';
+        html += '<div style="font-size:0.82rem; color:#444;">🤖 Delegaron: <b>' + delegated + '</b> | 👤 No delegaron: <b>' + strategic + '</b></div>';
         container.innerHTML = html;
     }
 
@@ -207,7 +207,7 @@
             document.getElementById('regular_guess_section').style.display = 'none';
             show_text(document.getElementById('belief_guess_section'));
             show_text(receiver_guess);
-            // Do NOT call updateBelief on load — slider starts blank until user moves it
+            // NO llamar updateBelief al cargar — el deslizador inicia en blanco hasta que el usuario lo mueva
         } else {
             show_text(receiver_guess);
         }
@@ -229,7 +229,7 @@
         
         // Validate input
         if (isNaN(sliderValue) || sliderValue < 1 || sliderValue > 7) {
-            alert("Please make a valid guess before submitting.");
+            alert("Por favor ingresa una adivinanza válida antes de continuar.");
             return;
         }
         

@@ -38,15 +38,15 @@ El juego
         
     <p>
         <strong>Cuando eres el Jugador A:</strong> En cualquier ronda relevante para el pago,
-        <strong>tu pago depende solo de la suposición del Jugador B.</strong>
-        Específicamente, cuanto mayor sea la suposición de B (en una escala del 1 al 7), mayor será tu probabilidad de recibir el bono.
+        <strong>tu pago depende solo de la adivinanza del Jugador B.</strong>
+        Específicamente, cuanto mayor sea la adivinanza de B (en una escala del 1 al 7), mayor será tu probabilidad de recibir el bono.
         (Tu propio mensaje o el número secreto no afectan tu pago.)
     </p>
 
     <p>
         <strong>Cuando eres el Jugador B:</strong> En cualquier ronda relevante para el pago,
-        <strong>tu pago depende solo de qué tan cerca esté tu suposición del número secreto.</strong>
-        Cuanto más cerca esté tu suposición del número secreto, mayor será tu probabilidad de recibir el bono.
+        <strong>tu pago depende solo de qué tan cerca esté tu adivinanza del número secreto.</strong>
+        Cuanto más cerca esté tu adivinanza del número secreto, mayor será tu probabilidad de recibir el bono.
     </p>
 
     <p>
@@ -70,11 +70,11 @@ El juego
     </h3>
 
     <p>
-      <b>El Jugador A</b> puede ganar un bono de <b>{{Constants.BONUS_AMOUNT}} pesos</b> dependiendo de la suposición del Jugador B.
-      La probabilidad de que el Jugador A gane este bono <b>aumenta</b> a medida que aumenta la suposición del Jugador B.
-      Esto significa que la suposición más alta (7) le da al Jugador A un 100% de probabilidad de obtener el bono, 
-      mientras que la suposición más baja (1) le da un 0% de probabilidad. 
-      (No importa si la suposición de B es mayor o menor que el propio mensaje de A.)
+      <b>El Jugador A</b> puede ganar un bono de <b>{{Constants.BONUS_AMOUNT}} pesos</b> dependiendo de la adivinanza del Jugador B.
+      La probabilidad de que el Jugador A gane este bono <b>aumenta</b> a medida que aumenta la adivinanza del Jugador B.
+      Esto significa que la adivinanza más alta (7) le da al Jugador A un 100% de probabilidad de obtener el bono, 
+      mientras que la adivinanza más baja (1) le da un 0% de probabilidad. 
+      (No importa si la adivinanza de B es mayor o menor que el propio mensaje de A.)
   </p>
 
 <!-- Botón para activar el modal -->
@@ -93,7 +93,7 @@ El juego
       </div>
       <div class="modal-body">
         <p>
-    La suposición del Jugador B es un número entre 1 y 7. Este número se utiliza para determinar
+    La adivinanza del Jugador B es un número entre 1 y 7. Este número se utiliza para determinar
             el pago del Jugador A según la siguiente fórmula:
 </p>
 
@@ -106,7 +106,7 @@ El juego
         <math>
   <mfrac>
     <mrow>
-      <mi>Suposición&nbsp;del&nbsp;Jugador&nbsp;B&nbsp;-&nbsp;1</mi>
+      <mi>Adivinanza&nbsp;del&nbsp;Jugador&nbsp;B&nbsp;-&nbsp;1</mi>
     </mrow>
     <mn>6</mn>
   </mfrac>
@@ -119,18 +119,18 @@ El juego
 
 
 <p>
-    La fórmula toma la diferencia entre la suposición del Jugador B y 1. El número resultante
+    La fórmula toma la diferencia entre la adivinanza del Jugador B y 1. El número resultante
     se divide por 6 y luego se multiplica por 100. 
 </p>
 
 <p>
-    Supongamos que la suposición del Jugador B es igual a 7. En este caso, la diferencia es 6,
-    y la probabilidad de que el Jugador A gane el bono es del 100%. En contraste, cuando la suposición del Jugador B es 1,
+    Supongamos que la adivinanza del Jugador B es igual a 7. En este caso, la diferencia es 6,
+    y la probabilidad de que el Jugador A gane el bono es del 100%. En contraste, cuando la adivinanza del Jugador B es 1,
     la diferencia es igual a 0. Esto implica que la probabilidad de que el Jugador A gane el bono es del 0%.
 </p>
 
 <p>
-    El principio subyacente de la fórmula es simple: Cuanto más cerca esté la suposición del Jugador B de la suposición más alta posible,
+    El principio subyacente de la fórmula es simple: Cuanto más cerca esté la adivinanza del Jugador B de la adivinanza más alta posible,
     mayor será la probabilidad de que el Jugador A reciba un pago de <b>{{Constants.BONUS_AMOUNT}} pesos</b>.
 </p>
 
@@ -159,7 +159,7 @@ El juego
 
 <p>
   <b>El Jugador B</b> puede ganar un bono de <b>{{ Constants.BONUS_AMOUNT }} pesos</b> dependiendo de qué tan cerca 
-  esté su suposición del número secreto. Cuanto más cerca esté la suposición, mayor será la probabilidad de ganar el bono.
+  esté su adivinanza del número secreto. Cuanto más cerca esté la adivinanza, mayor será la probabilidad de ganar el bono.
 </p>
 
 
@@ -179,7 +179,7 @@ El juego
       </div>
       <div class="modal-body">
  <p>
-     La suposición del Jugador B es un número entre 1 y 7.
+    La adivinanza del Jugador B es un número entre 1 y 7.
      Este número se utiliza para determinar el pago del Jugador B según la siguiente fórmula:
 </p>
 
@@ -202,7 +202,7 @@ El juego
   <mo>(</mo>
   <mi>Número&nbsp;secreto</mi>
   <mo>-</mo>
-  <mi>Suposición&nbsp;del&nbsp;Jugador&nbsp;B</mi>
+  <mi>Adivinanza&nbsp;del&nbsp;Jugador&nbsp;B</mi>
   <mo>)</mo>
   <msup>
     <mrow>
@@ -217,19 +217,19 @@ El juego
 </div>
 
 <p>
-    La fórmula toma el cuadrado de la diferencia entre la suposición del Jugador B y el número secreto.
+    La fórmula toma el cuadrado de la diferencia entre la adivinanza del Jugador B y el número secreto.
     El número resultante se multiplica por una constante y luego se resta de 100.
 </p>
 
 <p>
-    Supongamos que la suposición del Jugador B es exactamente igual al número secreto.
+    Supongamos que la adivinanza del Jugador B es exactamente igual al número secreto.
     En este caso, la diferencia es cero, y la probabilidad de que el Jugador B gane el bono es del 100%.
-    A medida que la suposición del Jugador B se aleja del valor verdadero del número secreto,
+    A medida que la adivinanza del Jugador B se aleja del valor verdadero del número secreto,
     la diferencia se hace mayor, lo que disminuye la probabilidad de ganar el bono.
 </p>
 
 <p>
-    El principio subyacente de la fórmula es simple: Cuanto más cerca esté la suposición del Jugador B del número secreto,
+    El principio subyacente de la fórmula es simple: Cuanto más cerca esté la adivinanza del Jugador B del número secreto,
     mayor será la probabilidad de que el Jugador B reciba un pago de <b>{{ Constants.BONUS_AMOUNT }} pesos</b>.
 </p>
 

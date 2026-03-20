@@ -39,34 +39,34 @@
         {% endif %}
         {% if treatment == 'Belief' %}
             {% if receiver_guess > 0 %}
-                <p class="blocktext">Your stated belief: <b>{{ belief_honest_pct }}%</b> probability that Player A delegated to the computer</p>
-                <p class="blocktext">Optimal guess calculated by the computer: <b>{{ receiver_guess }}</b></p>
+                <p class="blocktext">Tu creencia reportada: <b>{{ belief_honest_pct }}%</b> de probabilidad de que el Jugador A delegó al computador</p>
+                <p class="blocktext">Adivinanza óptima calculada por el computador: <b>{{ receiver_guess }}</b></p>
             {% else %}
-                <p class="blocktext">You did not report a belief in time.</p>
+                <p class="blocktext">No reportaste tu creencia a tiempo.</p>
             {% endif %}
         {% elif treatment == 'NoUncertainty' %}
             {% if receiver_guess > 0 %}
-                <p class="blocktext">Player B's guess was: <b>{{ receiver_guess }}</b></p>
-                <p class="blocktext">This guess was evaluated against all secret numbers in the bundle: <b>{{ bundle_secret_numbers_display }}</b></p>
-                <p class="blocktext">Average secret number across the bundle: <span class="payoff">{{ bundle_average_secret_number }}</span></p>
+                <p class="blocktext">La adivinanza del Jugador B fue: <b>{{ receiver_guess }}</b></p>
+                <p class="blocktext">Esta adivinanza se evaluó contra todos los números secretos del grupo: <b>{{ bundle_secret_numbers_display }}</b></p>
+                <p class="blocktext">Número secreto promedio del grupo: <span class="payoff">{{ bundle_average_secret_number }}</span></p>
             {% else %}
-                <p class="blocktext">Player B did not guess in time.</p>
-                <p class="blocktext">This guess was evaluated against all secret numbers in the bundle: <b>{{ bundle_secret_numbers_display }}</b></p>
-                <p class="blocktext">Average secret number across the bundle: <span class="payoff">{{ bundle_average_secret_number }}</span></p>
+                <p class="blocktext">El Jugador B no adivinó a tiempo.</p>
+                <p class="blocktext">Esta adivinanza se evaluó contra todos los números secretos del grupo: <b>{{ bundle_secret_numbers_display }}</b></p>
+                <p class="blocktext">Número secreto promedio del grupo: <span class="payoff">{{ bundle_average_secret_number }}</span></p>
             {% endif %}
         {% else %}
             {% if receiver_guess > 0 %}
-                <p class="blocktext">Player B's guess was: <b>{{ receiver_guess }}</b></p>
+                <p class="blocktext">La adivinanza del Jugador B fue: <b>{{ receiver_guess }}</b></p>
             {% else %}
                 {% if sender_message > 0 %}
-                        <p class="blocktext">Player B's guess was: <b>{{ sender_message }}</b></p>
+                        <p class="blocktext">La adivinanza del Jugador B fue: <b>{{ sender_message }}</b></p>
                 {% else %}
-                        <p class="blocktext">Player B did not guess in time.</p>
+                        <p class="blocktext">El Jugador B no adivinó a tiempo.</p>
                 {% endif %}
             {% endif %}
         {% endif %}
         {% if treatment != 'NoUncertainty' %}
-        <p class="blocktext"> The secret number was: <span class="payoff">{{ secret_number }}</span> </p>
+        <p class="blocktext"> El número secreto fue: <span class="payoff">{{ secret_number }}</span> </p>
         {% endif %}
     </div>
 </div>

@@ -35,22 +35,22 @@
         <!-- ═══ Expert-Rep: standard Expert task with recycled senders ═══ -->
         {{ if player.participant.treatment == "ExpertRep" }}
         <div class="card border-info mb-3">
-            <div class="card-header bg-info text-dark fst-italic" style="font-size: 0.9em;">How your task differs from the previous experiment</div>
+            <div class="card-header bg-info text-dark fst-italic" style="font-size: 0.9em;">En qué se diferencia tu tarea del experimento anterior</div>
             <div class="card-body">
                 <p>
-                    The instructions you just read described how participants in the <b>previous experiment</b> played.
-                    In that experiment, Player B had a <b>20 second</b> window to guess the secret number by choosing a number between 1 and 7,
-                    without knowing whether Player A delegated to the computer.
+                    Las instrucciones que acabas de leer describen cómo jugaron los participantes en el <b>experimento anterior</b>.
+                    En ese experimento, el Jugador B tenía <b>20 segundos</b> para adivinar el número secreto eligiendo un número entre 1 y 7,
+                    sin saber si el Jugador A delegó al computador.
                 </p>
                 <p>
-                    Your task differs from the previous experiment in two ways:
+                    Tu tarea es diferente al experimento anterior en dos aspectos:
                 </p>
                 <ol>
                     <li>
-                        The messages you see today are recycled from Player A's in the previous experiment.
+                        Los mensajes que ves hoy provienen de Jugadores A del experimento anterior.
                     </li>
                     <li>
-                        You will have a <b>60 second</b> window to submit your guess.
+                        Tendrás <b>60 segundos</b> para enviar tu adivinanza.
                     </li>
                 </ol>
             </div>
@@ -60,44 +60,44 @@
         <!-- ═══ Belief: report honesty belief, computer calculates optimal guess ═══ -->
         {{ if player.participant.treatment == "Belief" }}
         <div class="card border-info mb-3">
-            <div class="card-header bg-info text-dark fst-italic" style="font-size: 0.9em;">How your task differs from the previous experiment</div>
+            <div class="card-header bg-info text-dark fst-italic" style="font-size: 0.9em;">En qué se diferencia tu tarea del experimento anterior</div>
             <div class="card-body">
                 <p>
-                    The instructions you just read described how participants in the <b>previous experiment</b> played.
-                    In that experiment, Player B had a <b>20 second</b> window to guess the secret number by choosing a number between 1 and 7,
-                    without knowing whether Player A delegated to the computer.
+                    Las instrucciones que acabas de leer describen cómo jugaron los participantes en el <b>experimento anterior</b>.
+                    En ese experimento, el Jugador B tenía <b>20 segundos</b> para adivinar el número secreto eligiendo un número entre 1 y 7,
+                    sin saber si el Jugador A delegó al computador.
                 </p>
                 <p>
-                    Your task differs from the previous experiment in three ways:
+                    Tu tarea es diferente al experimento anterior en tres aspectos:
                 </p>
                 <ol>
                     <li>
-                        The messages you see today are recycled from Player A's in the previous experiment.
+                        Los mensajes que ves hoy provienen de Jugadores A del experimento anterior.
                     </li>
                     <li>
-                        You will have a <b>60 second</b> window to submit your response.
+                        Tendrás <b>60 segundos</b> para enviar tu respuesta.
                     </li>
                     <li>
-                        Instead of entering a direct guess, you will report your <strong>belief about the likelihood
-                        that Player A delegated to the computer</strong> using a slider from <b>0%</b>
-                        (Player A surely did not delegate) to <b>100%</b> (Player A surely delegated).
-                        The computer then automatically calculates and submits the optimal guess for you.
+                        En lugar de adivinar un número directamente, reportarás tu <strong>creencia sobre la probabilidad
+                        de que el Jugador A haya delegado al computador</strong> usando un control deslizante del <b>0%</b>
+                        (el Jugador A definitivamente no delegó) al <b>100%</b> (el Jugador A definitivamente delegó).
+                        El computador calculará y enviará automáticamente la adivinanza óptima por ti.
                     </li>
                 </ol>
 
                 <div class="card border-warning my-3">
                     <div class="card-body">
-                        <h5><i class="fas fa-cogs"></i> How the computer uses your belief</h5>
+                        <h5><i class="fas fa-cogs"></i> Cómo usa el computador tu creencia</h5>
                         <p class="mb-2">
-                            Once you report your belief, the computer will automatically calculate and submit
-                            the <b>guess that best maximises your chances of earning the bonus</b> given what you stated.
+                            Una vez que reportes tu creencia, el computador calculará y enviará automáticamente
+                            la <b>adivinanza que mejor maximice tus posibilidades de ganar el bono</b> dado lo que indicaste.
                         </p>
                         <p class="mb-2">
-                            This means your <strong>best strategy is to report your true belief</strong> — the more
-                            accurately your belief reflects Player A's actual behaviour, the higher your expected earnings.
+                            Esto significa que tu <strong>mejor estrategia es reportar tu creencia verdadera</strong> — cuanto más
+                            fielmente refleje tu creencia el comportamiento real del Jugador A, mayores serán tus ganancias esperadas.
                         </p>
                         <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#formulaModal">
-                            <i class="fas fa-square-root-alt"></i> Show the formula
+                            <i class="fas fa-square-root-alt"></i> Mostrar la fórmula
                         </button>
                     </div>
                 </div>
@@ -109,29 +109,29 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="formulaModalLabel">How the computer calculates the optimal guess</h5>
+                        <h5 class="modal-title" id="formulaModalLabel">Cómo calcula el computador la adivinanza óptima</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <p>
-                            Let <em>p</em> be your stated belief (as a fraction between 0 and 1) about the likelihood that
-                            Player A delegated to the computer (was honest), and let <em>m</em> be the message you observe. The computer submits:
+                            Sea <em>p</em> tu creencia declarada (como fracción entre 0 y 1) sobre la probabilidad de que
+                            el Jugador A haya delegado al computador (fue honesto), y sea <em>m</em> el mensaje que observas. El computador envía:
                         </p>
                         <div class="card bg-light my-3">
                             <div class="card-body text-center" style="font-size: 1.15rem;">
-                                <b>Optimal guess = p × m + (1 − p) × 4</b>
+                                <b>Adivinanza óptima = p × m + (1 − p) × 4</b>
                             </div>
                         </div>
                         <p class="text-muted" style="font-size: 0.9rem;">
-                            This formula maximizes your expected earnings. When Player A is honest
-                            (probability p), the message <em>m</em> equals the secret number, so the best guess
-                            is <em>m</em>. When Player A is not honest (probability 1 − <em>p</em>), the message carries no
-                            information and the best guess is the unconditional mean of the secret number, which is 4.
-                            The optimal guess is a weighted average of these two cases.
+                            Esta fórmula maximiza tus ganancias esperadas. Cuando el Jugador A es honesto
+                            (probabilidad p), el mensaje <em>m</em> es igual al número secreto, por lo que la mejor adivinanza
+                            es <em>m</em>. Cuando el Jugador A no es honesto (probabilidad 1 − <em>p</em>), el mensaje no lleva
+                            información y la mejor adivinanza es la media incondicional del número secreto, que es 4.
+                            La adivinanza óptima es un promedio ponderado de estos dos casos.
                         </p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>
@@ -141,29 +141,30 @@
         <!-- ═══ FixBelief: told X/4 honest, guess evaluated against ONE random sender ═══ -->
         {{ if player.participant.treatment == "FixBelief" }}
         <div class="card border-info mb-3">
-            <div class="card-header bg-info text-dark fst-italic" style="font-size: 0.9em;">How your task differs from the previous experiment</div>
+            <div class="card-header bg-info text-dark fst-italic" style="font-size: 0.9em;">En qué se diferencia tu tarea del experimento anterior</div>
             <div class="card-body">
                 <p>
-                    The instructions you just read described how participants in the <b>previous experiment</b> played.
-                    In that experiment, Player B had a <b>20 second</b> window to guess the secret number by choosing a number between 1 and 7,
-                    without knowing whether Player A delegated to the computer.
+                    Las instrucciones que acabas de leer describen cómo jugaron los participantes en el <b>experimento anterior</b>.
+                    En ese experimento, el Jugador B tenía <b>20 segundos</b> para adivinar el número secreto eligiendo un número entre 1 y 7,
+                    sin saber si el Jugador A delegó al computador.
                 </p>
                 <p>
-                    Your task differs from the previous experiment in three ways:
+                    Tu tarea es diferente al experimento anterior en tres aspectos:
                 </p>
                 <ol>
                     <li>
-                        The messages you see today are recycled from Player A's in the previous experiment.
+                        Los mensajes que ves hoy provienen de Jugadores A del experimento anterior.
                     </li>
                     <li>
-                        You will have a <b>60 second</b> window to submit your guess.
+                        Tendrás <b>60 segundos</b> para enviar tu adivinanza.
                     </li>
                     <li>
-                        In each round, you will be told how many out of <strong>4 Player A's</strong> who sent that
-                        exact message delegated to the computer . For example:
-                        <em>"Out of 4 Player A's who sent this message, <strong>1 delegated</strong> and 3 chose freely."</em>
-                        You then submit <b>one guess</b>, which is compared with the secret number of
-                        <strong>one randomly selected Player A</strong> from the group of 4. This means that you know the exact probability that the Player A delegated to the computer, which is the number of Player A's who delegated divided by 4.
+                        En cada ronda, se te informará cuántos de los <strong>4 Jugadores A</strong> que enviaron ese
+                        mismo mensaje delegaron al computador. Por ejemplo:
+                        <em>"De los 4 Jugadores A que enviaron este mensaje, <strong>1 delegó</strong> y 3 eligieron libremente."</em>
+                        Después, tú envías <b>una adivinanza</b>.
+                        Esa adivinanza se compara con el número secreto de <strong>1 de esos 4 Jugadores A</strong>, elegido al azar.
+                        Entonces, si delegaron 1 de 4, la probabilidad de delegar es <strong>1 de 4 (25%)</strong>.
                     </li>
                 </ol>
 
@@ -174,23 +175,23 @@
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="formulaModalLabelFB">How your earnings are calculated</h5>
+                                <h5 class="modal-title" id="formulaModalLabelFB">Cómo se calculan tus ganancias</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <p>
-                                    Suppose you submit a guess <em>g</em>. 
-                                    The computer will randomly select 1 out of the 4 Player A's who sent the exact message you saw. 
-                                    Let <em>S</em> be the secret number of that randomly selected Player A.
+                                    Supongamos que envías una adivinanza <em>g</em>.
+                                    El computador seleccionará aleatoriamente 1 de los 4 Jugadores A que enviaron el mensaje exacto que viste.
+                                    Sea <em>S</em> el número secreto de ese Jugador A seleccionado aleatoriamente.
                                 </p>
                                 <div class="card bg-light my-3">
                                     <div class="card-body text-center" style="font-size: 1.15rem;">
-                                        <b>Your Earnings = Bonus based on the distance between <em>g</em> and <em>S</em></b>
+                                        <b>Tus Ganancias = Bono basado en la distancia entre <em>g</em> y <em>S</em></b>
                                     </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                             </div>
                         </div>
                     </div>
@@ -203,40 +204,42 @@
         <!-- ═══ NoUncertainty: told X/4 honest, guess evaluated against ALL 4 senders ═══ -->
         {{ if player.participant.treatment == "NoUncertainty" }}
         <div class="card border-info mb-3">
-            <div class="card-header bg-info text-dark fst-italic" style="font-size: 0.9em;">How your task differs from the previous experiment</div>
+            <div class="card-header bg-info text-dark fst-italic" style="font-size: 0.9em;">En qué se diferencia tu tarea del experimento anterior</div>
             <div class="card-body">
                 <p>
-                    The instructions you just read described how participants in the <b>previous experiment</b> played.
-                    In that experiment, Player B had a <b>20 second</b> window to guess the secret number by choosing a number between 1 and 7,
-                    without knowing whether Player A delegated to the computer.
+                    Las instrucciones que acabas de leer describen cómo jugaron los participantes en el <b>experimento anterior</b>.
+                    En ese experimento, el Jugador B tenía <b>20 segundos</b> para adivinar el número secreto eligiendo un número entre 1 y 7,
+                    sin saber si el Jugador A delegó al computador.
                 </p>
                 <p>
-                    Your task differs from the previous experiment in three ways:
+                    Tu tarea es diferente al experimento anterior en tres aspectos:
                 </p>
                 <ol>
                     <li>
-                        The messages you see today are recycled from Player A's in the previous experiment.
+                        Los mensajes que ves hoy provienen de Jugadores A del experimento anterior.
                     </li>
                     <li>
-                        You will have a <b>60 second</b> window to submit your guess.
+                        Tendrás <b>60 segundos</b> para enviar tu adivinanza.
                     </li>
                     <li>
-                        In each round, you will be told how many out of <strong>4 Player A's</strong> who sent that
-                        exact message delegated to the computer. You then submit <b>one guess</b>,
-                        which is compared with the secret numbers of <strong>all 4 Player A's simultaneously</strong>. This means that you know the exact probability that the Player A delegated to the computer, which is the number of Player A's who delegated divided by 4.
-                        Your earnings are based on your <strong>average accuracy across all 4 comparisons</strong>.
+                        En cada ronda, se te informará cuántos de los <strong>4 Jugadores A</strong> que enviaron ese
+                        mismo mensaje delegaron al computador.
+                        Después, tú envías <b>una adivinanza</b>.
+                        Esa adivinanza se compara con los números secretos de <strong>los 4 Jugadores A</strong>.
+                        Luego se calcula tu pago usando el <strong>promedio</strong> de esas 4 comparaciones.
+                        Por ejemplo, si delegaron 1 de 4, la probabilidad de delegar es <strong>1 de 4 (25%)</strong>.
                     </li>
                 </ol>
                 <div class="card border-warning my-3">
                     <div class="card-body">
-                        <h5><i class="fas fa-cogs"></i> How your payment is calculated</h5>
+                        <h5><i class="fas fa-cogs"></i> Cómo se calcula tu pago</h5>
                         <p class="mb-2">
-                            Because your single guess is compared against the secret numbers of all 4 Player A's,
-                            your total earnings for the round depend on how close your guess is to the secret numbers 
-                            of <strong>all 4 Player A's on average</strong>.
+                            Dado que tu adivinanza se compara con los números secretos de los 4 Jugadores A,
+                            tus ganancias totales de la ronda dependen de qué tan cerca esté tu adivinanza de los números secretos
+                            de <strong>los 4 Jugadores A en promedio</strong>.
                         </p>
                         <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#formulaModalNU">
-                            <i class="fas fa-square-root-alt"></i> Show how earnings are calculated
+                            <i class="fas fa-square-root-alt"></i> Mostrar cómo se calculan las ganancias
                         </button>
                     </div>
                 </div>
@@ -246,31 +249,31 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="formulaModalLabelNU">How your earnings are calculated</h5>
+                        <h5 class="modal-title" id="formulaModalLabelNU">Cómo se calculan tus ganancias</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <p>
-                            Suppose you submit a guess <em>g</em>. 
-                            The computer will compare your guess <em>g</em> with the secret number of each of the 4 Player A's separately. 
-                            Let <em>S₁, S₂, S₃, S₄</em> be the secret numbers of the 4 Player A's.
+                            Supongamos que envías una adivinanza <em>g</em>.
+                            El computador comparará tu adivinanza <em>g</em> con el número secreto de cada uno de los 4 Jugadores A por separado.
+                            Sean <em>S₁, S₂, S₃, S₄</em> los números secretos de los 4 Jugadores A.
                         </p>
                         <div class="card bg-light my-3">
                             <div class="card-body text-center" style="font-size: 1.15rem;">
-                                <b>Your Earnings = Average of the bonuses earned for each sender</b><br><br>
+                                <b>Tus Ganancias = Promedio de los bonos obtenidos por cada emisor</b><br><br>
                                 <span style="font-size: 0.95rem;">
-                                    Bonus₁ (based on distance between <em>g</em> and <em>S₁</em>) <br>
-                                    + Bonus₂ (based on distance between <em>g</em> and <em>S₂</em>) <br>
-                                    + Bonus₃ (based on distance between <em>g</em> and <em>S₃</em>) <br>
-                                    + Bonus₄ (based on distance between <em>g</em> and <em>S₄</em>) <br>
+                                    Bono₁ (basado en la distancia entre <em>g</em> y <em>S₁</em>) <br>
+                                    + Bono₂ (basado en la distancia entre <em>g</em> y <em>S₂</em>) <br>
+                                    + Bono₃ (basado en la distancia entre <em>g</em> y <em>S₃</em>) <br>
+                                    + Bono₄ (basado en la distancia entre <em>g</em> y <em>S₄</em>) <br>
                                     ──────────────────────────── <br>
-                                    Divided by 4
+                                    Dividido entre 4
                                 </span>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>

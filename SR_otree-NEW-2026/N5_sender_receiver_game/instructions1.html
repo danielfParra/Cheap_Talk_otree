@@ -32,7 +32,7 @@ El Juego
 
     <p>
         En este juego, el Jugador A envía un mensaje al Jugador B, quien luego intenta adivinar un número secreto.
-        Las ganancias de ambos jugadores dependen de la suposición del Jugador B y del número secreto.
+        Los pagos de ambos jugadores dependen de la adivinanza del Jugador B y del número secreto.
     </p>
 
       <p>
@@ -55,7 +55,7 @@ El Juego
     </li>
     <br>
     <li>
-        <i class="fa fa-envelope" aria-hidden="true"></i> El Jugador A envía <b>un mensaje</b> al Jugador B diciendo <b>"Para recibir la mayor ganancia, deberías elegir X."</b>
+        <i class="fa fa-envelope" aria-hidden="true"></i> El Jugador A envía <b>un mensaje</b> al Jugador B diciendo <b>"Para recibir el pago más alto, deberías elegir X."</b>
         <b>El Jugador A puede elegir cualquier número</b> 1, 2, 3, 4, 5, 6, o 7 como valor de X. Explicaremos más sobre las opciones exactas del Jugador A a continuación.
     </li>
     <br>
@@ -63,14 +63,14 @@ El Juego
         <i class="fas fa-question-circle"></i> El Jugador B <b>observa</b> el <b>mensaje</b> y <b>adivina el número secreto.</b>
         El Jugador B puede <b>adivinar cualquier número</b> entre 1 y 7, incluyendo números con decimales.
         Por ejemplo, un Jugador B que piensa que 1 y 2 son igualmente probables puede adivinar 1.50, y un Jugador B
-        que piensa que el número secreto es 4 o 5 pero más probablemente 5 puede hacer una suposición entre
-        4 y 5 pero más cerca de 5, como 4.8. {{ if player.participant.treatment == "Decode" }}A veces, el Jugador B tendrá que <b>descifrar</b> el mensaje antes de hacer una suposición. Explicaremos mejor esto más adelante.{{ endif }}
+        que piensa que el número secreto es 4 o 5 pero más probablemente 5 puede hacer una adivinanza entre
+        4 y 5 pero más cerca de 5, como 4.8. {{ if player.participant.treatment == "Decode" }}A veces, el Jugador B tendrá que <b>descifrar</b> el mensaje antes de hacer una adivinanza. Explicaremos mejor esto más adelante.{{ endif }}
     </li>
 
     <br>
     <li>
        <i class="fas fa-chart-bar"></i>  Tanto el Jugador A como el Jugador B recibirán <b>retroalimentación.</b>
-        Esta retroalimentación incluirá el número secreto generado por el computador, el mensaje del Jugador A y la suposición del Jugador B.
+        Esta retroalimentación incluirá el número secreto generado por el computador, el mensaje del Jugador A y la adivinanza del Jugador B.
     </li>
 </ol>
 
@@ -116,7 +116,7 @@ El Juego
     </p>
     <p>
         <b>¿Qué mensaje puede enviar el Jugador A?</b><br>
-        El Jugador A puede enviar cualquier número del 1 al 7. Por ejemplo, si el Jugador A elige "2," el Jugador B recibe: "Para recibir la mayor ganancia, deberías elegir 2."
+        El Jugador A puede enviar cualquier número del 1 al 7. Por ejemplo, si el Jugador A elige "2," el Jugador B recibe: "Para recibir el pago más alto, deberías elegir 2."
     </p>
     <p>
         Alternativamente, el Jugador A puede <b>delegar</b> la elección al computador 🤖. El computador siempre enviará al Jugador B un mensaje con el número secreto correcto.
