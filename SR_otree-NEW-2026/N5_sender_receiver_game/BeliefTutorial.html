@@ -121,6 +121,11 @@
                 intro: 'Based on your belief, this is the guess the computer will submit for you. It is calculated to maximise your expected earnings. Every time you change the slider, this number updates automatically.'
             },
             {
+                title: 'Límite de tiempo',
+                element: 'h3',
+                intro: 'En el experimento real, tendrás un límite de tiempo para tomar tu decisión. Verás tu tiempo restante en una cuenta regresiva en la parte superior de la página. <br> Para este tutorial, no hay límite de tiempo.'
+            },
+            {
                 title: 'Submit button',
                 element: '.btn-success',
                 intro: "Click here to submit your belief and proceed. You can submit now or close the tutorial first. Press 'Submit' when you're ready!"
@@ -138,7 +143,9 @@
     // Block advancing past "belief slider" step until slider has been moved
     intro.onafterchange(function(targetElement) {
         if (intro._currentStep == 4) {
+            var original_onclick = $('.introjs-nextbutton').get(0).onclick;
             $('.introjs-nextbutton').addClass('introjs-disabled');
+            $('.introjs-nextbutton').get(0).onclick = null;
         }
     });
 
@@ -164,9 +171,12 @@
             sliderMoved = true;
             show_text(submit_button);
             if (intro._currentStep == 4) {
-                $('.introjs-nextbutton').removeClass('introjs-disabled');
+                        intro.exit();
+                        intro.goToStep(6);
             }
         }
-    }
+    };
+
+
 </script>
 {% endblock %}

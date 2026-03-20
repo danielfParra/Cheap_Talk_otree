@@ -15,10 +15,26 @@
     <div class="right-pane" style="width: 50%; background-color: #fff; padding: 20px; box-sizing: border-box; overflow-y: auto;">
         <h3 data-intro="Número de ronda" data-step="3">Ronda {{player.round_number}}: Adivina el número secreto</h3>
 
+        <p>Eres el Jugador B. Tu tarea es enviar una sola adivinanza.</p>
+
         {% if player.participant.treatment == 'NoUncertainty' %}
-        <p>You are Player B. Your task is to guess the secret numbers.</p>
-        {% else %}
-        <p>You are Player B. Your task is to guess the secret number.</p>
+        <div class="card border-info mb-3" role="alert">
+            <div class="card-header bg-info-subtle"><b>NoUncertainty: round summary</b></div>
+            <div class="card-body py-2">
+                <p class="mb-1">This message comes from a bundle of <b>4 Player A participants</b> who all sent the same message.</p>
+                <div id="bundle_visual" class="mb-2"></div>
+                <p class="mb-1"><b>{{ x_count }}</b> delegated to the computer and <b>{{ strategic_sender_count }}</b> did not delegate (they chose the message themselves).</p>
+                <p class="mb-0">Your round payoff uses <b>one single guess</b> evaluated against <b>all 4 secret numbers</b> (your performance is averaged across the 4 cases).</p>
+            </div>
+        </div>
+        {% elif player.participant.treatment == 'FixBelief' %}
+        <div class="card border-info mb-3" role="alert">
+            <div class="card-header bg-info-subtle"><b>Información de esta ronda</b></div>
+            <div class="card-body py-2">
+                <div id="bundle_visual" class="mb-2"></div>
+                <p class="mb-0">Este mensaje viene de 4 participantes A: <b>{{ x_count }}</b> delegaron al computador y <b>{{ strategic_sender_count }}</b> no delegaron (eligieron el mensaje por su cuenta).</p>
+            </div>
+        </div>
         {% endif %}
 
         <div class="d-flex justify-content-center" data-intro="Mensaje del Jugador A." data-step="5" id="message-box">
@@ -34,38 +50,13 @@
             </div>
         </div>
 
-        {% if player.participant.treatment == 'NoUncertainty' %}
-        <div class="card border-info mb-3" role="alert">
-            <div class="card-header bg-info-subtle"><b>Información de esta ronda</b></div>
-            <div class="card-body py-2">
-                <div id="bundle_visual" class="mb-2"></div>
-                <p class="mb-0">Este mensaje viene de 4 participantes A: <b>{{ x_count }}</b> delegaron al computador y <b>{{ strategic_sender_count }}</b> no delegaron (eligieron el mensaje por su cuenta).</p>
-            </div>
-        </div>
-        {% elif player.participant.treatment == 'FixBelief' %}
-        <div class="card border-info mb-3" role="alert">
-            <div class="card-header bg-info-subtle"><b>Información de esta ronda</b></div>
-            <div class="card-body py-2">
-                <div id="bundle_visual" class="mb-2"></div>
-                <p class="mb-0">Este mensaje viene de 4 participantes A: <b>{{ x_count }}</b> delegaron al computador y <b>{{ strategic_sender_count }}</b> no delegaron (eligieron el mensaje por su cuenta).</p>
-            </div>
-        </div>
-        {% endif %}
-
         <div id="receiver_guess" class="hidden-paragraph">
 
         <!-- Regular treatment: direct guess slider -->
         <div id="regular_guess_section">
-
-        {% if player.participant.treatment == 'NoUncertainty' %}
         <p>
-            Please guess the secret numbers. You may enter any number between 1 and 7, including decimals.
+            Por favor, adivina el número secreto. Puedes ingresar cualquier número entre 1 y 7, incluyendo decimales.
         </p>
-        {% else %}
-        <p>
-            Please guess the secret number. You may enter any number between 1 and 7, including decimals.
-        </p>
-        {% endif %}
 
         <h4 class="card-title" data-intro="Deslizador de adivinanza" data-step="6">Mueve el deslizador para seleccionar tu adivinanza.</h4>
         <br>
@@ -114,29 +105,21 @@
 
         <input type="hidden" name="guess_confirmed" id="guess_confirmed_input" value="false">
 
-        <br>
         <div id="submit_button" class="hidden-paragraph" data-intro="Submit-Button" data-step="7">
             <div class="d-grid gap-2 col-6 mx-auto">
                 <button id="submitBtn" type="button" class="btn btn-success btn-lg btn-block" onclick="lockAndWait()">Submit</button>
             </div>
-            <!-- Waiting message shown after submission 
+            <!-- Waiting message shown after submission -->
             <div id="waitingMessage" class="text-center mt-3" style="display: none;">
                 <div class="alert alert-info">
                     Su elección ha sido registrada. Por favor, espere hasta que expire el tiempo...
                 </div>
-            </div>-->
+            </div>
         </div>
         </div>
 
 
-
-        {{ formfield_errors 'receiver_guess' }}
-    </div>
-{% endblock %}
-
-{% block scripts %}
-
- <script>
+        <script>
 
             let description = document.getElementById('description');
             function updateDescription(input) {
@@ -164,6 +147,13 @@
                 show_text(submit_button);
             }
         </script>
+
+        {{ formfield_errors 'receiver_guess' }}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
 
 <script>
     function renderBundleVisual(containerId, xCount) {
@@ -235,11 +225,8 @@
         
         // Set the confirmed field
         document.getElementById('guess_confirmed_input').value = true;
-
-        // Submit the form immediately
-        document.querySelector('form').submit();
         
-        // Visual feedback (shown briefly before navigation)
+        // Visual feedback
         slider.style.pointerEvents = 'none';
         slider.style.opacity = '0.7';
         document.getElementById('submitBtn').disabled = true;
@@ -249,7 +236,6 @@
             document.getElementById('belief_slider').style.pointerEvents = 'none';
             document.getElementById('belief_slider').style.opacity = '0.7';
         }
-
     }
 
 </script>

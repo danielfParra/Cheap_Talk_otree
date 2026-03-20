@@ -47,12 +47,11 @@
         {% elif treatment == 'NoUncertainty' %}
             {% if receiver_guess > 0 %}
                 <p class="blocktext">Player B's guess was: <b>{{ receiver_guess }}</b></p>
-                <p class="blocktext">This guess was evaluated against all secret numbers in the bundle: <b>{{ bundle_secret_numbers_display }}</b></p>
-                <p class="blocktext">Average secret number across the bundle: <span class="payoff">{{ bundle_average_secret_number }}</span></p>
+                <p class="blocktext">This guess was evaluated against all <b>{{ bundle_sender_count }}</b> secret numbers in the bundle: <b>{{ bundle_secret_numbers_display }}</b></p>
+                <p class="blocktext">Average accuracy across the bundle: <b>{{ bundle_average_score_percent }}%</b></p>
             {% else %}
                 <p class="blocktext">Player B did not guess in time.</p>
-                <p class="blocktext">This guess was evaluated against all secret numbers in the bundle: <b>{{ bundle_secret_numbers_display }}</b></p>
-                <p class="blocktext">Average secret number across the bundle: <span class="payoff">{{ bundle_average_secret_number }}</span></p>
+                <p class="blocktext">The bundle's secret numbers were: <b>{{ bundle_secret_numbers_display }}</b></p>
             {% endif %}
         {% else %}
             {% if receiver_guess > 0 %}
@@ -65,9 +64,7 @@
                 {% endif %}
             {% endif %}
         {% endif %}
-        {% if treatment != 'NoUncertainty' %}
         <p class="blocktext"> The secret number was: <span class="payoff">{{ secret_number }}</span> </p>
-        {% endif %}
     </div>
 </div>
 

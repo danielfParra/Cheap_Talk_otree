@@ -15,8 +15,7 @@ class Constants(BaseConstants):
     EXPLANATION_BONUS = Currency(4000) # Bonus for the explanation task
     #RECEIVER_ROLE = 'Player B'
     POOL_SIZE = 5
-    TIME_PER_ROUND = 60
-    TIME_PER_ROUND_PREV = 20
+    TIME_PER_ROUND = 20
     FEEDBACK_TIME = 5
     ATTEMPT_DELAY = 5
 
@@ -619,10 +618,10 @@ class TutorialIntro(Page):
     
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        tutorial_message = 6
+        tutorial_message = random.randint(1, 7)
         player.tutorial_message = tutorial_message
         player.tutorial_message_encoded = str(tutorial_message)
-        player.tutorial_x_count = 2
+        player.tutorial_x_count = random.randint(0, 4)
 
 class ReceiverTutorial(Page):
     form_model = 'player'
@@ -714,9 +713,7 @@ class NoUncertaintyTutorial(Page):
         current_round = player.round_number
         is_sender_payoff_relevant = current_round in Constants.PREDEFINED_SENDER_ROUNDS
         return dict(
-            is_sender_payoff_relevant=is_sender_payoff_relevant,
-            x_count = player.tutorial_x_count,
-            strategic_sender_count = max(0, 4 - player.tutorial_x_count)
+            is_sender_payoff_relevant=is_sender_payoff_relevant
         )
 
     @staticmethod
@@ -724,7 +721,6 @@ class NoUncertaintyTutorial(Page):
         return dict(
             encoded_message=player.tutorial_message_encoded,
             sender_message=player.tutorial_message,
-            x_count=player.tutorial_x_count,
             treatment=player.participant.treatment,
             max_guess=7,
             min_guess=1
@@ -850,7 +846,7 @@ class Results(Page):
             'strategic_sender_count': max(0, 4 - player.x_count),
             'bundle_sender_count': len(bundle_secret_numbers),
             'bundle_secret_numbers_display': ', '.join(str(number) for number in bundle_secret_numbers),
-            'bundle_average_secret_number': sum(bundle_secret_numbers) / len(bundle_secret_numbers) if bundle_secret_numbers else 'N/A',
+            'bundle_average_score_percent': round(player.bundle_receiver_average_score * 100, 1),
             'bundle_receiver_scores_display': ', '.join(f'{score * 100:.1f}%' for score in bundle_receiver_scores),
             'treatment': player.participant.treatment,
         }

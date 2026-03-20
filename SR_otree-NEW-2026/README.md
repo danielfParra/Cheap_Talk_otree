@@ -153,3 +153,14 @@ The final survey (`survey` app) collects: `age`, `gender`, `education`, `student
 - **Wait Pages**: All synchronization wait pages removed.
 - **Sender UI**: Pages for Player A actions removed from the page sequence.
 - **Babbling / Decode treatments**: Removed from all logic and templates. Only `ExpertRep`, `Belief`, `FixBelief`, `NoUncertainty` are active.
+
+## **🔟 Repository Naming & Current Working Copy (March 2026)**
+
+- `SR_otree-NEW-2026` is the **current active project folder**.
+- `SR_otree-NEW-2026_BACKUP` is a **backup snapshot** kept for archival/reference purposes.
+
+### What changed during this reorganization
+- The previous backup folder named `SR_otree-NEW-2026` was renamed to `SR_otree-NEW-2026_BACKUP`.
+- The working folder that had been named `SR_otree-NEW-2026_treatment_timing` was renamed to `SR_otree-NEW-2026` and is now the canonical active version.
+
+This keeps the active project under the standard name while preserving the pre-change copy as a clearly labeled backup.

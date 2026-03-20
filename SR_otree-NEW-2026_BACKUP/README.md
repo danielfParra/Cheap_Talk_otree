@@ -1,5 +1,10 @@
 # Sender-Receiver game
 
+> **⚠️ BACKUP — DO NOT EDIT**
+> This folder (`SR_otree-NEW-2026_BACKUP`) is a **read-only snapshot** of the codebase before the treatment-timing changes were introduced.
+> The active working version lives in **`SR_otree-NEW-2026`**.
+> Backed up: March 2026.
+
 `oTree`: 6.0.11
 
 `python`: 3.12.4

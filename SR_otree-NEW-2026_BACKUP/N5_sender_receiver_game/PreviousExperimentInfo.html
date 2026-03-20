@@ -39,6 +39,57 @@
                 Today, your task is closely related to the task faced by Player B in the earlier session.
                 You will read the <b>actual messages</b> that participants in the role of Player A sent in the past.
                 After seeing a message, you will have to <b>guess the secret number</b>.
+
+                {{ if player.participant.treatment == "Belief" }}
+                However, rather than entering a guess directly, you will report your <b>belief about the likelihood that Player A delegated to the computer</b> (in which case the sent number equals the true number).
+                Based on that belief, the computer will automatically calculate and submit your <b>optimal guess</b> on your behalf.
+                Your earnings will therefore depend on the <b>accuracy of your stated belief</b>.
+    {{ elif player.participant.treatment == "FixBelief" }}
+
+</p>
+
+<p>
+    For each message, you will be told that it was sent by <b>one of four people</b>
+    who sent that same message in a previous experiment.
+</p>
+
+<p>
+    You will also be told <b>how many of those four people let the computer choose the message for them</b>.
+</p>
+
+<p>
+    This information tells you <b>how likely it is that the message is honest in that round</b>.
+</p>
+
+<p>
+
+                {{ elif player.participant.treatment == "NoUncertainty" }}
+
+</p>
+
+<p>
+    For each message, you will be told that it was sent by <b>four people</b>
+    who all sent that same message in a previous experiment.
+</p>
+
+<p>
+    You will also be told <b>how many of those four people let the computer choose the message for them</b>.
+</p>
+
+<p>
+    You will submit <b>one guess</b>, and that guess will be evaluated against the <b>four secret numbers</b>
+    of those four people. Your round performance will therefore aggregate across all four comparisons.
+</p>
+
+<p>
+
+                {{ else }}
+                Your earnings will depend on how close your guess is to the true secret number.
+                {{ endif }}
+            </p>
+            <p>
+                However, one key difference is that you will <b>not</b> be matched with a Player A who is currently in the room.
+                Instead, you will observe the messages that Player A participants sent during the earlier session of this experiment.
             </p>
 
             <p>

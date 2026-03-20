@@ -20,21 +20,7 @@
 
         <h3 data-intro="Round number" data-step="3">Round X: Guess the secret number</h3>
 
-        <p>You are Player B. Your task is to submit one guess.</p>
-
-        <div id="bundle_info" class="alert alert-info" role="alert" data-intro="Bundle information" data-step="4">
-            In each round, the message comes from 4 previous senders who all sent the same message.
-            You will be told how many of those 4 delegated to the computer.
-        </div>
-
-        <div id="bundle_visual_tutorial" class="mb-3" data-intro="Visual bundle" data-step="5"></div>
-
-        <div id="evaluation_info" class="card border-warning mb-3" data-intro="How your guess is evaluated" data-step="6">
-            <div class="card-body">
-                You still submit <b>one guess</b>, but that guess is evaluated against the <b>4 secret numbers</b>
-                in the bundle. Your round performance is based on your <b>average accuracy across those 4 comparisons</b>.
-            </div>
-        </div>
+        <p>You are Player B. Your task is to guess the secret numbers.</p>
 
         <div class="d-flex justify-content-center" data-intro="Player A's message" data-step="7" id="message-box">
             <div class="card text-dark bg-light mb-3" style="width: 24rem;">
@@ -45,9 +31,17 @@
             </div>
         </div>
 
+        <div class="card border-info mb-3" role="alert" id="NoUncertainty_info" data-intro="FixBelief information" data-step="5">
+            <div class="card-header bg-info-subtle"><b>Información de esta ronda</b></div>
+            <div class="card-body py-2">
+                <div id="bundle_visual" class="mb-2"></div>
+                <p class="mb-0">Este mensaje viene de 4 participantes A: <b>{{ x_count }}</b> delegaron al computador y <b>{{ strategic_sender_count }}</b> no delegaron (eligieron el mensaje por su cuenta).</p>
+            </div>
+        </div>
+
         <div id="receiver_guess" class="hidden-paragraph" data-intro="Guess slider" data-step="8">
             <p>
-                Please guess the secret number. You may enter any number between 1 and 7, including decimals.
+                Please guess the secret numbers. You may enter any number between 1 and 7, including decimals.
             </p>
 
             <div style="max-width: 420px; margin: 0 auto;">
@@ -118,6 +112,10 @@
 
         if (parseFloat(input.value) >= 1 && parseFloat(input.value) <= 7) {
             show_text(submit_button);
+            if (intro._currentStep == 5) {
+                        intro.exit();
+                        intro.goToStep(7);
+                    }
         } else {
             hide_text(submit_button);
         }
@@ -150,29 +148,24 @@
                 intro: "Here you can see which round you are in. During the experiment, 'X' will vary between 1 and {{ Constants.num_rounds }}."
             },
             {
-                title: 'Bundle information',
-                element: '#bundle_info',
-                intro: 'Each round, you observe a message sent by a bundle of 4 previous senders who all sent that same message.'
-            },
-            {
-                title: '4 sender bundle',
-                element: '#bundle_visual_tutorial',
-                intro: 'These 4 boxes represent the 4 previous senders in the bundle. Robot icons delegated to the computer; person icons did not delegate and chose the message themselves.'
-            },
-            {
-                title: 'Evaluation rule',
-                element: '#evaluation_info',
-                intro: 'Your single guess is compared with all 4 secret numbers in the bundle, and your round performance is based on your average accuracy across those 4 cases.'
-            },
-            {
-                title: "Player A's message",
+                title: "Player A's messages",
                 element: '#message-box',
-                intro: "Here you can see the message sent by the bundle of previous senders."
+                intro: "Here you can see the message sent by 4 previous Player A\'s."
+            },
+            {
+                title: 'Bundle information',
+                element: '#NoUncertainty_info',
+                intro: 'Here you see how many out of 4 Player A\'s delegated to the computer when sending this message. Your guess will be evaluated against the secret numbers of all Player A\'s from that group of 4.'
             },
             {
                 title: 'Your guess',
                 element: '#receiver_guess',
                 intro: 'Move the slider to choose your guess. Please try any value now.'
+            },
+            {
+                title: 'Límite de tiempo',
+                element: 'h3',
+                intro: 'En el experimento real, tendrás un límite de tiempo para tomar tu decisión. Verás tu tiempo restante en una cuenta regresiva en la parte superior de la página. <br> Para este tutorial, no hay límite de tiempo.'
             },
             {
                 title: 'Submit button',
@@ -189,9 +182,12 @@
         keyboardNavigation: false,
     });
 
-    intro.onafterchange(function() {
-        if (intro._currentStep == 7) {
+    // Block advancing past "belief slider" step until slider has been moved
+    intro.onafterchange(function(targetElement) {
+        if (intro._currentStep == 5) {
+            var original_onclick = $('.introjs-nextbutton').get(0).onclick;
             $('.introjs-nextbutton').addClass('introjs-disabled');
+            $('.introjs-nextbutton').get(0).onclick = null;
         }
     });
 
@@ -204,18 +200,38 @@
         document.getElementById('encoded_message').innerHTML = js_vars.encoded_message;
         renderBundleVisual('bundle_visual_tutorial', js_vars.x_count);
         show_text(receiver_guess);
+
+        if (js_vars.treatment === 'FixBelief' || js_vars.treatment === 'NoUncertainty') {
+            renderBundleVisual('bundle_visual', js_vars.x_count);
+        }
     };
 
-    let sliderUsed = false;
-    const originalUpdate = updateDescription;
-    updateDescription = function(input) {
-        originalUpdate(input);
-        if (!sliderUsed) {
-            sliderUsed = true;
-            if (intro._currentStep == 7) {
-                $('.introjs-nextbutton').removeClass('introjs-disabled');
-            }
+    function renderBundleVisual(containerId, xCount) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        const total = 4;
+        const delegated = Math.max(0, Math.min(total, parseInt(xCount || 0)));
+        const strategic = total - delegated;
+        let html = '<div style="display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:8px; margin-bottom:6px;">';
+
+        for (let i = 0; i < total; i++) {
+            const isDelegated = i < delegated;
+            const bg = isDelegated ? '#e8f7ff' : '#fff3e8';
+            const border = isDelegated ? '#7cc5e8' : '#f0b27a';
+            const icon = isDelegated ? '🤖' : '👤';
+            const label = isDelegated ? 'Computador' : 'Eligio';
+
+            html +=
+                '<div style="border:1px solid ' + border + '; background:' + bg + '; border-radius:8px; padding:8px; text-align:center;">' +
+                '<div style="font-size:1.25rem; line-height:1;">' + icon + '</div>' +
+                '<div style="font-size:0.72rem; margin-top:4px;">' + label + '</div>' +
+                '</div>';
         }
+
+        html += '</div>';
+        html += '<div style="font-size:0.82rem; color:#444;">🤖 Delegated: <b>' + delegated + '</b> | 👤 Did not delegate: <b>' + strategic + '</b></div>';
+        container.innerHTML = html;
     }
 </script>
 {% endblock %}

@@ -76,8 +76,6 @@
 <script>
     let description = document.getElementById('description');
 
-    let sliderMoved = false;
-
     function updateDescription(input) {
         document.getElementById('slider').setAttribute('max', js_vars.max_guess);
         document.getElementById('slider').setAttribute('min', js_vars.min_guess);
@@ -86,23 +84,8 @@
 
         if (parseFloat(input.value) >= 1 && parseFloat(input.value) <= 7) {
             show_text(submit_button);
-            if (intro._currentStep == 5) {
-                        intro.exit();
-                        intro.goToStep(7);
-                    }
-            slider_used = 1;
         } else {
             hide_text(submit_button);
-        }
-
-        // Reveal submit button and unblock the intro tour Next button once slider is touched
-        if (!sliderMoved) {
-            sliderMoved = true;
-            show_text(submit_button);
-            if (intro._currentStep == 4) {
-                        intro.exit();
-                        intro.goToStep(6);
-            }
         }
     }
 
@@ -138,19 +121,14 @@
                 intro: "Here you can see the message sent by Player A."
             },
             {
-                title: 'Information about this round',
+                title: 'FixBelief information',
                 element: '#fixbelief_info',
-                intro: 'Here you see how many out of 4 Player A\'s delegated to the computer when sending this message. Your guess will be evaluated against the secret number of one randomly selected Player A from that group of 4.'
+                intro: 'Your Player A is among 4 Player As.'
             },
             {
                 title: 'Your guess',
                 element: '#receiver_guess',
                 intro: 'Move the slider to choose your guess. Please try any value now.'
-            },
-            {
-                title: 'Límite de tiempo',
-                element: 'h3',
-                intro: 'En el experimento real, tendrás un límite de tiempo para tomar tu decisión. Verás tu tiempo restante en una cuenta regresiva en la parte superior de la página. <br> Para este tutorial, no hay límite de tiempo.'
             },
             {
                 title: 'Submit button',
@@ -167,12 +145,9 @@
         keyboardNavigation: false,
     });
 
-    // Block advancing past "belief slider" step until slider has been moved
-    intro.onafterchange(function(targetElement) {
+    intro.onafterchange(function() {
         if (intro._currentStep == 5) {
-            var original_onclick = $('.introjs-nextbutton').get(0).onclick;
             $('.introjs-nextbutton').addClass('introjs-disabled');
-            $('.introjs-nextbutton').get(0).onclick = null;
         }
     });
 
@@ -219,5 +194,16 @@
     }
 
 
+    let sliderUsed = false;
+    const originalUpdate = updateDescription;
+    updateDescription = function(input) {
+        originalUpdate(input);
+        if (!sliderUsed) {
+            sliderUsed = true;
+            if (intro._currentStep == 5) {
+                $('.introjs-nextbutton').removeClass('introjs-disabled');
+            }
+        }
+    }
 </script>
 {% endblock %}
