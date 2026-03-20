@@ -1,0 +1,44 @@
+{{ block title }}
+Comenzaremos el Juego en la Próxima Pantalla
+{{ endblock }}
+
+{{ block styles }}
+<!-- Cargar los estilos CSS personalizados -->
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+{{ endblock }}
+
+{{ block content }}
+<div class="card bg-light m-3">
+    <div class="card-body ">
+
+    {{ if player.participant.role == "Player A" }}
+    <p>
+        Ahora comenzaremos el juego. En cada ronda, tendrás <b>{{Constants.TIME_PER_ROUND }} segundos</b> para
+        elegir qué mensaje enviar al Jugador B.
+    </p>
+    <p>
+        Luego, el Jugador B tendrá {{Constants.TIME_PER_ROUND }} segundos
+        para hacer una suposición. Después de que el Jugador B haga una suposición, observarás la retroalimentación durante 5 segundos.
+        Luego, comienza una nueva ronda.
+    </p>
+
+    {{ else }}
+
+    <p>
+        Ahora comenzaremos el juego. En cada ronda, el Jugador A tendrá <b>{{Constants.TIME_PER_ROUND }} segundos</b> para
+        elegir qué mensaje enviarte.
+    </p>
+    <p>
+        Luego, tendrás {{Constants.TIME_PER_ROUND }} segundos para
+        hacer una suposición. Después de que hagas una suposición, observarás la retroalimentación durante 5 segundos.
+        Luego, comienza una nueva ronda.
+    </p>
+
+    {{ endif }}    
+
+    </div>
+</div>
+    <button class="otree-btn-next btn btn-primary">Continuar</button>
+
+{{ endblock }}

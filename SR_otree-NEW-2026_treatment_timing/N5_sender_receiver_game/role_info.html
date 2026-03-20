@@ -1,0 +1,295 @@
+{{ block title }}
+ Tu Rol
+{{ endblock }}
+
+{{ block styles }}
+<link rel="stylesheet" href="{% static 'global/myStyle.css' %}">
+<link rel="stylesheet" href="{% static 'global/myStyleButton.css' %}">
+{{ endblock }}
+
+{{ block content }}
+<div class="card bg-light m-3">
+    <div class="card-body">
+        <p>
+            Durante este juego tu tendrás el rol de 
+            <b>
+                {{ if player.participant.role == "Player A" }}
+                    Jugador A
+                {{ else }}
+                    Jugador B.
+                {{ endif }}
+            </b>
+        </p>
+
+        <p>
+            Mantendrás este rol durante las <b>{{Constants.num_rounds}}</b> rondas del juego.
+        </p>
+
+        {{ if player.participant.role == "Player B" }}
+        <p>
+            Recuerda que los mensajes que verás provienen de otros participantes A que participaron en un experimento anterior.
+            Cada mensaje puede provenir de una persona diferente, no siempre de la misma persona.
+        </p>
+        {{ endif }}
+
+        <!-- ═══ Expert-Rep: standard Expert task with recycled senders ═══ -->
+        {{ if player.participant.treatment == "ExpertRep" }}
+        <div class="card border-info mb-3">
+            <div class="card-header bg-info text-dark fst-italic" style="font-size: 0.9em;">How your task differs from the previous experiment</div>
+            <div class="card-body">
+                <p>
+                    The instructions you just read described how participants in the <b>previous experiment</b> played.
+                    In that experiment, Player B had a <b>20 second</b> window to guess the secret number by choosing a number between 1 and 7,
+                    without knowing whether Player A delegated to the computer.
+                </p>
+                <p>
+                    Your task differs from the previous experiment in two ways:
+                </p>
+                <ol>
+                    <li>
+                        The messages you see today are recycled from Player A's in the previous experiment.
+                    </li>
+                    <li>
+                        You will have a <b>60 second</b> window to submit your guess.
+                    </li>
+                </ol>
+            </div>
+        </div>
+        {{ endif }}
+
+        <!-- ═══ Belief: report honesty belief, computer calculates optimal guess ═══ -->
+        {{ if player.participant.treatment == "Belief" }}
+        <div class="card border-info mb-3">
+            <div class="card-header bg-info text-dark fst-italic" style="font-size: 0.9em;">How your task differs from the previous experiment</div>
+            <div class="card-body">
+                <p>
+                    The instructions you just read described how participants in the <b>previous experiment</b> played.
+                    In that experiment, Player B had a <b>20 second</b> window to guess the secret number by choosing a number between 1 and 7,
+                    without knowing whether Player A delegated to the computer.
+                </p>
+                <p>
+                    Your task differs from the previous experiment in three ways:
+                </p>
+                <ol>
+                    <li>
+                        The messages you see today are recycled from Player A's in the previous experiment.
+                    </li>
+                    <li>
+                        You will have a <b>60 second</b> window to submit your response.
+                    </li>
+                    <li>
+                        Instead of entering a direct guess, you will report your <strong>belief about the likelihood
+                        that Player A delegated to the computer</strong> using a slider from <b>0%</b>
+                        (Player A surely did not delegate) to <b>100%</b> (Player A surely delegated).
+                        The computer then automatically calculates and submits the optimal guess for you.
+                    </li>
+                </ol>
+
+                <div class="card border-warning my-3">
+                    <div class="card-body">
+                        <h5><i class="fas fa-cogs"></i> How the computer uses your belief</h5>
+                        <p class="mb-2">
+                            Once you report your belief, the computer will automatically calculate and submit
+                            the <b>guess that best maximises your chances of earning the bonus</b> given what you stated.
+                        </p>
+                        <p class="mb-2">
+                            This means your <strong>best strategy is to report your true belief</strong> — the more
+                            accurately your belief reflects Player A's actual behaviour, the higher your expected earnings.
+                        </p>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#formulaModal">
+                            <i class="fas fa-square-root-alt"></i> Show the formula
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formula Modal -->
+        <div class="modal fade" id="formulaModal" tabindex="-1" aria-labelledby="formulaModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="formulaModalLabel">How the computer calculates the optimal guess</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Let <em>p</em> be your stated belief (as a fraction between 0 and 1) about the likelihood that
+                            Player A delegated to the computer (was honest), and let <em>m</em> be the message you observe. The computer submits:
+                        </p>
+                        <div class="card bg-light my-3">
+                            <div class="card-body text-center" style="font-size: 1.15rem;">
+                                <b>Optimal guess = p × m + (1 − p) × 4</b>
+                            </div>
+                        </div>
+                        <p class="text-muted" style="font-size: 0.9rem;">
+                            This formula maximizes your expected earnings. When Player A is honest
+                            (probability p), the message <em>m</em> equals the secret number, so the best guess
+                            is <em>m</em>. When Player A is not honest (probability 1 − <em>p</em>), the message carries no
+                            information and the best guess is the unconditional mean of the secret number, which is 4.
+                            The optimal guess is a weighted average of these two cases.
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{ endif }}
+
+        <!-- ═══ FixBelief: told X/4 honest, guess evaluated against ONE random sender ═══ -->
+        {{ if player.participant.treatment == "FixBelief" }}
+        <div class="card border-info mb-3">
+            <div class="card-header bg-info text-dark fst-italic" style="font-size: 0.9em;">How your task differs from the previous experiment</div>
+            <div class="card-body">
+                <p>
+                    The instructions you just read described how participants in the <b>previous experiment</b> played.
+                    In that experiment, Player B had a <b>20 second</b> window to guess the secret number by choosing a number between 1 and 7,
+                    without knowing whether Player A delegated to the computer.
+                </p>
+                <p>
+                    Your task differs from the previous experiment in three ways:
+                </p>
+                <ol>
+                    <li>
+                        The messages you see today are recycled from Player A's in the previous experiment.
+                    </li>
+                    <li>
+                        You will have a <b>60 second</b> window to submit your guess.
+                    </li>
+                    <li>
+                        In each round, you will be told how many out of <strong>4 Player A's</strong> who sent that
+                        exact message delegated to the computer . For example:
+                        <em>"Out of 4 Player A's who sent this message, <strong>1 delegated</strong> and 3 chose freely."</em>
+                        You then submit <b>one guess</b>, which is compared with the secret number of
+                        <strong>one randomly selected Player A</strong> from the group of 4. This means that you know the exact probability that the Player A delegated to the computer, which is the number of Player A's who delegated divided by 4.
+                    </li>
+                </ol>
+
+                
+
+                <!-- Formula Modal FixBelief -->
+                <div class="modal fade" id="formulaModalFB" tabindex="-1" aria-labelledby="formulaModalLabelFB" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="formulaModalLabelFB">How your earnings are calculated</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    Suppose you submit a guess <em>g</em>. 
+                                    The computer will randomly select 1 out of the 4 Player A's who sent the exact message you saw. 
+                                    Let <em>S</em> be the secret number of that randomly selected Player A.
+                                </p>
+                                <div class="card bg-light my-3">
+                                    <div class="card-body text-center" style="font-size: 1.15rem;">
+                                        <b>Your Earnings = Bonus based on the distance between <em>g</em> and <em>S</em></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        {{ endif }}
+
+        <!-- ═══ NoUncertainty: told X/4 honest, guess evaluated against ALL 4 senders ═══ -->
+        {{ if player.participant.treatment == "NoUncertainty" }}
+        <div class="card border-info mb-3">
+            <div class="card-header bg-info text-dark fst-italic" style="font-size: 0.9em;">How your task differs from the previous experiment</div>
+            <div class="card-body">
+                <p>
+                    The instructions you just read described how participants in the <b>previous experiment</b> played.
+                    In that experiment, Player B had a <b>20 second</b> window to guess the secret number by choosing a number between 1 and 7,
+                    without knowing whether Player A delegated to the computer.
+                </p>
+                <p>
+                    Your task differs from the previous experiment in three ways:
+                </p>
+                <ol>
+                    <li>
+                        The messages you see today are recycled from Player A's in the previous experiment.
+                    </li>
+                    <li>
+                        You will have a <b>60 second</b> window to submit your guess.
+                    </li>
+                    <li>
+                        In each round, you will be told how many out of <strong>4 Player A's</strong> who sent that
+                        exact message delegated to the computer. You then submit <b>one guess</b>,
+                        which is compared with the secret numbers of <strong>all 4 Player A's simultaneously</strong>. This means that you know the exact probability that the Player A delegated to the computer, which is the number of Player A's who delegated divided by 4.
+                        Your earnings are based on your <strong>average accuracy across all 4 comparisons</strong>.
+                    </li>
+                </ol>
+                <div class="card border-warning my-3">
+                    <div class="card-body">
+                        <h5><i class="fas fa-cogs"></i> How your payment is calculated</h5>
+                        <p class="mb-2">
+                            Because your single guess is compared against the secret numbers of all 4 Player A's,
+                            your total earnings for the round depend on how close your guess is to the secret numbers 
+                            of <strong>all 4 Player A's on average</strong>.
+                        </p>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#formulaModalNU">
+                            <i class="fas fa-square-root-alt"></i> Show how earnings are calculated
+                        </button>
+                    </div>
+                </div>
+
+        <!-- Formula Modal NoUncertainty -->
+        <div class="modal fade" id="formulaModalNU" tabindex="-1" aria-labelledby="formulaModalLabelNU" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="formulaModalLabelNU">How your earnings are calculated</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Suppose you submit a guess <em>g</em>. 
+                            The computer will compare your guess <em>g</em> with the secret number of each of the 4 Player A's separately. 
+                            Let <em>S₁, S₂, S₃, S₄</em> be the secret numbers of the 4 Player A's.
+                        </p>
+                        <div class="card bg-light my-3">
+                            <div class="card-body text-center" style="font-size: 1.15rem;">
+                                <b>Your Earnings = Average of the bonuses earned for each sender</b><br><br>
+                                <span style="font-size: 0.95rem;">
+                                    Bonus₁ (based on distance between <em>g</em> and <em>S₁</em>) <br>
+                                    + Bonus₂ (based on distance between <em>g</em> and <em>S₂</em>) <br>
+                                    + Bonus₃ (based on distance between <em>g</em> and <em>S₃</em>) <br>
+                                    + Bonus₄ (based on distance between <em>g</em> and <em>S₄</em>) <br>
+                                    ──────────────────────────── <br>
+                                    Divided by 4
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            </div>
+        </div>
+        {{ endif }}
+
+        <p>
+            <i> Antes de comenzar, nos gustaría que respondieras las preguntas en la siguiente página para verificar tu comprensión.</i>
+        </p>
+
+    </div>
+</div>
+    <button class="otree-btn-next btn btn-primary">Continuar</button>
+
+{{ endblock }}
+
+{% block scripts %}
+<script src="https://kit.fontawesome.com/46026ecfac.js" crossOrigin="anonymous"></script>
+{% endblock %}
