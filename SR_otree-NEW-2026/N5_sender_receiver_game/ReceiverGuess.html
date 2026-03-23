@@ -16,7 +16,7 @@
         <h3 data-intro="Número de ronda" data-step="3">Ronda {{player.round_number}}: Adivina el número secreto</h3>
 
         {% if player.participant.treatment == 'NoUncertainty' %}
-        <p>Eres el Jugador B. Tu tarea es adivinar los números secretos.</p>
+        <p>Eres el Jugador B. Tu tarea es enviar una sola adivinanza, que se evaluará contra todos los números secretos del grupo.</p>
         {% else %}
         <p>Eres el Jugador B. Tu tarea es adivinar el número secreto.</p>
         {% endif %}
@@ -59,7 +59,7 @@
 
         {% if player.participant.treatment == 'NoUncertainty' %}
         <p>
-            Por favor adivina los números secretos. Puedes ingresar cualquier número entre 1 y 7, incluyendo decimales.
+            Por favor, haz una sola adivinanza. Puedes ingresar cualquier número entre 1 y 7, incluyendo decimales.
         </p>
         {% else %}
         <p>
@@ -115,7 +115,7 @@
         <input type="hidden" name="guess_confirmed" id="guess_confirmed_input" value="false">
 
         <br>
-        <div id="submit_button" class="hidden-paragraph" data-intro="Submit-Button" data-step="7">
+        <div id="submit_button" class="hidden-paragraph" data-intro="Botón de envío" data-step="7">
             <div class="d-grid gap-2 col-6 mx-auto">
                 <button id="submitBtn" type="button" class="btn btn-success btn-lg btn-block" onclick="lockAndWait()">Continuar</button>
             </div>
