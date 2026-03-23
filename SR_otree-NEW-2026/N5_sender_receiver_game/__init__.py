@@ -336,6 +336,7 @@ class Player(BasePlayer):
     honesty_guess = models.IntegerField()
     honesty_certainty = models.IntegerField()
     credulity_guess = models.IntegerField()
+    credulity_certainty = models.IntegerField()
 
     strategy_explanation = models.LongStringField(
         label="",
@@ -934,6 +935,24 @@ class FollowingGuess(Page):
         wins = random.random() < credulity_guess_prob
         player.payoff += Constants.CREDULITY_GUESS_BONUS if wins else Currency(0)
 
+class FollowingCertainty(Page):
+    form_model = 'player'
+    form_fields = ['credulity_certainty']
+
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == Constants.num_rounds
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        guess = player.credulity_guess
+        lower_bound = max(0, guess - 1)
+        upper_bound = min(100, guess + 1)
+        return dict(
+            lower_bound=lower_bound,
+            upper_bound=upper_bound
+        )
+
 class ExplanationTask(Page):
     form_model = 'player'
     form_fields = ['strategy_explanation']
@@ -948,7 +967,7 @@ page_sequence = [
     ControlQuestions, ControlQuestions, ControlQuestions, ControlQuestions, ControlQuestions,
     TutorialIntro, ReceiverTutorial, FixBeliefTutorial, NoUncertaintyTutorial, BeliefTutorial, start_page,
     Round_number, ReceiverGuess, Results,
-    HonestyGuess, HonestyCertainty, FollowingGuess, ExplanationTask
+    HonestyGuess, HonestyCertainty, FollowingGuess, FollowingCertainty, ExplanationTask
 ]
 
 

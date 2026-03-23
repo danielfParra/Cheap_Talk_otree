@@ -56,5 +56,6 @@ class PlayerBot(Bot):
             yield HonestyGuess, {'honesty_guess': 50}
             yield HonestyCertainty, {'honesty_certainty': 50}
             yield FollowingGuess, {'credulity_guess': 50}
+            yield FollowingCertainty, {'credulity_certainty': 50}
             yield ExplanationTask, {'strategy_explanation': 'Segui una estrategia simple basada en el mensaje y las reglas del tratamiento.'}
 
