@@ -47,15 +47,14 @@ Una tarea más
         </ul>
 
         <p><strong>Cómo se calcula el bono</strong></p>
-        <p>Para cada ronda seleccionada, calculamos un puntaje según qué tan cerca está la adivinanza de ChatGPT de la tuya.</p>
+        <p>Para cada una de las 5 rondas seleccionadas, comparamos tu adivinanza con la adivinanza de ChatGPT.</p>
         <ul>
-            <li>Cuanto más cerca esté la adivinanza de ChatGPT de la tuya, mayor será el puntaje de esa ronda.</li>
-            <li>Si la adivinanza de ChatGPT es exactamente igual a la tuya, el puntaje de esa ronda es 100%.</li>
-            <li>Si la adivinanza de ChatGPT está muy lejos de la tuya, el puntaje será menor.</li>
+          <li>Si la diferencia es de <strong>1 punto o menos</strong>, esa ronda cuenta como <strong>acierto</strong>.</li>
+          <li>Si la diferencia es mayor que 1 punto, esa ronda cuenta como <strong>no acierto</strong>.</li>
         </ul>
 
         <button type="button" class="btn btn-warning mb-2" data-bs-toggle="modal" data-bs-target="#formulaModal">
-            Detalles del cálculo del puntaje
+          Detalles de la regla del bono
         </button>
 
         <!-- Modal -->
@@ -63,36 +62,15 @@ Una tarea más
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header d-flex justify-content-between align-items-center">
-                <h5 class="modal-title m-0" id="formulaModalLabel">Cálculo del puntaje por ronda</h5>
+                <h5 class="modal-title m-0" id="formulaModalLabel">Regla del bono por ronda</h5>
                 <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <p>La fórmula utilizada es:</p>
+                <p>La regla utilizada es:</p>
                 <div class="card bg-light my-3">
                   <div class="card-body text-center" style="font-size: 1rem;">
-                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-                        <mrow>
-                            <mtext>Puntaje por ronda (en porcentaje)</mtext>
-                            <mo>=</mo>
-                            <mn>100</mn>
-                            <mo>-</mo>
-                            <mfrac>
-                                <mn>100</mn>
-                                <mn>36</mn>
-                            </mfrac>
-                            <mo>&#xD7;</mo>
-                            <msup>
-                                <mrow>
-                                    <mo>(</mo>
-                                    <mtext>Tu adivinanza</mtext>
-                                    <mo>-</mo>
-                                    <mtext>Adivinanza de ChatGPT</mtext>
-                                    <mo>)</mo>
-                                </mrow>
-                                <mn>2</mn>
-                            </msup>
-                        </mrow>
-                    </math>
+                  <p class="mb-2"><strong>Ronda acertada</strong> si:</p>
+                  <p class="mb-0"><strong>|Tu adivinanza - Adivinanza de ChatGPT| ≤ 1</strong></p>
                   </div>
                 </div>
               </div>
@@ -103,17 +81,16 @@ Una tarea más
           </div>
         </div>
 
-        <p>Luego calculamos el puntaje promedio de las 5 rondas seleccionadas.</p>
-
         <p><strong>Bono final</strong></p>
         <p>Puedes ganar un bono adicional de <strong>{{ Constants.EXPLANATION_BONUS }}</strong>.</p>
-        <p>Tu probabilidad de recibir este bono es igual a tu puntaje promedio (en porcentaje).</p>
+        <p>Tu probabilidad de recibir el bono es el porcentaje de rondas acertadas entre las 5 seleccionadas.</p>
         <p><strong>Ejemplo:</strong></p>
         <ul>
-            <li>Si tu puntaje promedio es 80%, tienes un 80% de probabilidad de recibir el bono.</li>
-            <li>Si tu puntaje promedio es 25%, tienes un 25% de probabilidad de recibir el bono.</li>
+          <li>Si aciertas 3 de 5 rondas, tu probabilidad de bono es 3/5 = 60%.</li>
+          <li>Si aciertas 5 de 5 rondas, tu probabilidad de bono es 100%.</li>
+          <li>Si aciertas 0 de 5 rondas, tu probabilidad de bono es 0%.</li>
         </ul>
-        <p><strong>Cuanto mejor permita tu explicación que ChatGPT reproduzca tus adivinanzas, mayor será tu probabilidad de recibir el bono.</strong></p>
+        <p><strong>Cuanto mejor permita tu explicación que ChatGPT reproduzca tus adivinanzas de forma cercana, mayor será tu posibilidad de recibir el bono.</strong></p>
 
         <p class="mt-4">Por favor usa el recuadro de abajo para escribir tu explicación.</p>
         <p><strong>Importante:</strong> Lo único de lo que debes preocuparte es describir, de la forma más clara posible, 
