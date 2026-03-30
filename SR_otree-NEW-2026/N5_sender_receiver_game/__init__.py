@@ -7,7 +7,7 @@ import json
 class Constants(BaseConstants):
     name_in_url = 'sender_receiver_game'
     players_per_group = None  # All players in one subsession; data is stored per Player, not per Group
-    num_rounds = 4
+    num_rounds = 24
     BONUS_AMOUNT = Currency(4000)
     PIECE_RATE_DECODE = Currency(500)  # New constant for the piece rate per correct answer
     HONESTY_GUESS_BONUS = Currency(1000)  # Bonus for honesty guess

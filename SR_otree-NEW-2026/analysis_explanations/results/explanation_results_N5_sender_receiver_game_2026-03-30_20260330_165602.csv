@@ -1,0 +1,17 @@
+participant.code,participant.label,explanation_empty,selected_rounds,participant_guesses_5,llm_predictions_5,round_matches_5,matches_count,bonus_probability,bonus_draw_u,won_bonus_rule,score,won_bonus,status
+aih6vigb,1,0,"[1, 6, 15, 20, 21]","[4.0, 4.0, 4.0, 4.0, 4.0]","[4.0, 5.0, 2.0, 6.0, 1.0]","[1, 1, 0, 0, 0]",2,0.4,0.562364,won_if_bonus_draw_u_lt_bonus_probability,40.0,0,ok
+lkm0acgc,1,0,"[1, 6, 15, 20, 21]","[4.0, 4.0, 4.0, 4.0, 4.0]","[5.0, 4.0, 5.0, 7.0, 7.0]","[1, 1, 1, 0, 0]",3,0.6,0.463032,won_if_bonus_draw_u_lt_bonus_probability,60.0,1,ok
+pw4trmjs,1,0,"[1, 6, 15, 20, 21]","[4.0, 4.0, 4.0, 4.0, 4.0]","[5.0, 6.0, 7.0, 3.0, 4.0]","[1, 0, 0, 1, 1]",3,0.6,0.557154,won_if_bonus_draw_u_lt_bonus_probability,60.0,1,ok
+uxedcf11,1,0,"[1, 6, 15, 20, 21]","[4.0, 4.0, 4.0, 4.0, 4.0]","[3.0, 1.0, 3.0, 6.0, 6.0]","[1, 0, 1, 0, 0]",2,0.4,0.39672,won_if_bonus_draw_u_lt_bonus_probability,40.0,1,ok
+j71ms0hl,1,0,"[1, 6, 15, 20, 21]","[4.0, 4.0, 4.0, 4.0, 4.0]","[5.0, 2.0, 6.0, 2.0, 2.0]","[1, 0, 0, 0, 0]",1,0.2,0.7238,won_if_bonus_draw_u_lt_bonus_probability,20.0,0,ok
+w5pudjp7,1,0,"[1, 6, 15, 20, 21]","[4.0, 4.0, 4.0, 4.0, 4.0]","[2.0, 7.0, 2.0, 5.0, 6.0]","[0, 0, 0, 1, 0]",1,0.2,0.778196,won_if_bonus_draw_u_lt_bonus_probability,20.0,0,ok
+epfy7e30,1,0,"[1, 6, 15, 20, 21]","[4.0, 4.0, 4.0, 4.0, 4.0]","[4.0, 3.0, 4.0, 7.0, 4.0]","[1, 1, 1, 0, 1]",4,0.8,0.252215,won_if_bonus_draw_u_lt_bonus_probability,80.0,1,ok
+lcpoawza,1,0,"[1, 6, 15, 20, 21]","[4.0, 4.0, 4.0, 4.0, 4.0]","[4.0, 6.0, 6.0, 6.0, 6.0]","[1, 0, 0, 0, 0]",1,0.2,0.529732,won_if_bonus_draw_u_lt_bonus_probability,20.0,0,ok
+i63yjlqn,1,0,"[1, 6, 15, 20, 21]","[4.0, 4.0, 4.0, 4.0, 4.0]","[5.0, 4.0, 5.0, 6.0, 5.0]","[1, 1, 1, 0, 1]",4,0.8,0.958743,won_if_bonus_draw_u_lt_bonus_probability,80.0,0,ok
+zzx9j8v4,1,0,"[1, 6, 15, 20, 21]","[4.0, 4.0, 4.0, 4.0, 4.0]","[1.0, 5.0, 4.0, 1.0, 4.0]","[0, 1, 1, 0, 1]",3,0.6,0.152944,won_if_bonus_draw_u_lt_bonus_probability,60.0,1,ok
+qxe0gwby,1,0,"[1, 6, 15, 20, 21]","[4.0, 4.0, 4.0, 4.0, 4.0]","[4.0, 1.0, 6.0, 5.0, 6.0]","[1, 0, 0, 1, 0]",2,0.4,0.168523,won_if_bonus_draw_u_lt_bonus_probability,40.0,1,ok
+nic87rql,1,0,"[1, 6, 15, 20, 21]","[4.0, 4.0, 4.0, 4.0, 4.0]","[3.0, 6.0, 5.0, 3.0, 7.0]","[1, 0, 1, 1, 0]",3,0.6,0.241493,won_if_bonus_draw_u_lt_bonus_probability,60.0,1,ok
+bj6mp1m3,1,0,"[1, 6, 15, 20, 21]","[4.0, 4.0, 4.0, 4.0, 4.0]","[5.0, 5.0, 7.0, 2.0, 3.0]","[1, 1, 0, 0, 1]",3,0.6,0.664709,won_if_bonus_draw_u_lt_bonus_probability,60.0,0,ok
+qtikmj84,1,0,"[1, 6, 15, 20, 21]","[4.0, 4.0, 4.0, 4.0, 4.0]","[5.0, 7.0, 2.0, 4.0, 7.0]","[1, 0, 0, 1, 0]",2,0.4,0.847876,won_if_bonus_draw_u_lt_bonus_probability,40.0,0,ok
+sb11vi86,1,0,"[1, 6, 15, 20, 21]","[4.0, 4.0, 4.0, 4.0, 4.0]","[0.0, 1.0, 4.0, 5.0, 1.0]","[0, 0, 1, 1, 0]",2,0.4,0.41752,won_if_bonus_draw_u_lt_bonus_probability,40.0,0,ok
+2a5rrfma,1,0,"[1, 6, 15, 20, 21]","[4.0, 4.0, 4.0, 4.0, 4.0]","[5.0, 5.0, 5.0, 6.0, 7.0]","[1, 1, 1, 0, 0]",3,0.6,0.006836,won_if_bonus_draw_u_lt_bonus_probability,60.0,1,ok

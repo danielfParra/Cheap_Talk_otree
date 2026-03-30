@@ -46,22 +46,20 @@
             {% endif %}
         {% elif treatment == 'NoUncertainty' %}
             {% if receiver_guess > 0 %}
-                <p class="blocktext">La adivinanza del Jugador B fue: <b>{{ receiver_guess }}</b></p>
+                <p class="blocktext">Tu adivinanza fue: <b>{{ receiver_guess }}</b></p>
                 <p class="blocktext">Esta adivinanza se evaluó contra todos los números secretos del grupo: <b>{{ bundle_secret_numbers_display }}</b></p>
-                <p class="blocktext">Número secreto promedio del grupo: <span class="payoff">{{ bundle_average_secret_number }}</span></p>
             {% else %}
-                <p class="blocktext">El Jugador B no adivinó a tiempo.</p>
+                <p class="blocktext">No adivinaste a tiempo.</p>
                 <p class="blocktext">Esta adivinanza se evaluó contra todos los números secretos del grupo: <b>{{ bundle_secret_numbers_display }}</b></p>
-                <p class="blocktext">Número secreto promedio del grupo: <span class="payoff">{{ bundle_average_secret_number }}</span></p>
             {% endif %}
         {% else %}
             {% if receiver_guess > 0 %}
-                <p class="blocktext">La adivinanza del Jugador B fue: <b>{{ receiver_guess }}</b></p>
+                <p class="blocktext">Tu adivinanza fue: <b>{{ receiver_guess }}</b></p>
             {% else %}
                 {% if sender_message > 0 %}
-                        <p class="blocktext">La adivinanza del Jugador B fue: <b>{{ sender_message }}</b></p>
+                        <p class="blocktext">Tu adivinanza fue: <b>{{ sender_message }}</b></p>
                 {% else %}
-                        <p class="blocktext">El Jugador B no adivinó a tiempo.</p>
+                        <p class="blocktext">No adivinaste a tiempo.</p>
                 {% endif %}
             {% endif %}
         {% endif %}
