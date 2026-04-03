@@ -7,7 +7,7 @@ Your objective is to replicate how this specific participant guessed numbers.
 - In each round, the receiver sees a message from Player A.
 - The receiver then submits one numeric guess.
 - The participant explanation describes the rule/method they used to convert the message into their guess.
-- This task evaluates how well the AI reproduces the participant's own guesses in 5 selected rounds.
+- This task evaluates how well the AI reproduces the participant's own guesses in the selected rounds.
 - You will receive encoded messages for those rounds and the participant's explanation.
 </game_context>
 

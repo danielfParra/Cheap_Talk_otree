@@ -17,7 +17,7 @@ from config import DATA_RAW_DIR, ENV_FILE, PROMPTS_DIR, RESULTS_DIR, RUNS_DIR, g
 
 MODEL_NAME = "gpt-5.4-mini"
 TEMPERATURE = 0
-EXPECTED_SAMPLE_SIZE = 5
+EXPECTED_SAMPLE_SIZE = 10
 
 COL_PARTICIPANT_CODE = "participant.code"
 COL_PARTICIPANT_LABEL = "participant.label"
@@ -523,9 +523,9 @@ def main() -> None:
                 "participant.label": p.participant_label,
                 "explanation_empty": p.explanation_empty,
                 "selected_rounds": json.dumps(selected_rounds),
-                "participant_guesses_5": json.dumps(participant_guesses),
-                "llm_predictions_5": json.dumps(llm_predictions),
-                "round_matches_5": json.dumps(matches),
+                "participant_guesses_sample": json.dumps(participant_guesses),
+                "llm_predictions_sample": json.dumps(llm_predictions),
+                "round_matches_sample": json.dumps(matches),
                 "matches_count": matches_count,
                 "bonus_probability": None if bonus_probability is None else round(bonus_probability, 6),
                 "bonus_draw_u": None if bonus_draw_u is None else round(bonus_draw_u, 6),
@@ -557,7 +557,7 @@ def main() -> None:
         "model": MODEL_NAME,
         "temperature": TEMPERATURE,
         "scoring_rule": "threshold_bonus_abs_diff_leq_1",
-        "bonus_rule": "bonus_probability_equals_share_of_matches_across_5_rounds",
+        "bonus_rule": "bonus_probability_equals_share_of_matches_across_sampled_rounds",
         "result_csv": result_csv,
         "raw_llm_csv": raw_llm_csv,
         "participants_total": len(roster),

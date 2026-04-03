@@ -9,7 +9,7 @@ Path and environment configuration live in `analysis_explanations/config.py`.
 - Reads an oTree export file (`N5_sender_receiver_game_YYYY-MM-DD.csv`) from `analysis_explanations/data_raw/`.
 - Identifies participants from round 24 only.
 - Includes participants with empty explanations and flags them with `explanation_empty = 1`.
-- Randomly samples 5 rounds once at script start.
+- Randomly samples 10 rounds once at script start.
 - Uses `player.sender_message_encoded` as LLM input.
 - Uses GPT model `gpt-5.4-mini` with `temperature = 0`.
 - Outputs one row per participant code in a results CSV.
@@ -95,7 +95,7 @@ Optional arguments:
 - `--input <path>`: Use a specific CSV file.
 - `--seed <int>`: Force deterministic random seed.
 - `--round-for-explanations <int>`: Default is `24`.
-- `--sample-size <int>`: Default is `5`.
+- `--sample-size <int>`: Default is `10`.
 
 ## Main output columns
 
@@ -103,9 +103,9 @@ Optional arguments:
 - `participant.label`
 - `explanation_empty`
 - `selected_rounds`
-- `participant_guesses_5`
-- `llm_predictions_5`
-- `round_matches_5`
+- `participant_guesses_sample`
+- `llm_predictions_sample`
+- `round_matches_sample`
 - `matches_count`
 - `bonus_probability`
 - `bonus_draw_u`
