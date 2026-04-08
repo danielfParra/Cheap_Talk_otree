@@ -9,10 +9,68 @@ Path and environment configuration live in `analysis_explanations/config.py`.
 - Reads an oTree export file (`N5_sender_receiver_game_YYYY-MM-DD.csv`) from `analysis_explanations/data_raw/`.
 - Identifies participants from round 24 only.
 - Includes participants with empty explanations and flags them with `explanation_empty = 1`.
+- Reads treatment from `player.treatment`.
+- Builds treatment-aware prompts so GPT sees the same round context the participant saw.
+- Uses `player.sender_message_encoded` as the message input in all treatments.
+- Adds `player.x_count` to the prompt for `FixBelief` and `NoUncertainty`.
+- For `Belief`, asks GPT to predict the participant's belief about delegation and then computes the final guess in code using the experiment rule.
 - Randomly samples 10 rounds once at script start.
-- Uses `player.sender_message_encoded` as LLM input.
 - Uses GPT model `gpt-5.4-mini` with `temperature = 0`.
 - Outputs one row per participant code in a results CSV.
+
+## Required CSV columns
+
+Base columns:
+
+- `participant.code`
+- `participant.label`
+- `session.code`
+- `subsession.round_number`
+- `player.strategy_explanation`
+- `player.sender_message`
+- `player.sender_message_encoded`
+- `player.receiver_guess`
+- `player.treatment`
+
+Treatment-specific columns:
+
+- `player.x_count` is required when the file contains `FixBelief` or `NoUncertainty`.
+
+## Prompt files
+
+These files are the single source of truth for prompting:
+
+- `analysis_explanations/prompts/system_prompt.txt`
+- `analysis_explanations/prompts/user_prompt_template.txt`
+- `analysis_explanations/prompts/treatments/ExpertRep.txt`
+- `analysis_explanations/prompts/treatments/FixBelief.txt`
+- `analysis_explanations/prompts/treatments/NoUncertainty.txt`
+- `analysis_explanations/prompts/treatments/Belief.txt`
+
+The user template must contain:
+
+- `{{TREATMENT}}`
+- `{{TREATMENT_INSTRUCTIONS}}`
+- `{{EXPLANATION}}`
+- `{{ROUNDS_JSON}}`
+
+## Treatment behavior
+
+- `ExpertRep`: GPT predicts a direct numeric guess from the message and explanation.
+- `FixBelief`: GPT predicts a direct numeric guess and receives round-level `x_count`.
+- `NoUncertainty`: GPT predicts a direct numeric guess and receives round-level `x_count`.
+- `Belief`: GPT predicts `predicted_belief_pct`, then the script computes the implied final guess using `p * message + (1 - p) * 4`.
+
+## Scoring rule
+
+For each sampled round:
+
+- It counts as a match if `|human_guess - llm_guess| <= 1`.
+
+Then:
+
+- `bonus_probability = matches_count / sample_size`
+- `score = bonus_probability * 100`
 
 ## Setup
 
@@ -22,43 +80,14 @@ Path and environment configuration live in `analysis_explanations/config.py`.
 pip install -r analysis_explanations/requirements.txt
 ```
 
-2. Set API key (safe option):
+2. Set API key:
 
 - Copy `analysis_explanations/.env.example` to `analysis_explanations/.env`.
 - Put your key there as `OPENAI_API_KEY=...`.
-- The `.env` file is ignored by git.
-- The script loads this file automatically through `python-dotenv`.
-
-Alternative: export `OPENAI_API_KEY` in your shell.
 
 3. Edit prompts if needed:
 
-- `analysis_explanations/prompts/system_prompt.txt`
-- `analysis_explanations/prompts/user_prompt_template.txt`
-
-These files are the single source of truth for prompting.
-The user template must contain placeholders `{{EXPLANATION}}` and `{{ROUNDS_JSON}}`.
-Predicted guesses may be integers or decimals with exactly one decimal digit.
-
-## Scoring Rule Rationale
-
-Why this rule and not a continuous score:
-We considered a continuous quadratic scoring rule of the form score = 100 - (100/36) * (guess_human - guess_LLM)^2, which penalizes larger differences more. However, we rejected it because the penalty was too flat in the middle of the scale - a difference of 3 points (half the scale) still yielded a score of 75/100, meaning nearly everyone would earn a high bonus regardless of agreement quality.
-The threshold rule solves this by drawing a hard line: only close agreement (difference of 0 or 1) is rewarded. This is also consistent with the experimental economics literature - Arrieta & Nielsen (2025) use an equivalent fixed-prize-for-correct-guess rule in their replication paradigm rather than a continuous score.
-
-## API key examples
-
-Windows CMD:
-
-```bash
-set OPENAI_API_KEY=your_key_here
-```
-
-PowerShell:
-
-```bash
-$env:OPENAI_API_KEY="your_key_here"
-```
+- `analysis_explanations/prompts/`
 
 ## Run
 
@@ -72,22 +101,10 @@ PowerShell launcher:
 .\analysis_explanations\run_analysis.ps1
 ```
 
-If PowerShell blocks `.ps1` scripts because of execution policy, use the CMD launcher instead:
+CMD launcher:
 
 ```cmd
 analysis_explanations\run_analysis.cmd
-```
-
-You can also pass arguments through the launcher, for example:
-
-```powershell
-.\analysis_explanations\run_analysis.ps1 --seed 12345
-```
-
-CMD example:
-
-```cmd
-analysis_explanations\run_analysis.cmd --seed 12345
 ```
 
 Optional arguments:
@@ -101,10 +118,13 @@ Optional arguments:
 
 - `participant.code`
 - `participant.label`
+- `treatment`
+- `llm_output_mode`
 - `explanation_empty`
 - `selected_rounds`
 - `participant_guesses_sample`
 - `llm_predictions_sample`
+- `predicted_beliefs_sample`
 - `round_matches_sample`
 - `matches_count`
 - `bonus_probability`
@@ -114,7 +134,8 @@ Optional arguments:
 - `won_bonus`
 - `status`
 
-Output files are written to:
+Additional run metadata is written to:
 
 - `analysis_explanations/results/`
 - `analysis_explanations/runs/`
+- `analysis_explanations/backup/`
