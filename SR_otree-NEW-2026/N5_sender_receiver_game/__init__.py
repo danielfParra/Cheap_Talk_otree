@@ -2,6 +2,7 @@ from otree.api import *
 import math
 import random
 import json
+import time
 
 
 class Constants(BaseConstants):
@@ -15,7 +16,7 @@ class Constants(BaseConstants):
     EXPLANATION_BONUS = Currency(4000) # Bonus for the explanation task
     #RECEIVER_ROLE = 'Player B'
     POOL_SIZE = 5
-    TIME_PER_ROUND = 60
+    TIME_PER_ROUND = 40
     TIME_PER_ROUND_PREV = 20
     FEEDBACK_TIME = 10
     ATTEMPT_DELAY = 5
@@ -196,6 +197,7 @@ def creating_session(subsession: Subsession):
 
     # Set role via player.participant — same mechanism that successfully writes all other fields
     for player in players:
+        player.treatment = treatment
         player.participant.role = 'Player B'
         player.participant.vars['role'] = 'Player B'
         player.participant.treatment = treatment
@@ -276,6 +278,8 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
+    treatment = models.StringField(initial='')
+
     decoding_answer = models.IntegerField(blank=True)  # Stores the answer for each task
     task_number = models.IntegerField(initial=1)  # Tracks the current task (1 to 10)
     correct_answers = models.IntegerField(initial=0)  # Tracks how many correct answers the player has given
@@ -784,8 +788,18 @@ class ReceiverGuess(Page):
     def is_displayed(player):
         return True
 
-    timeout_seconds = Constants.TIME_PER_ROUND
     timer_text = '⏳ Tiempo restante:'
+
+    @staticmethod
+    def get_timeout_seconds(player: Player):
+        deadline_key = f'receiver_guess_deadline_round_{player.round_number}'
+        deadline = player.participant.vars.get(deadline_key)
+
+        if deadline is None:
+            deadline = time.time() + Constants.TIME_PER_ROUND
+            player.participant.vars[deadline_key] = deadline
+
+        return max(0, deadline - time.time())
 
     @staticmethod
     def vars_for_template(player: Player):
@@ -812,6 +826,9 @@ class ReceiverGuess(Page):
 
     @staticmethod
     def before_next_page(player, timeout_happened):
+        deadline_key = f'receiver_guess_deadline_round_{player.round_number}'
+        player.participant.vars.pop(deadline_key, None)
+
         if timeout_happened and not player.guess_confirmed:
             player.receiver_guess = 0
 
@@ -962,12 +979,11 @@ class ExplanationTask(Page):
         return player.round_number == Constants.num_rounds
 
 page_sequence = [
-    PreviousExperimentInfo, instructions1, instructions2, TimeLimit, Decode, instructions3, instructions4,
+    PreviousExperimentInfo, instructions1, instructions2, TimeLimit, Decode, instructions4,
     role_info,
     ControlQuestions, ControlQuestions, ControlQuestions, ControlQuestions, ControlQuestions,
     TutorialIntro, ReceiverTutorial, FixBeliefTutorial, NoUncertaintyTutorial, BeliefTutorial, start_page,
     Round_number, ReceiverGuess, Results,
     HonestyGuess, HonestyCertainty, FollowingGuess, FollowingCertainty, ExplanationTask
 ]
-
 

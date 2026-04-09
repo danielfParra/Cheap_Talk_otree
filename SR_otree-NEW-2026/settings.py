@@ -11,13 +11,13 @@ SESSION_CONFIGS = [
         treatment='ExpertRep'
     ),
     dict(
-        name='BOTs_sender_receiver_game_expert',
-        display_name="BOTS Sender-Receiver Game: Expert",
+        name='BOTs_sender_receiver_game',
+        display_name="BOTS Sender-Receiver Game",
         use_browser_bots=True,
         num_demo_participants=16,
         app_sequence=['consent', 'welcome', 'N5_sender_receiver_game', 'payment_info', 'survey'],
         num_rounds=3,
-        treatment='ExpertRep'
+        treatment='NoUncertainty'
     ),
     dict(
         name='sender_receiver_game_belief',
@@ -75,7 +75,7 @@ SESSION_FIELDS = ['treatment']
 
 # ISO-639 code
 # for example: de, fr, ja, ko, zh-hans
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'es'
 
 # e.g. EUR, GBP, CNY, JPY
 REAL_WORLD_CURRENCY_CODE = 'USD'

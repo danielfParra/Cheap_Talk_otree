@@ -1,31 +1,56 @@
 {{ block title }}
-    Información del Experimento Anterior
+    Información sobre el experimento anterior
 {{ endblock }}
 
 {{ block styles }}
 <!-- Load custom CSS styles -->
 <link rel="stylesheet" href="{{ static 'global/myStyle.css' }}">
 <link rel="stylesheet" href="{{ static 'global/myStyleButton.css' }}">
+<style>
+    .previous-experiment-card {
+        border-width: 3px;
+        border-color: #0b7285 !important;
+        box-shadow: 0 0.75rem 1.5rem rgba(11, 114, 133, 0.16);
+    }
+
+    .previous-experiment-card .card-header {
+        background: linear-gradient(135deg, #0dcaf0 0%, #8ee7f7 100%);
+        color: #062b33;
+        font-size: 1rem !important;
+        font-style: normal !important;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        padding: 0.9rem 1.25rem;
+    }
+
+    .previous-experiment-card .card-body {
+        background-color: #f2fbfd;
+    }
+
+    .previous-experiment-card h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+    }
+</style>
 {{ endblock }}
 
 {{ block content }}
 
-<div class="card border-info mb-3">
+<div class="card border-info mb-4 shadow-sm previous-experiment-card" role="alert">
     <div class="card-header bg-info text-dark fst-italic" style="font-size: 0.9em;">Información del Experimento Anterior</div>
     <div class="card-body">
 
         <h3><i class="fas fa-info-circle"></i> Contexto</h3>
         <p>
-            Durante la sesión de hoy, observarás información que fue generada por participantes que hicieron parte de una sesión anterior de este mismo estudio.
-        </p>
+        En una sesión anterior de este estudio, otros participantes jugaron con los roles de Jugador A y Jugador B.        </p>
         <p>
-            En esa sesión anterior, a los participantes se les asignó el rol de <b>Jugador A</b> o <b>Jugador B</b>.
-            Hay un número secreto entre 1 y 7. La tarea del Jugador A era enviar un mensaje al Jugador B,
-            <b>sin conocer el número secreto</b>. El Jugador A podía enviar cualquier número entre 1 y 7,
-            o <b>delegar</b> la decisión al computador, en cuyo caso el mensaje contenía el número secreto verdadero.
-        </p>
+          En cada ronda, el computador generaba un número secreto (entre 1 y 7) que nadie conocía.
+          El <b>Jugador A</b> debía enviar un mensaje (un número entre 1 y 7) al <b>Jugador B</b>. 
+                  </p>
         <p>
-            Después de recibir el mensaje, el Jugador B adivinaba el número secreto.
+            El <b>Jugador A</b>  también podía delegar al computador que enviara el mensaje,
+           y en ese caso el computador enviaba el número secreto verdadero como mensaje. 
+           Luego, el <b>Jugador B</b> intentaba adivinar el número secreto.
         </p>
 
         <p>
@@ -36,9 +61,8 @@
 
             <h3><i class="fas fa-gamepad"></i> Tu Tarea de Hoy</h3>
             <p>
-                Hoy, tu tarea está estrechamente relacionada con la tarea que enfrentó el Jugador B en la sesión anterior.
-                Leerás los <b>mensajes reales</b> que enviaron en el pasado los participantes con el rol de Jugador A.
-                Después de ver un mensaje, tendrás que <b>adivinar el número secreto</b>.
+            Hoy leerás los mensajes reales que enviaron los Jugadores A en esa sesión. 
+            Después de ver cada mensaje, tendrás que adivinar el número secreto.
             </p>
 
             <p>
@@ -49,17 +73,12 @@
 
         <div id="paragraph2" class="hidden-paragraph">
 
-            <h3><i class="fas fa-book-open"></i> Sobre las Instrucciones de Abajo</h3>
+            <h3><i class="fas fa-book-open"></i> Sobre las instrucciones que verás en la siguiente página</h3>
             <p>
-                Para ayudarte a entender las decisiones que tomaron los participantes anteriores, ahora te mostraremos
-                las mismas instrucciones que ellos recibieron. Todos los mensajes que observarás hoy fueron generados
-                bajo las reglas exactas descritas en esas instrucciones.
+            A continuación verás las mismas instrucciones que recibieron los participantes anteriores.
+            Los mensajes que observarás se generaron bajo esas reglas. 
+            <b>Léelas con atención</b>, ya que tu tarea es muy similar a la del <b>Jugador B</b>.
             </p>
-            <p>
-                Como tu tarea comparte muchas características con la de los participantes que fueron Jugador B en la sesión anterior,
-                es importante que <b>leas estas instrucciones con atención</b>.
-            </p>
-
         </div>
 
     </div>

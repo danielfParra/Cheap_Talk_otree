@@ -174,3 +174,29 @@
   font-size: 1rem;
   font-weight: 500;
 }
+
+.previous-instructions-card {
+  border-width: 3px;
+  border-color: #d39e00 !important;
+  box-shadow: 0 0.75rem 1.5rem rgba(211, 158, 0, 0.18);
+}
+
+.previous-instructions-card .card-header {
+  background: linear-gradient(135deg, #ffc107 0%, #ffe082 100%) !important;
+  color: #4d3b00 !important;
+  font-size: 1rem !important;
+  font-style: normal !important;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  padding: 0.9rem 1.25rem;
+}
+
+.previous-instructions-card .card-body {
+  background-color: #fff8db;
+}
+
+.previous-instructions-card h3 {
+  color: #8a5a00 !important;
+  font-size: 1.3rem;
+  font-weight: 700;
+}

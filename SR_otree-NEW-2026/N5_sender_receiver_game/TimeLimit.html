@@ -10,7 +10,7 @@ Instrucciones
 
 {{ block content }}
 
-<div class="card border-warning mb-3">
+<div class="card border-warning mb-4 shadow-sm previous-instructions-card" role="alert">
     <div class="card-header bg-warning text-dark fst-italic" style="font-size: 0.9em;">Instrucciones del experimento anterior</div>
     <div class="card-body">
 
@@ -20,8 +20,9 @@ Instrucciones
 
     <p>
         En cada ronda, el Jugador A tendrá <b>{{Constants.TIME_PER_ROUND_PREV }} segundos</b> para elegir un mensaje.
-        Luego, el Jugador B tendrá <b>{{Constants.TIME_PER_ROUND_PREV }} segundos</b> para hacer una suposición.
-        Después de que el Jugador B haga una suposición, ambos jugadores verán la retroalimentación durante 5 segundos antes de que comience la siguiente ronda.
+        Luego, el Jugador B tendrá <b>{{Constants.TIME_PER_ROUND_PREV }} segundos</b> para hacer una adivinanza.
+        Después de que el Jugador B haga una adivinanza, 
+        ambos jugadores verán la retroalimentación durante 5 segundos antes de que comience la siguiente ronda.
     </p>
 
     <p>
@@ -52,11 +53,11 @@ Instrucciones
 
     <div class="hidden-paragraph" id="PlayerB">
     <p>
-        Esto es lo que sucede si <strong>el Jugador B</strong> no hace una suposición a tiempo:
+        Esto es lo que sucede si <strong>el Jugador B</strong> no hace una adivinanza a tiempo:
         <ul>
-            <li>La suposición del Jugador B se convertirá automáticamente en el número recomendado por el mensaje del Jugador A. Por ejemplo,
-                si el Jugador A envía el mensaje "Para recibir el pago más alto, deberías elegir 5", la suposición del Jugador B se convierte en 5 si no responde a tiempo.</li>
-            <li>Los pagos de ambos jugadores dependerán de esta suposición establecida automáticamente.</li>
+            <li>La adivinanza del Jugador B se convertirá automáticamente en el número recomendado por el mensaje del Jugador A. Por ejemplo,
+                si el Jugador A envía el mensaje "Para recibir el pago más alto, deberías elegir 5", la adivinanza del Jugador B se convierte en 5 si no responde a tiempo.</li>
+            <li>Los pagos de ambos jugadores dependerán de esta adivinanza establecida automáticamente.</li>
         </ul>
     </p>
     <p>
