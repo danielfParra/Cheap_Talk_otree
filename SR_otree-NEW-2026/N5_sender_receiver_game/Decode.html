@@ -56,7 +56,7 @@ Instrucciones
         El <b>Decodificador</b> debe responder dos preguntas antes de que se acabe el tiempo:
         <ol>
             <li>¿Cuál es el número que el Jugador A pretendía enviar?</li>
-            <li>¿Cuál es tu suposición del número secreto?</li>
+            <li>¿Cuál es tu adivinanza del número secreto?</li>
         </ol>
         Es importante destacar que el <b>Decodificador</b> no puede adivinar el número secreto hasta que identifique correctamente el número que el Jugador A intentó enviar.
 
@@ -69,7 +69,7 @@ Instrucciones
     <div id="consequences" class="hidden-paragraph">
         <p><b>Importante:</b></p>
         <ul>
-            <li>El Jugador B tiene <b>{{ Constants.TIME_PER_ROUND }} segundos</b> para hacer una suposición. Si el Decodificador se queda sin tiempo, el número que el Jugador A envió se envía automáticamente como la suposición.</li>
+            <li>El Jugador B tiene <b>{{ Constants.TIME_PER_ROUND }} segundos</b> para hacer una adivinanza. Si el Decodificador se queda sin tiempo, el número que el Jugador A envió se envía automáticamente como la adivinanza.</li>
             <li>Los Decodificadores deben esperar <b>{{ Constants.ATTEMPT_DELAY }} segundos</b> entre intentos de decodificar la expresión matemática. No se recomienda adivinar al azar.</li>
         </ul>
 
